@@ -32,6 +32,18 @@ add_action( 'plugins_loaded', function () {
 	\Elementor_GSAP\Willem_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Crisp_Loading_Animation_Extension::init();
 
+	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
+		$manager->add_category( 'elementor-gsap', [
+			'title' => __( 'Elements GSAP', 'elementor-gsap' ),
+			'icon'  => 'eicon-animation',
+		] );
+	} );
+
+	add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-bunny-hls-player-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Bunny_HLS_Player_Widget() );
+	} );
+
 	add_action( 'elementor/frontend/after_register_scripts', function () {
 		wp_register_script(
 			'gsap',
@@ -55,6 +67,13 @@ add_action( 'plugins_loaded', function () {
 			true
 		);
 		wp_register_script(
+			'hls-js',
+			'https://cdn.jsdelivr.net/npm/hls.js@1.6.11',
+			[],
+			'1.6.11',
+			true
+		);
+		wp_register_script(
 			'elementor-willem-loading',
 			ELEMENTOR_GSAP_URL . 'assets/js/willem-loading-animation.js',
 			[ 'gsap' ],
@@ -65,6 +84,13 @@ add_action( 'plugins_loaded', function () {
 			'elementor-crisp-loading',
 			ELEMENTOR_GSAP_URL . 'assets/js/crisp-loading-animation.js',
 			[ 'gsap', 'gsap-splittext', 'gsap-customease' ],
+			ELEMENTOR_GSAP_VERSION,
+			true
+		);
+		wp_register_script(
+			'elementor-bunny-hls-player',
+			ELEMENTOR_GSAP_URL . 'assets/js/bunny-hls-player.js',
+			[ 'hls-js' ],
 			ELEMENTOR_GSAP_VERSION,
 			true
 		);
@@ -80,6 +106,12 @@ add_action( 'plugins_loaded', function () {
 		wp_register_style(
 			'elementor-crisp-loading',
 			ELEMENTOR_GSAP_URL . 'assets/css/crisp-loading-animation.css',
+			[],
+			ELEMENTOR_GSAP_VERSION
+		);
+		wp_register_style(
+			'elementor-bunny-hls-player',
+			ELEMENTOR_GSAP_URL . 'assets/css/bunny-hls-player.css',
 			[],
 			ELEMENTOR_GSAP_VERSION
 		);
