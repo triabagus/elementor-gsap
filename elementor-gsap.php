@@ -42,6 +42,9 @@ add_action( 'plugins_loaded', function () {
 	add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-bunny-hls-player-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Bunny_HLS_Player_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-masked-text-reveal-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Masked_Text_Reveal_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -62,6 +65,13 @@ add_action( 'plugins_loaded', function () {
 		wp_register_script(
 			'gsap-customease',
 			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/CustomEase.min.js',
+			[ 'gsap' ],
+			'3.15.0',
+			true
+		);
+		wp_register_script(
+			'gsap-scrolltrigger',
+			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/ScrollTrigger.min.js',
 			[ 'gsap' ],
 			'3.15.0',
 			true
@@ -94,6 +104,13 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_VERSION,
 			true
 		);
+		wp_register_script(
+			'elementor-masked-text-reveal',
+			ELEMENTOR_GSAP_URL . 'assets/js/masked-text-reveal.js',
+			[ 'gsap', 'gsap-scrolltrigger', 'gsap-splittext' ],
+			ELEMENTOR_GSAP_VERSION,
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -112,6 +129,12 @@ add_action( 'plugins_loaded', function () {
 		wp_register_style(
 			'elementor-bunny-hls-player',
 			ELEMENTOR_GSAP_URL . 'assets/css/bunny-hls-player.css',
+			[],
+			ELEMENTOR_GSAP_VERSION
+		);
+		wp_register_style(
+			'elementor-masked-text-reveal',
+			ELEMENTOR_GSAP_URL . 'assets/css/masked-text-reveal.css',
 			[],
 			ELEMENTOR_GSAP_VERSION
 		);

@@ -1,0 +1,23 @@
+/* FOUC prevention — element disembunyikan sampai JS siap */
+.emt-masked-text {
+	visibility: hidden;
+	-webkit-text-rendering: optimizeSpeed;
+	text-rendering: optimizeSpeed;
+	-webkit-transform: translateZ(0);
+	font-kerning: none;
+}
+
+/* Inline style="visibility: visible" dari PHP edit mode meng-override CSS di atas */
+
+/* Mask wrapper yang dibuat SplitText akan punya class .line dengan overflow hidden otomatis,
+   tapi kita pastikan child line/word/char display block agar yPercent transform-nya rapi */
+.emt-masked-text .line {
+	display: block;
+	overflow: hidden;
+}
+
+.emt-masked-text .word,
+.emt-masked-text .letter {
+	display: inline-block;
+	will-change: transform;
+}
