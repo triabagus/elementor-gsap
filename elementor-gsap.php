@@ -45,6 +45,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-masked-text-reveal-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Masked_Text_Reveal_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-draggable-infinite-slider-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Draggable_Infinite_Slider_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -72,6 +75,20 @@ add_action( 'plugins_loaded', function () {
 		wp_register_script(
 			'gsap-scrolltrigger',
 			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/ScrollTrigger.min.js',
+			[ 'gsap' ],
+			'3.15.0',
+			true
+		);
+		wp_register_script(
+			'gsap-draggable',
+			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/Draggable.min.js',
+			[ 'gsap' ],
+			'3.15.0',
+			true
+		);
+		wp_register_script(
+			'gsap-inertia',
+			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/InertiaPlugin.min.js',
 			[ 'gsap' ],
 			'3.15.0',
 			true
@@ -111,6 +128,13 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_VERSION,
 			true
 		);
+		wp_register_script(
+			'elementor-draggable-slider',
+			ELEMENTOR_GSAP_URL . 'assets/js/draggable-infinite-slider.js',
+			[ 'gsap', 'gsap-draggable', 'gsap-inertia' ],
+			ELEMENTOR_GSAP_VERSION,
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -135,6 +159,12 @@ add_action( 'plugins_loaded', function () {
 		wp_register_style(
 			'elementor-masked-text-reveal',
 			ELEMENTOR_GSAP_URL . 'assets/css/masked-text-reveal.css',
+			[],
+			ELEMENTOR_GSAP_VERSION
+		);
+		wp_register_style(
+			'elementor-draggable-slider',
+			ELEMENTOR_GSAP_URL . 'assets/css/draggable-infinite-slider.css',
 			[],
 			ELEMENTOR_GSAP_VERSION
 		);
