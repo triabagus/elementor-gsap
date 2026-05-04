@@ -1,159 +1,204 @@
-=== Elementor GSAP styled by Osmo ===
+# Elementor GSAP styled by Osmo
 Contributors: creativetria
-Tags: elementor, gsap, loading animation, preloader, hls player, video player, bunny, animation, page transition, splittext
+Tags: elementor, gsap, loading animation, preloader, page transition, hls player, video player, splittext, scroll reveal, slider
 Requires at least: 6.7
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 Elementor tested up to: 4.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Kumpulan widget & ekstensi Elementor bertenaga GSAP bergaya Osmo: page loading animation (Willem & Crisp) dan Bunny HLS video player.
+Premium Osmo-style loading animations, page transitions, and interactive widgets for Elementor — powered by GSAP.
 
-== Description ==
+## Description
 
-**Elementor GSAP styled by Osmo** menambahkan komponen animasi premium ke Elementor menggunakan [GSAP](https://gsap.com/) (GreenSock Animation Platform) — terinspirasi gaya animasi dari [Osmo](https://www.osmo.supply/).
+**Elementor GSAP styled by Osmo** brings premium-grade animations to the Elementor page builder. Inspired by the design language of [Osmo](https://www.osmo.supply/) and powered by [GSAP](https://gsap.com/) (GreenSock Animation Platform), this plugin gives designers and developers a curated set of preloaders, page transitions, and animated widgets — all configurable directly from the Elementor panel.
 
-Plugin ini dirancang untuk pengembang dan desainer web yang ingin menambahkan loading animation berkualitas tinggi dan video HLS player ke project Elementor mereka tanpa perlu menulis kode dari nol. Semua kontrol terintegrasi langsung di antarmuka Elementor — dari toggle, color picker, typography group, sampai responsive slider.
+##  📸 Demo
 
-= Komponen yang Tersedia =
+![Demo GIF](https://your-demo-link.com/demo.gif)  
+[Live Site](https://your-live-site.com)
 
-**1. Willem Loading Animation** (Page-level Preloader)
+## Why use this plugin?
 
-Preloader bergaya Osmo dengan logo huruf yang dipisah dua, kotak gambar yang tumbuh dari tengah, lalu meluas memenuhi viewport. Cocok untuk landing page, portfolio, atau intro hero section.
+* **No code required** — every animation parameter (color, font, duration, easing, breakpoint) is exposed as an Elementor control.
+* **Production-ready** — ships with editor preview mode, asset lazy-loading, FOUC prevention, and per-instance scoping.
+* **Performance-conscious** — assets only load on pages that actually use them.
+* **Multi-instance safe** — drop multiple sliders or text reveals on the same page without conflicts.
+* **Developer-friendly** — clean BEM-style class names, CSS custom properties, and semantic markup.
 
-* Toggle on/off di Page Settings → Style
-* Custom logo text dengan pemisahan otomatis di tengah
-* 4 layer cover image (1 final + 3 flash transition)
-* Navigation bar (brand, links repeater, CTA)
-* Color customization (header, loader, background)
-* Typography group control per element (top logo, bottom logo, brand, nav links, CTA)
-* Responsive width control untuk separuh logo
-* Default font: PP Neue Montreal (fallback ke sans-serif)
+## ✨ What's included
 
-**2. Crisp Loading Animation** (Page-level Preloader)
+The plugin ships **3 page-level animations** (configured via Page Settings) and **3 Elementor widgets** (in the "Elements GSAP" category).
 
-Loading animation dengan slideshow-style: 5 gambar bergerak horizontal, salah satunya menjadi focal point yang scaling sampai memenuhi viewport. Setelah loading selesai, slideshow tetap aktif dengan thumbnail navigation.
+### Page-level Animations
 
-* Toggle on/off di Page Settings → Style
-* 5 gambar konfigurabel (dipakai untuk slider, loader, dan thumbnail)
-* Custom heading text dengan SplitText animation per kata
-* Custom logo image (PNG/JPG/SVG) dengan fallback OSMO SVG
-* Responsive logo width control
-* Background, text, dan fade edge color via CSS custom properties
-* Typography group control untuk heading dan paragraph
-* Slideshow interaktif dengan parallax inner & cubic-bezier easing
+1. **Willem Loading Animation** — an Osmo-inspired preloader with a split-text logo wrapping a growing image cover that expands to fill the viewport. Configurable logo text, cover image stack (1 final + 3 flash transitions), top navigation bar, colors, typography per text element, and responsive width per logo half. Default font: PP Neue Montreal.
 
-**3. Bunny HLS Player (Basic)** (Elementor Widget)
+2. **Crisp Loading Animation** — a slideshow-driven preloader: 5 images move horizontally, one becomes the focal point that scales to fit the viewport. After loading, the slideshow remains interactive with thumbnail navigation. Includes SplitText heading animation, custom logo image (PNG/JPG/SVG with OSMO SVG fallback), parallax inner, and cubic-bezier easing.
 
-Widget custom video player untuk HLS streaming (.m3u8) dengan dukungan native Safari + [hls.js](https://github.com/video-dev/hls.js) untuk browser lain. Cocok untuk hosting video via [Bunny.net](https://bunny.net/), AWS, atau provider HLS lain.
+3. **Pixelated Page Transition** — a retro pixel-grid dissolve between pages. Internal link clicks trigger a randomly-staggered pixel grid that covers the page before navigation; the destination page fades the grid back out for a smooth entry. Pixel color, grid density (responsive), stagger timing, and per-block duration are all configurable.
 
-* HLS source via .m3u8 URL (dynamic tag support)
-* Placeholder image sebelum video load
-* Autoplay mode (auto muted + loop, dikontrol IntersectionObserver)
-* Lazy loading: Eager / Meta only / Full lazy
-* Aspect ratio: Default 16:10 / Auto from video / Cover container
-* Border radius, icon color, overlay color, big button background — fully customizable
-* Play/pause toggle, mute control, hover state
-* Responsive design dengan breakpoint mobile
+### Elementor Widgets
 
-= Editor Preview Mode =
+4. **Bunny HLS Player (Basic)** — a custom video player for HLS streaming (`.m3u8`), using Safari's native HLS support and [hls.js](https://github.com/video-dev/hls.js) elsewhere. Designed for [Bunny.net](https://bunny.net/), AWS, or any HLS provider. Supports autoplay (muted + loop with IntersectionObserver), lazy loading modes, aspect ratio behaviors, and full styling control.
 
-Saat editing di Elementor, semua animasi dan loading state otomatis dinonaktifkan dan menampilkan preview statis dengan badge label di pojok kanan atas. Developer dan editor langsung tahu mana page yang punya loading animation aktif tanpa perlu save & refresh.
+5. **Masked Text Reveal** — a scroll-triggered reveal using GSAP SplitText + ScrollTrigger. Lines slide up from below a mask when the element enters the viewport. Configurable split type (Lines / Words / Characters), duration, stagger, easing, ScrollTrigger start position, "Animate Once Only" toggle, plus typography group, alignment, and color. Includes built-in FOUC prevention.
 
-= Performance & Asset Loading =
+6. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw and snap, plus thumbnail navigation, powered by GSAP Draggable + InertiaPlugin. Repeater for slides (image + caption), active-slide offset mode or center mode, animated "01 / 04" counter, prev/next buttons with corner overlay hover effect, and full per-instance styling.
 
-* Asset di-enqueue lazy: hanya halaman dengan toggle on yang load CSS/JS terkait
-* GSAP & hls.js dari jsDelivr CDN (versioned, cached)
-* Editor mode skip animasi — tidak boros saat ngedit
-* CSS pakai custom properties (`--egsap-*`) untuk theming per-instance
-* Per-page scoping via `data-egsap-id` agar typography & style tidak bocor antar halaman
+## Editor Preview
 
-== Installation ==
+While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
 
-1. Upload folder `elementor-gsap` ke direktori `/wp-content/plugins/`
-2. Aktifkan plugin via menu **Plugins** di WordPress admin
-3. Pastikan plugin **Elementor** sudah aktif (minimal versi terbaru stabil)
-4. Untuk Loading Animation: edit halaman dengan Elementor → klik ikon **gear** (Page Settings) → tab **Style** → scroll ke section **Willem Loading Animation** atau **Crisp Loading Animation**
-5. Untuk Bunny HLS Player: di panel widget Elementor, cari category **Elements GSAP** → drag widget **Bunny HLS Player (Basic)** ke Section/Container
+## 🚀 Performance Notes
 
-== Requirements ==
+* Lazy-enqueued assets — CSS/JS for each component only loads on pages that use it.
+* GSAP, hls.js, and helper plugins served from the jsDelivr CDN (versioned and cached).
+* GSAP animations are skipped entirely in edit mode.
+* CSS uses custom properties (`--egsap-*`) for per-instance theming.
+* Per-page / per-widget scoping via `data-egsap-id` prevents style bleed between instances.
 
-* WordPress 6.7 atau lebih baru
-* PHP 7.4 atau lebih baru
-* Elementor (versi terbaru stabil disarankan)
-* Browser modern dengan dukungan CSS `:has()` (Chrome 105+, Firefox 121+, Safari 15.4+, Edge 105+)
-* Untuk SVG upload: enable Elementor SVG support atau install plugin Safe SVG
-* Untuk Bunny HLS Player: video harus di-host sebagai HLS stream (.m3u8 playlist)
+## 📦 Installation
 
-== Frequently Asked Questions ==
+1. Upload the `elementor-gsap` folder to `/wp-content/plugins/`.
+2. Activate the plugin from the **Plugins** menu in WordPress admin.
+3. Make sure the **Elementor** plugin is active (latest stable recommended).
+4. **Page-level animations**: open a page in Elementor → click the **gear** icon (Page Settings) → **Style** tab → scroll to the desired section (Willem / Crisp / Pixelated Transition).
+5. **Widgets**: in the Elementor widget panel, find the **Elements GSAP** category and drag the desired widget onto a Section/Container.
 
-= Apakah plugin ini gratis? =
+## 🛠 Quick Start
 
-Ya. Plugin ini open source di bawah lisensi GPLv3.
+### Add a Willem preloader to a landing page
 
-= Apakah perlu Elementor Pro? =
+1. Edit the page in Elementor.
+2. Open Page Settings → Style → Willem Loading Animation.
+3. Toggle **Enable**.
+4. Customize logo text, cover image, and colors.
+5. Click **Update** and preview.
 
-Tidak wajib. Plugin ini bekerja dengan Elementor versi gratis (Free). Beberapa fitur seperti dynamic tags pada widget HLS Player akan lebih lengkap kalau pakai Elementor Pro.
+### Add a Bunny HLS video to any layout
 
-= Bisa pakai font selain PP Neue Montreal? =
+1. Drag the **Bunny HLS Player (Basic)** widget into a Section/Container.
+2. Paste your `.m3u8` URL into the HLS Source field.
+3. Pick a placeholder image.
+4. Choose a lazy loading mode (`Meta only` is a good default).
+5. Update.
 
-Bisa. PP Neue Montreal hanya default fallback. Pakai control **Typography** di setiap section animasi untuk mengganti font (auto-load dari Google Fonts library Elementor) atau set Custom Font via Elementor Pro.
+### Trigger the Pixelated Page Transition site-wide
 
-= Kenapa loading animation tidak muncul di frontend? =
+1. Enable the toggle on every page where you want the transition active.
+2. (Optional) Use Elementor Theme Builder to apply it via a global template.
+3. Add `data-transition-prevent` to any link that should bypass the animation.
 
-Periksa hal-hal berikut:
-1. Pastikan toggle **Enable Loading Animation** sudah aktif di Page Settings → Style
-2. Tema yang dipakai harus memanggil action `wp_body_open()` (standar WordPress 5.2+)
-3. Sudah klik **Update** dan refresh halaman frontend
-4. Tidak ada conflict dengan plugin loading animation lain
+## 🧰 Requirements
 
-= Bagaimana cara enable upload file SVG? =
+* WordPress 6.7 or later
+* PHP 7.4 or later
+* Elementor (latest stable recommended)
+* Modern browsers with CSS `:has()` support (Chrome 105+, Firefox 121+, Safari 15.4+, Edge 105+)
+* For SVG uploads: Elementor's SVG support enabled, or the **Safe SVG** plugin
+* For Bunny HLS Player: video must be hosted as an HLS stream (`.m3u8` playlist)
+* For page-level loaders: theme must call `wp_body_open()` (WordPress 5.2+ standard)
 
-WordPress memblokir SVG default karena alasan keamanan. Aktifkan via:
+## Frequently Asked Questions
+
+= Is this plugin free? =
+
+Yes. It's open source under the GPLv3 license.
+
+= Do I need Elementor Pro? =
+
+No. The plugin works with the free version of Elementor. Some features (like dynamic tags on widgets) become more capable with Elementor Pro, but it's not required.
+
+= Can I use a font other than PP Neue Montreal? =
+
+Yes. PP Neue Montreal is just the fallback default. Use the **Typography** control in any animation section to switch fonts (auto-loaded from Elementor's Google Fonts library) or set a Custom Font via Elementor Pro.
+
+= My loading animation isn't showing on the frontend. =
+
+Check the following:
+
+1. The **Enable** toggle is on in Page Settings → Style.
+2. Your theme calls `wp_body_open()` (standard since WordPress 5.2).
+3. You clicked **Update** and refreshed the frontend.
+4. No conflict with another loading animation plugin.
+
+= How do I enable SVG uploads? =
+
+WordPress blocks SVG by default for security. Enable via:
+
 * Elementor Pro: **Elementor → Settings → General → Enable Unfiltered File Uploads**
-* Plugin gratis: **Safe SVG** (recommended) atau **SVG Support**
+* Free plugins: **Safe SVG** (recommended) or **SVG Support**
 
-= Apakah Bunny HLS Player support format MP4? =
+= Does the Bunny HLS Player support MP4? =
 
-Tidak. Player ini didesain khusus untuk HLS streaming (.m3u8). Untuk MP4 reguler, gunakan widget Video bawaan Elementor.
+No. This player is designed exclusively for HLS streams (`.m3u8`). For regular MP4 files, use Elementor's built-in Video widget.
 
-= Browser apa saja yang didukung HLS Player? =
+= Which browsers does the HLS Player support? =
 
 * Safari (macOS/iOS): native HLS support
-* Chrome, Firefox, Edge: via hls.js library
-* IE11: tidak didukung
+* Chrome, Firefox, Edge: via the hls.js library
+* IE11: not supported
 
-= Bisa load 2 loading animation sekaligus di satu halaman? =
+= Can I run multiple loading animations on one page? =
 
-Secara teknis bisa (Willem + Crisp keduanya aktif), tapi tidak disarankan — keduanya akan render bersamaan dan tampilan akan kacau. Pilih salah satu per page.
+Technically yes (Willem + Crisp + Pixelated all enabled), but it's not recommended — they will render simultaneously and look chaotic. Pick one per page.
+
+= The Pixelated Transition only runs on pages where it's enabled. How do I make it site-wide? =
+
+Enable the toggle on every destination page, or use **Elementor Theme Builder** to apply it via a global template (Single, Archive, etc.).
+
+= Why doesn't a specific link trigger the transition? =
+
+Pixelated Transition only intercepts links that are: (a) same domain, (b) don't start with `#`, (c) don't have `target="_blank"`, and (d) don't have the `data-transition-prevent` attribute. Add `data-transition-prevent` to skip the transition on a specific link.
+
+= The Draggable Slider isn't draggable, what's wrong? =
+
+Make sure both `gsap-draggable` and `gsap-inertia` are loading. Check the browser console — if you see a warning about InertiaPlugin being required for momentum-based scrolling, InertiaPlugin failed to load (often due to ad-blockers or CDN issues).
+
+= Masked Text Reveal replays every time I scroll. How do I make it animate just once? =
+
+Toggle **Animate Once Only** in the widget's Animation tab.
 
 == Changelog ==
 
+= 1.2.0 =
+
+* Added **Pixelated Page Transition** (page-level transition)
+* Added **Masked Text Reveal** widget (scroll-triggered SplitText reveal)
+* Added **Draggable Infinite Slider** widget (Draggable + InertiaPlugin)
+* Registered additional GSAP plugins: ScrollTrigger, Draggable, InertiaPlugin
+
 = 1.1.0 =
-* Tambah **Crisp Loading Animation** (slideshow preloader)
-* Tambah widget **Bunny HLS Player (Basic)**
-* Migrasi loading animation dari widget ke Page Settings (document-level)
-* Editor preview mode dengan badge identifikasi
-* CSS custom properties untuk per-instance styling
+
+* Added **Crisp Loading Animation** (slideshow preloader)
+* Added **Bunny HLS Player (Basic)** widget
+* Migrated loading animations from widget to Page Settings (document-level)
+* Editor preview mode with identification badge
+* CSS custom properties for per-instance styling
 * Typography group control per text element
-* Responsive slider untuk logo width (Willem & Crisp)
+* Responsive sliders for logo widths (Willem & Crisp)
 * Default font: PP Neue Montreal
-* GSAP upgrade ke 3.15
-* Custom logo image control untuk Crisp animation
+* Upgraded GSAP to 3.15
+* Custom logo image control for Crisp animation
 
 = 1.0.0 =
-* Initial release dengan **Willem Loading Animation** sebagai widget Elementor
 
-== Upgrade Notice ==
+* Initial release with **Willem Loading Animation** as an Elementor widget
 
-= 1.1.0 =
-Loading animation tidak lagi widget — sekarang di Page Settings → Style. Migrasi tidak otomatis: kalau page sebelumnya pakai widget Willem, perlu di-set ulang dari Page Settings.
+## 🤝 Contributing
 
-== Credits ==
+Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
 
-* [GSAP](https://gsap.com/) by GreenSock — animation engine
+## 🙌 Credits
+
+* [GSAP](https://gsap.com/) by GreenSock — animation engine and plugins (ScrollTrigger, SplitText, Draggable, InertiaPlugin, CustomEase)
 * [hls.js](https://github.com/video-dev/hls.js) — HLS playback library
 * [Osmo](https://www.osmo.supply/) — design inspiration
 * [Bunny.net](https://bunny.net/) — recommended HLS video hosting
+
+## 📄 License
+
+This plugin is released under the GPLv3 license. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html) for full terms.
