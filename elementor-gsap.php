@@ -28,9 +28,12 @@ add_action( 'plugins_loaded', function () {
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-willem-loading-animation-extension.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-crisp-loading-animation-template.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-crisp-loading-animation-extension.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-pixelated-transition-template.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-pixelated-transition-extension.php';
 
 	\Elementor_GSAP\Willem_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Crisp_Loading_Animation_Extension::init();
+	\Elementor_GSAP\Pixelated_Transition_Extension::init();
 
 	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
 		$manager->add_category( 'elementor-gsap', [
@@ -135,6 +138,13 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_VERSION,
 			true
 		);
+		wp_register_script(
+			'elementor-pixelated-transition',
+			ELEMENTOR_GSAP_URL . 'assets/js/pixelated-transition.js',
+			[ 'gsap' ],
+			ELEMENTOR_GSAP_VERSION,
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -165,6 +175,12 @@ add_action( 'plugins_loaded', function () {
 		wp_register_style(
 			'elementor-draggable-slider',
 			ELEMENTOR_GSAP_URL . 'assets/css/draggable-infinite-slider.css',
+			[],
+			ELEMENTOR_GSAP_VERSION
+		);
+		wp_register_style(
+			'elementor-pixelated-transition',
+			ELEMENTOR_GSAP_URL . 'assets/css/pixelated-transition.css',
 			[],
 			ELEMENTOR_GSAP_VERSION
 		);
