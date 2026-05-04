@@ -1,21 +1,26 @@
-=== Elementor GSAP styled by Osmo ===
+# Elementor GSAP styled by Osmo
 Contributors: creativetria
 Tags: elementor, gsap, loading animation, preloader, page transition, hls player, video player, splittext, scroll reveal, slider
 Requires at least: 6.7
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.10.0
+Stable tag: 1.2.0
 Elementor tested up to: 4.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Premium Osmo-style loading animations, page transitions, and interactive widgets for Elementor — powered by GSAP.
 
-== Description ==
+## Description
 
 **Elementor GSAP styled by Osmo** brings premium-grade animations to the Elementor page builder. Inspired by the design language of [Osmo](https://www.osmo.supply/) and powered by [GSAP](https://gsap.com/) (GreenSock Animation Platform), this plugin gives designers and developers a curated set of preloaders, page transitions, and animated widgets — all configurable directly from the Elementor panel.
 
-= Why use this plugin? =
+##  📸 Demo
+
+![Demo GIF](https://your-demo-link.com/demo.gif)  
+[Live Site](https://your-live-site.com)
+
+## Why use this plugin?
 
 * **No code required** — every animation parameter (color, font, duration, easing, breakpoint) is exposed as an Elementor control.
 * **Production-ready** — ships with editor preview mode, asset lazy-loading, FOUC prevention, and per-instance scoping.
@@ -23,11 +28,11 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 * **Multi-instance safe** — drop multiple sliders or text reveals on the same page without conflicts.
 * **Developer-friendly** — clean BEM-style class names, CSS custom properties, and semantic markup.
 
-= What's included =
+## ✨ What's included
 
 The plugin ships **3 page-level animations** (configured via Page Settings) and **3 Elementor widgets** (in the "Elements GSAP" category).
 
-**Page-level Animations**
+### Page-level Animations
 
 1. **Willem Loading Animation** — an Osmo-inspired preloader with a split-text logo wrapping a growing image cover that expands to fill the viewport. Configurable logo text, cover image stack (1 final + 3 flash transitions), top navigation bar, colors, typography per text element, and responsive width per logo half. Default font: PP Neue Montreal.
 
@@ -35,7 +40,7 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 
 3. **Pixelated Page Transition** — a retro pixel-grid dissolve between pages. Internal link clicks trigger a randomly-staggered pixel grid that covers the page before navigation; the destination page fades the grid back out for a smooth entry. Pixel color, grid density (responsive), stagger timing, and per-block duration are all configurable.
 
-**Elementor Widgets**
+### Elementor Widgets
 
 4. **Bunny HLS Player (Basic)** — a custom video player for HLS streaming (`.m3u8`), using Safari's native HLS support and [hls.js](https://github.com/video-dev/hls.js) elsewhere. Designed for [Bunny.net](https://bunny.net/), AWS, or any HLS provider. Supports autoplay (muted + loop with IntersectionObserver), lazy loading modes, aspect ratio behaviors, and full styling control.
 
@@ -43,11 +48,11 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 
 6. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw and snap, plus thumbnail navigation, powered by GSAP Draggable + InertiaPlugin. Repeater for slides (image + caption), active-slide offset mode or center mode, animated "01 / 04" counter, prev/next buttons with corner overlay hover effect, and full per-instance styling.
 
-= Editor Preview =
+## Editor Preview
 
 While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
 
-= Performance Notes =
+## 🚀 Performance Notes
 
 * Lazy-enqueued assets — CSS/JS for each component only loads on pages that use it.
 * GSAP, hls.js, and helper plugins served from the jsDelivr CDN (versioned and cached).
@@ -55,7 +60,7 @@ While editing in Elementor, animations are automatically disabled and components
 * CSS uses custom properties (`--egsap-*`) for per-instance theming.
 * Per-page / per-widget scoping via `data-egsap-id` prevents style bleed between instances.
 
-== Installation ==
+## 📦 Installation
 
 1. Upload the `elementor-gsap` folder to `/wp-content/plugins/`.
 2. Activate the plugin from the **Plugins** menu in WordPress admin.
@@ -63,9 +68,9 @@ While editing in Elementor, animations are automatically disabled and components
 4. **Page-level animations**: open a page in Elementor → click the **gear** icon (Page Settings) → **Style** tab → scroll to the desired section (Willem / Crisp / Pixelated Transition).
 5. **Widgets**: in the Elementor widget panel, find the **Elements GSAP** category and drag the desired widget onto a Section/Container.
 
-== Quick Start ==
+## 🛠 Quick Start
 
-**Add a Willem preloader to a landing page**
+### Add a Willem preloader to a landing page
 
 1. Edit the page in Elementor.
 2. Open Page Settings → Style → Willem Loading Animation.
@@ -73,7 +78,7 @@ While editing in Elementor, animations are automatically disabled and components
 4. Customize logo text, cover image, and colors.
 5. Click **Update** and preview.
 
-**Add a Bunny HLS video to any layout**
+### Add a Bunny HLS video to any layout
 
 1. Drag the **Bunny HLS Player (Basic)** widget into a Section/Container.
 2. Paste your `.m3u8` URL into the HLS Source field.
@@ -81,13 +86,13 @@ While editing in Elementor, animations are automatically disabled and components
 4. Choose a lazy loading mode (`Meta only` is a good default).
 5. Update.
 
-**Trigger the Pixelated Page Transition site-wide**
+### Trigger the Pixelated Page Transition site-wide
 
 1. Enable the toggle on every page where you want the transition active.
 2. (Optional) Use Elementor Theme Builder to apply it via a global template.
 3. Add `data-transition-prevent` to any link that should bypass the animation.
 
-== Requirements ==
+## 🧰 Requirements
 
 * WordPress 6.7 or later
 * PHP 7.4 or later
@@ -97,7 +102,7 @@ While editing in Elementor, animations are automatically disabled and components
 * For Bunny HLS Player: video must be hosted as an HLS stream (`.m3u8` playlist)
 * For page-level loaders: theme must call `wp_body_open()` (WordPress 5.2+ standard)
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
 = Is this plugin free? =
 
@@ -159,7 +164,7 @@ Toggle **Animate Once Only** in the widget's Animation tab.
 
 == Changelog ==
 
-= 1.10.0 =
+= 1.2.0 =
 
 * Added **Pixelated Page Transition** (page-level transition)
 * Added **Masked Text Reveal** widget (scroll-triggered SplitText reveal)
@@ -183,23 +188,17 @@ Toggle **Animate Once Only** in the widget's Animation tab.
 
 * Initial release with **Willem Loading Animation** as an Elementor widget
 
-== Upgrade Notice ==
+## 🤝 Contributing
 
-= 1.10.0 =
+Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
 
-3 new components added: Pixelated Transition, Masked Text Reveal, Draggable Infinite Slider. No breaking changes from 1.1.0.
-
-= 1.1.0 =
-
-Loading animations are no longer widgets — they live in Page Settings → Style. Migration is not automatic: pages previously using the Willem widget need to be re-configured from Page Settings.
-
-== Credits ==
+## 🙌 Credits
 
 * [GSAP](https://gsap.com/) by GreenSock — animation engine and plugins (ScrollTrigger, SplitText, Draggable, InertiaPlugin, CustomEase)
 * [hls.js](https://github.com/video-dev/hls.js) — HLS playback library
 * [Osmo](https://www.osmo.supply/) — design inspiration
 * [Bunny.net](https://bunny.net/) — recommended HLS video hosting
 
-== License ==
+## 📄 License
 
 This plugin is released under the GPLv3 license. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html) for full terms.
