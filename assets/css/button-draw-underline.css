@@ -1,0 +1,32 @@
+.text-draw {
+	cursor: pointer;
+	margin-left: 1em;
+	margin-right: 1em;
+	padding-top: .625em;
+	font-size: 2em;
+	text-decoration: none;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.text-draw__span {
+	margin-bottom: 0;
+	font-size: 1.5em;
+	font-weight: 500;
+	line-height: 1.1;
+}
+
+.text-draw__box {
+	color: #e55050;
+	width: 100%;
+	height: .625em;
+	position: relative;
+}
+
+.text-draw__box svg {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	overflow: visible !important;
+}
