@@ -51,6 +51,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-draggable-infinite-slider-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Draggable_Infinite_Slider_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-button-draw-underline-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Button_Draw_Underline_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -92,6 +95,13 @@ add_action( 'plugins_loaded', function () {
 		wp_register_script(
 			'gsap-inertia',
 			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/InertiaPlugin.min.js',
+			[ 'gsap' ],
+			'3.15.0',
+			true
+		);
+		wp_register_script(
+			'gsap-drawsvg',
+			'https://cdn.jsdelivr.net/npm/gsap@3.15/dist/DrawSVGPlugin.min.js',
 			[ 'gsap' ],
 			'3.15.0',
 			true
@@ -145,6 +155,13 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_VERSION,
 			true
 		);
+		wp_register_script(
+			'elementor-button-draw-underline',
+			ELEMENTOR_GSAP_URL . 'assets/js/button-draw-underline.js',
+			[ 'gsap', 'gsap-drawsvg' ],
+			ELEMENTOR_GSAP_VERSION,
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -181,6 +198,12 @@ add_action( 'plugins_loaded', function () {
 		wp_register_style(
 			'elementor-pixelated-transition',
 			ELEMENTOR_GSAP_URL . 'assets/css/pixelated-transition.css',
+			[],
+			ELEMENTOR_GSAP_VERSION
+		);
+		wp_register_style(
+			'elementor-button-draw-underline',
+			ELEMENTOR_GSAP_URL . 'assets/css/button-draw-underline.css',
 			[],
 			ELEMENTOR_GSAP_VERSION
 		);
