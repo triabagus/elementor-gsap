@@ -48,6 +48,7 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 
 6. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw and snap, plus thumbnail navigation, powered by GSAP Draggable + InertiaPlugin. Repeater for slides (image + caption), active-slide offset mode or center mode, animated "01 / 04" counter, prev/next buttons with corner overlay hover effect, and full per-instance styling.
 
+7. **Button Draw Button** - a draw button with svg line and use the attribute to specific which element should trigger the line drawing animation hover.
 ## Editor Preview
 
 While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
@@ -169,6 +170,7 @@ Toggle **Animate Once Only** in the widget's Animation tab.
 * Added **Pixelated Page Transition** (page-level transition)
 * Added **Masked Text Reveal** widget (scroll-triggered SplitText reveal)
 * Added **Draggable Infinite Slider** widget (Draggable + InertiaPlugin)
+* Added **Button Draw Underline** widget
 * Registered additional GSAP plugins: ScrollTrigger, Draggable, InertiaPlugin
 
 = 1.1.0 =
