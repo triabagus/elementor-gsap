@@ -171,6 +171,7 @@ Toggle **Animate Once Only** in the widget's Animation tab.
 * Added **Masked Text Reveal** widget (scroll-triggered SplitText reveal)
 * Added **Draggable Infinite Slider** widget (Draggable + InertiaPlugin)
 * Added **Button Draw Underline** widget
+* Added **Pixelated Image Reveal** widget
 * Registered additional GSAP plugins: ScrollTrigger, Draggable, InertiaPlugin
 
 = 1.1.0 =
