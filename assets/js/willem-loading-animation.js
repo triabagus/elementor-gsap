@@ -1,17 +1,37 @@
 (function () {
 	'use strict';
 
+	var instances = new Map();
+
 	function isEditorPreview() {
 		return !!(window.elementorFrontend
 			&& typeof window.elementorFrontend.isEditMode === 'function'
 			&& window.elementorFrontend.isEditMode());
 	}
 
+	function destroyInstance(container) {
+		var inst = instances.get(container);
+		if (!inst) return;
+		if (inst.timeline) { try { inst.timeline.kill(); } catch (_) {} }
+		instances.delete(container);
+		delete container.dataset.egsapInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, container) {
+			if (!container.isConnected) destroyInstance(container);
+		});
+	}
+
 	function initWillemLoadingAnimation(container) {
-		if (!container || container.dataset.egsapInit === '1') return;
+		if (!container) return;
+		if (container.dataset.egsapInit === '1') return;
 		container.dataset.egsapInit = '1';
 
-		if (isEditorPreview()) return;
+		if (isEditorPreview()) {
+			instances.set(container, { editor: true });
+			return;
+		}
 
 		if (typeof window.gsap === 'undefined') {
 			console.warn('GSAP belum dimuat untuk elementor-gsap.');
@@ -96,9 +116,12 @@
 				stagger: 0.1,
 			}, '<');
 		}
+
+		instances.set(container, { timeline: tl });
 	}
 
 	function initAll(root) {
+		cleanupStale();
 		var scope = root || document;
 		scope.querySelectorAll('.willem-header').forEach(initWillemLoadingAnimation);
 	}
@@ -110,8 +133,9 @@
 	}
 
 	if (window.elementorFrontend && window.elementorFrontend.hooks) {
-		var initFromDoc = function () { initAll(document); };
-		window.elementorFrontend.hooks.addAction('frontend/element_ready/container', initFromDoc);
-		window.elementorFrontend.hooks.addAction('frontend/element_ready/section', initFromDoc);
+		// Re-init once Elementor frontend is ready (single fire) — covers editor reload.
+		window.elementorFrontend.hooks.addAction('frontend/init', function () {
+			initAll(document);
+		});
 	}
 })();

@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	var instances = new Map();
+
 	function isEditorPreview() {
 		return !!(window.elementorFrontend
 			&& typeof window.elementorFrontend.isEditMode === 'function'
@@ -32,8 +34,33 @@
 		});
 	}
 
+	function destroyInstance(transition) {
+		var inst = instances.get(transition);
+		if (!inst) return;
+		if (inst.onResize) {
+			window.removeEventListener('resize', inst.onResize);
+			clearTimeout(inst.resizeTimer);
+		}
+		(inst.linkHandlers || []).forEach(function (h) {
+			if (h.el && h.fn) h.el.removeEventListener('click', h.fn);
+		});
+		if (window.gsap) {
+			try { gsap.killTweensOf(transition.querySelectorAll('.transition-block')); } catch (_) {}
+		}
+		instances.delete(transition);
+		delete transition.dataset.egsapInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, t) {
+			if (!t.isConnected) destroyInstance(t);
+		});
+	}
+
 	function initOne(transition) {
-		if (transition.dataset.egsapInit === '1') return;
+		if (transition.dataset.egsapInit === '1') {
+			destroyInstance(transition);
+		}
 		transition.dataset.egsapInit = '1';
 
 		if (typeof window.gsap === 'undefined') {
@@ -49,8 +76,14 @@
 		var blockDuration = parseFloat(transition.dataset.egsapBlockDuration);
 		if (isNaN(blockDuration)) blockDuration = 0.1;
 
-		// Build grid then play page-load fade-out
+		var inst = {
+			onResize: null,
+			resizeTimer: null,
+			linkHandlers: [],
+		};
+
 		adjustGrid(transition).then(function () {
+			if (!transition.isConnected) return;
 			gsap.set(transition, { display: 'grid' });
 
 			var blocks = transition.querySelectorAll('.transition-block');
@@ -72,7 +105,6 @@
 			}, 0.5);
 		});
 
-		// Intercept valid internal links
 		var validLinks = Array.prototype.filter.call(document.querySelectorAll('a'), function (link) {
 			var href = link.getAttribute('href') || '';
 			var hostname;
@@ -88,7 +120,7 @@
 		});
 
 		validLinks.forEach(function (link) {
-			link.addEventListener('click', function (event) {
+			var fn = function (event) {
 				event.preventDefault();
 				var destination = link.href;
 
@@ -107,19 +139,25 @@
 						},
 					}
 				);
-			});
+			};
+			link.addEventListener('click', fn);
+			inst.linkHandlers.push({ el: link, fn: fn });
 		});
 
-		// Resize handler with debounce
-		var resizeTimer;
-		window.addEventListener('resize', function () {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(function () { adjustGrid(transition); }, 150);
-		});
+		inst.onResize = function () {
+			clearTimeout(inst.resizeTimer);
+			inst.resizeTimer = setTimeout(function () {
+				if (transition.isConnected) adjustGrid(transition);
+			}, 150);
+		};
+		window.addEventListener('resize', inst.onResize);
+
+		instances.set(transition, inst);
 	}
 
 	function initAll(scope) {
 		if (isEditorPreview()) return;
+		cleanupStale();
 		var root = scope || document;
 		root.querySelectorAll('.transition[data-egsap-id]').forEach(initOne);
 	}

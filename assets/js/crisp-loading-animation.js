@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	var instances = new Map();
+
 	function isEditorPreview() {
 		return !!(window.elementorFrontend
 			&& typeof window.elementorFrontend.isEditMode === 'function'
@@ -19,11 +21,35 @@
 		}
 	}
 
+	function destroyInstance(container) {
+		var inst = instances.get(container);
+		if (!inst) return;
+		if (inst.timeline) { try { inst.timeline.kill(); } catch (_) {} }
+		if (inst.split && typeof inst.split.revert === 'function') {
+			try { inst.split.revert(); } catch (_) {}
+		}
+		(inst.thumbHandlers || []).forEach(function (h) {
+			if (h.el && h.fn) h.el.removeEventListener('click', h.fn);
+		});
+		instances.delete(container);
+		delete container.dataset.egsapInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, c) {
+			if (!c.isConnected) destroyInstance(c);
+		});
+	}
+
 	function initCrispLoading(container) {
-		if (!container || container.dataset.egsapInit === '1') return;
+		if (!container) return;
+		if (container.dataset.egsapInit === '1') return;
 		container.dataset.egsapInit = '1';
 
-		if (isEditorPreview()) return;
+		if (isEditorPreview()) {
+			instances.set(container, { editor: true });
+			return;
+		}
 
 		if (typeof window.gsap === 'undefined') {
 			console.warn('GSAP belum dimuat untuk crisp loading.');
@@ -112,7 +138,9 @@
 			container.classList.remove('is--loading');
 		}, null, '+=0.45');
 
-		initSlideshow(container);
+		var thumbHandlers = initSlideshow(container);
+
+		instances.set(container, { timeline: tl, split: split, thumbHandlers: thumbHandlers });
 	}
 
 	function initSlideshow(wrapper) {
@@ -120,7 +148,7 @@
 		var inner = Array.prototype.slice.call(wrapper.querySelectorAll('[data-slideshow="parallax"]'));
 		var thumbs = Array.prototype.slice.call(wrapper.querySelectorAll('[data-slideshow="thumb"]'));
 
-		if (!slides.length || !thumbs.length) return;
+		if (!slides.length || !thumbs.length) return [];
 
 		var current = 0;
 		var length = slides.length;
@@ -166,17 +194,22 @@
 				.fromTo(upcomingInner, { xPercent: -direction * 75 }, { xPercent: 0 }, 0);
 		}
 
+		var handlers = [];
 		thumbs.forEach(function (thumb) {
-			thumb.addEventListener('click', function (event) {
+			var fn = function (event) {
 				var targetIndex = parseInt(event.currentTarget.getAttribute('data-index'), 10);
 				if (targetIndex === current || animating) return;
 				var direction = targetIndex > current ? 1 : -1;
 				navigate(direction, targetIndex);
-			});
+			};
+			thumb.addEventListener('click', fn);
+			handlers.push({ el: thumb, fn: fn });
 		});
+		return handlers;
 	}
 
 	function initAll(root) {
+		cleanupStale();
 		var scope = root || document;
 		scope.querySelectorAll('.crisp-header').forEach(initCrispLoading);
 	}
@@ -196,7 +229,8 @@
 	}
 
 	if (window.elementorFrontend && window.elementorFrontend.hooks) {
-		var initFromDoc = function () { initAll(document); };
-		window.elementorFrontend.hooks.addAction('frontend/element_ready/global', initFromDoc);
+		window.elementorFrontend.hooks.addAction('frontend/init', function () {
+			initAll(document);
+		});
 	}
 })();

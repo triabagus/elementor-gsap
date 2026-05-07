@@ -7,6 +7,8 @@
 		chars: { duration: 0.4, stagger: 0.01 },
 	};
 
+	var instances = new Map();
+
 	function isEditorPreview() {
 		return !!(window.elementorFrontend
 			&& typeof window.elementorFrontend.isEditMode === 'function'
@@ -22,14 +24,36 @@
 		return true;
 	}
 
+	function destroyInstance(heading) {
+		var inst = instances.get(heading);
+		if (!inst) return;
+		if (inst.tween) { try { inst.tween.kill(); } catch (_) {} }
+		if (inst.scrollTrigger) { try { inst.scrollTrigger.kill(); } catch (_) {} }
+		if (inst.split && typeof inst.split.revert === 'function') {
+			try { inst.split.revert(); } catch (_) {}
+		}
+		if (window.gsap) { try { gsap.killTweensOf(heading); } catch (_) {} }
+		instances.delete(heading);
+		delete heading.dataset.emtInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, heading) {
+			if (!heading.isConnected) destroyInstance(heading);
+		});
+	}
+
 	function initOne(heading) {
-		if (heading.dataset.emtInit === '1') return;
+		if (heading.dataset.emtInit === '1') {
+			destroyInstance(heading);
+		}
 		heading.dataset.emtInit = '1';
 
-		// Editor: tampilkan teks utuh tanpa animasi
+		// Editor: tampilkan teks utuh tanpa animasi (no SplitText, no ScrollTrigger).
 		if (isEditorPreview()) {
 			heading.style.visibility = 'visible';
 			heading.style.opacity = '1';
+			instances.set(heading, { editor: true });
 			return;
 		}
 
@@ -65,7 +89,9 @@
 		var startStr = heading.dataset.emtStart || 'clamp(top 80%)';
 		var once = heading.dataset.emtOnce !== 'false';
 
-		SplitText.create(heading, {
+		var inst = { split: null, tween: null, scrollTrigger: null };
+
+		inst.split = SplitText.create(heading, {
 			type: typesToSplit.join(','),
 			mask: 'lines',
 			autoSplit: true,
@@ -76,7 +102,7 @@
 				var targets = instance[type];
 				if (!targets || !targets.length) return null;
 
-				return gsap.from(targets, {
+				inst.tween = gsap.from(targets, {
 					yPercent: yPercent,
 					duration: duration,
 					stagger: stagger,
@@ -88,13 +114,24 @@
 						toggleActions: once ? 'play none none none' : 'play none none reset',
 					},
 				});
+				if (inst.tween && inst.tween.scrollTrigger) {
+					inst.scrollTrigger = inst.tween.scrollTrigger;
+				}
+				return inst.tween;
 			},
 		});
+
+		instances.set(heading, inst);
 	}
 
 	function initAll(scope) {
+		cleanupStale();
 		var root = scope || document;
 		root.querySelectorAll('[data-split="heading"]').forEach(initOne);
+		// Layout may have shifted (new widget added) — recompute trigger positions.
+		if (window.ScrollTrigger && typeof ScrollTrigger.refresh === 'function') {
+			try { ScrollTrigger.refresh(); } catch (_) {}
+		}
 	}
 
 	function bootstrap() {
