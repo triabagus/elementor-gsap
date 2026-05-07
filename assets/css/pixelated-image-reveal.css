@@ -1,0 +1,68 @@
+.pixelated-image-card {
+	background-color: var(--egsap-pir-bg, #1a1a1a);
+	color: var(--egsap-pir-pixel, #f4f4f4);
+	border-radius: .5em;
+	width: 100%;
+	max-width: 100%;
+	position: relative;
+	overflow: hidden;
+	display: block;
+	cursor: pointer;
+}
+
+.pixelated-image-card__before {
+	display: block;
+	width: 100%;
+	padding-top: 100%;
+}
+
+.pixelated-image-card__default,
+.pixelated-image-card__img,
+.pixelated-image-card__active,
+.pixelated-image-card__pixels {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.pixelated-image-card__img {
+	object-fit: cover;
+	display: block;
+}
+
+.pixelated-image-card__active {
+	display: none;
+	pointer-events: none;
+}
+
+.pixelated-image-card__pixels {
+	pointer-events: none;
+}
+
+.pixelated-image-card__pixel {
+	background-color: currentColor;
+	width: 100%;
+	height: 100%;
+	display: none;
+	position: absolute;
+}
+
+/* Editor preview badge — kasih hint visual bahwa widget ini interaktif di frontend */
+.pixelated-image-card.egsap-edit-mode::after {
+	content: 'Pixelated Image Reveal';
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	z-index: 999;
+	background: rgba(0, 0, 0, 0.75);
+	color: #fff;
+	padding: 4px 10px;
+	border-radius: 4px;
+	font-size: 11px;
+	letter-spacing: 0.05em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-weight: 500;
+	pointer-events: none;
+}

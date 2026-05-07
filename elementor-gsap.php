@@ -108,6 +108,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/draggable-infinite-slider.css',
 		'assets/css/pixelated-transition.css',
 		'assets/css/button-draw-underline.css',
+		'assets/css/pixelated-image-reveal.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -115,6 +116,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/draggable-infinite-slider.js',
 		'assets/js/pixelated-transition.js',
 		'assets/js/button-draw-underline.js',
+		'assets/js/pixelated-image-reveal.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-pixelated-transition-template.php',
@@ -122,6 +124,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-masked-text-reveal-widget.php',
 		'widgets/class-draggable-infinite-slider-widget.php',
 		'widgets/class-button-draw-underline-widget.php',
+		'widgets/class-pixelated-image-reveal-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -245,6 +248,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-button-draw-underline-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Button_Draw_Underline_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-pixelated-image-reveal-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Pixelated_Image_Reveal_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -314,6 +320,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/button-draw-underline.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-pixelated-image-reveal',
+			ELEMENTOR_GSAP_URL . 'assets/js/pixelated-image-reveal.js',
+			[ 'gsap' ],
+			elementor_gsap_asset_ver( 'assets/js/pixelated-image-reveal.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -358,6 +371,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/button-draw-underline.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/button-draw-underline.css' )
+		);
+		wp_register_style(
+			'elementor-pixelated-image-reveal',
+			ELEMENTOR_GSAP_URL . 'assets/css/pixelated-image-reveal.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/pixelated-image-reveal.css' )
 		);
 	} );
 } );
