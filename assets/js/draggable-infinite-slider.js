@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	var instances = new Map();
+
 	function isEditorPreview() {
 		return !!(window.elementorFrontend
 			&& typeof window.elementorFrontend.isEditMode === 'function'
@@ -17,12 +19,60 @@
 		return true;
 	}
 
+	function destroyInstance(root) {
+		var inst = instances.get(root);
+		if (!inst) return;
+		if (inst.onResize) window.removeEventListener('resize', inst.onResize);
+		if (inst.mq && inst.onMediaChange) {
+			if (typeof inst.mq.removeEventListener === 'function') {
+				inst.mq.removeEventListener('change', inst.onMediaChange);
+			} else if (typeof inst.mq.removeListener === 'function') {
+				inst.mq.removeListener(inst.onMediaChange);
+			}
+		}
+		(inst.slideClickHandlers || []).forEach(function (h) {
+			if (h.el && h.fn) h.el.removeEventListener('click', h.fn);
+		});
+		if (inst.nextHandler && inst.nextButton) {
+			inst.nextButton.removeEventListener('click', inst.nextHandler);
+		}
+		if (inst.prevHandler && inst.prevButton) {
+			inst.prevButton.removeEventListener('click', inst.prevHandler);
+		}
+		if (inst.draggable && typeof inst.draggable.kill === 'function') {
+			try { inst.draggable.kill(); } catch (_) {}
+		}
+		if (inst.timeline && typeof inst.timeline.kill === 'function') {
+			try { inst.timeline.kill(); } catch (_) {}
+		}
+		if (window.gsap && inst.slides) {
+			try { gsap.killTweensOf(inst.slides); } catch (_) {}
+		}
+		if (inst.context && typeof inst.context.revert === 'function') {
+			try { inst.context.revert(); } catch (_) {}
+		}
+		instances.delete(root);
+		delete root.dataset.dgInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, root) {
+			if (!root.isConnected) destroyInstance(root);
+		});
+	}
+
 	function initOne(root) {
-		if (!root || root.dataset.dgInit === '1') return;
+		if (!root) return;
+		if (root.dataset.dgInit === '1') {
+			destroyInstance(root);
+		}
 		root.dataset.dgInit = '1';
 
 		// Editor: keep static, no draggable / loop
-		if (isEditorPreview()) return;
+		if (isEditorPreview()) {
+			instances.set(root, { editor: true });
+			return;
+		}
 
 		if (!ensurePlugins()) {
 			console.warn('GSAP / Draggable belum dimuat untuk Draggable Infinite Slider.');
@@ -98,7 +148,22 @@
 			mq.addListener(onMediaChange);
 		}
 
-		var loop = horizontalLoop(slides, {
+		var inst = {
+			slides: slides,
+			mq: mq,
+			onMediaChange: onMediaChange,
+			onResize: null,
+			timeline: null,
+			draggable: null,
+			context: null,
+			nextButton: nextButton,
+			prevButton: prevButton,
+			nextHandler: null,
+			prevHandler: null,
+			slideClickHandlers: [],
+		};
+
+		var loopResult = horizontalLoop(slides, {
 			paused: true,
 			draggable: true,
 			center: centerMode,
@@ -108,27 +173,36 @@
 				applyActive(element, index, true);
 			},
 		});
+		var loop = loopResult.timeline;
+		inst.timeline = loop;
+		inst.draggable = loop && loop.draggable ? loop.draggable : null;
+		inst.onResize = loopResult.onResize;
+		inst.context = loopResult.context;
 
 		function mapClickIndex(i) {
 			return useNextForActive ? (i - 1) : i;
 		}
 
 		slides.forEach(function (slide, i) {
-			slide.addEventListener('click', function () {
+			var fn = function () {
 				if (slide.classList.contains('active')) return;
 				loop.toIndex(mapClickIndex(i), { ease: 'power3', duration: duration });
-			});
+			};
+			slide.addEventListener('click', fn);
+			inst.slideClickHandlers.push({ el: slide, fn: fn });
 		});
 
 		if (nextButton) {
-			nextButton.addEventListener('click', function () {
+			inst.nextHandler = function () {
 				loop.next({ ease: 'power3', duration: duration });
-			});
+			};
+			nextButton.addEventListener('click', inst.nextHandler);
 		}
 		if (prevButton) {
-			prevButton.addEventListener('click', function () {
+			inst.prevHandler = function () {
 				loop.previous({ ease: 'power3', duration: duration });
-			});
+			};
+			prevButton.addEventListener('click', inst.prevHandler);
 		}
 
 		if (!currentEl && slides[0]) {
@@ -136,13 +210,16 @@
 			currentIndex = 0;
 			applyActive(currentEl, currentIndex, false);
 		}
+
+		instances.set(root, inst);
 	}
 
 	function horizontalLoop(items, config) {
 		var timeline;
+		var onResizeRef;
 		items = gsap.utils.toArray(items);
 		config = config || {};
-		gsap.context(function () {
+		var ctx = gsap.context(function () {
 			var onChange = config.onChange,
 				lastIndex = 0,
 				tl = gsap.timeline({
@@ -234,6 +311,7 @@
 			populateTimeline();
 			populateOffsets();
 			window.addEventListener('resize', onResize);
+			onResizeRef = onResize;
 
 			function toIndex(index, vars) {
 				vars = vars || {};
@@ -318,12 +396,12 @@
 			lastIndex = curIndex;
 			if (onChange) onChange(items[curIndex], curIndex);
 			timeline = tl;
-			return function () { window.removeEventListener('resize', onResize); };
 		});
-		return timeline;
+		return { timeline: timeline, onResize: onResizeRef, context: ctx };
 	}
 
 	function initAll(scope) {
+		cleanupStale();
 		var root = scope || document;
 		root.querySelectorAll('[data-egsap-slider]').forEach(initOne);
 	}

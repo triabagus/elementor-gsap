@@ -11,6 +11,14 @@
 	];
 
 	var pluginsRegistered = false;
+	var instances = new Map();
+	var nextIndex = null;
+
+	function isEditorPreview() {
+		return !!(window.elementorFrontend
+			&& typeof window.elementorFrontend.isEditMode === 'function'
+			&& window.elementorFrontend.isEditMode());
+	}
 
 	function ensurePlugin() {
 		if (typeof window.gsap === 'undefined') return false;
@@ -29,11 +37,32 @@
 		});
 	}
 
-	// Shared cycle index for "random" mode (cycle through all variants across hovers)
-	var nextIndex = null;
+	function destroyInstance(container) {
+		var inst = instances.get(container);
+		if (!inst) return;
+		if (inst.enterTween) { try { inst.enterTween.kill(); } catch (_) {} }
+		if (inst.leaveTween) { try { inst.leaveTween.kill(); } catch (_) {} }
+		if (inst.box) {
+			var path = inst.box.querySelector('path');
+			if (path && window.gsap) { try { gsap.killTweensOf(path); } catch (_) {} }
+			inst.box.innerHTML = '';
+		}
+		if (inst.onEnter) container.removeEventListener('mouseenter', inst.onEnter);
+		if (inst.onLeave) container.removeEventListener('mouseleave', inst.onLeave);
+		instances.delete(container);
+		delete container.dataset.drawInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, container) {
+			if (!container.isConnected) destroyInstance(container);
+		});
+	}
 
 	function initOne(container) {
-		if (container.dataset.drawInit === '1') return;
+		if (container.dataset.drawInit === '1') {
+			destroyInstance(container);
+		}
 		container.dataset.drawInit = '1';
 
 		if (!ensurePlugin()) {
@@ -49,8 +78,36 @@
 		if (isNaN(duration)) duration = 0.5;
 		var ease = container.dataset.drawEase || 'power2.inOut';
 
-		var enterTween = null;
-		var leaveTween = null;
+		var inst = {
+			box: box,
+			enterTween: null,
+			leaveTween: null,
+			onEnter: null,
+			onLeave: null,
+		};
+
+		// Editor preview: render static underline (no hover animation) so style
+		// changes apply cleanly without animation conflicts.
+		if (isEditorPreview()) {
+			var staticIdx;
+			if (variant === 'random') {
+				staticIdx = 4; // straight sweep — least visually distracting
+			} else {
+				var n = parseInt(variant, 10);
+				staticIdx = (!isNaN(n) && n >= 1 && n <= svgVariants.length) ? (n - 1) : 4;
+			}
+			box.innerHTML = svgVariants[staticIdx];
+			var svgStatic = box.querySelector('svg');
+			if (svgStatic) {
+				decorateSVG(svgStatic);
+				var pathStatic = svgStatic.querySelector('path');
+				if (pathStatic) {
+					try { gsap.set(pathStatic, { drawSVG: '100%' }); } catch (_) {}
+				}
+			}
+			instances.set(container, inst);
+			return;
+		}
 
 		function pickIndex() {
 			if (variant !== 'random') {
@@ -67,9 +124,9 @@
 			return idx;
 		}
 
-		container.addEventListener('mouseenter', function () {
-			if (enterTween && enterTween.isActive()) return;
-			if (leaveTween && leaveTween.isActive()) leaveTween.kill();
+		inst.onEnter = function () {
+			if (inst.enterTween && inst.enterTween.isActive()) return;
+			if (inst.leaveTween && inst.leaveTween.isActive()) inst.leaveTween.kill();
 
 			var idx = pickIndex();
 			box.innerHTML = svgVariants[idx];
@@ -81,40 +138,46 @@
 			if (!path) return;
 
 			gsap.set(path, { drawSVG: '0%' });
-			enterTween = gsap.to(path, {
+			inst.enterTween = gsap.to(path, {
 				duration: duration,
 				drawSVG: '100%',
 				ease: ease,
-				onComplete: function () { enterTween = null; },
+				onComplete: function () { inst.enterTween = null; },
 			});
-		});
+		};
 
-		container.addEventListener('mouseleave', function () {
+		inst.onLeave = function () {
 			var path = box.querySelector('path');
 			if (!path) return;
 
 			var playOut = function () {
-				if (leaveTween && leaveTween.isActive()) return;
-				leaveTween = gsap.to(path, {
+				if (inst.leaveTween && inst.leaveTween.isActive()) return;
+				inst.leaveTween = gsap.to(path, {
 					duration: duration,
 					drawSVG: '100% 100%',
 					ease: ease,
 					onComplete: function () {
-						leaveTween = null;
+						inst.leaveTween = null;
 						box.innerHTML = '';
 					},
 				});
 			};
 
-			if (enterTween && enterTween.isActive()) {
-				enterTween.eventCallback('onComplete', playOut);
+			if (inst.enterTween && inst.enterTween.isActive()) {
+				inst.enterTween.eventCallback('onComplete', playOut);
 			} else {
 				playOut();
 			}
-		});
+		};
+
+		container.addEventListener('mouseenter', inst.onEnter);
+		container.addEventListener('mouseleave', inst.onLeave);
+
+		instances.set(container, inst);
 	}
 
 	function initAll(scope) {
+		cleanupStale();
 		var root = scope || document;
 		root.querySelectorAll('[data-draw-line]').forEach(initOne);
 	}

@@ -4,8 +4,8 @@ Tags: elementor, gsap, loading animation, preloader, page transition, hls player
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.0
-Elementor tested up to: 4.0.4
+Stable tag: 1.2.1
+Elementor tested up to: 4.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

@@ -1,6 +1,14 @@
 (function () {
 	'use strict';
 
+	var instances = new Map();
+
+	function isEditorPreview() {
+		return !!(window.elementorFrontend
+			&& typeof window.elementorFrontend.isEditMode === 'function'
+			&& window.elementorFrontend.isEditMode());
+	}
+
 	function readyIfIdle(player, pendingPlay) {
 		if (!pendingPlay
 			&& player.getAttribute('data-player-activated') !== 'true'
@@ -121,8 +129,47 @@
 		});
 	}
 
+	function destroyInstance(player) {
+		var inst = instances.get(player);
+		if (!inst) return;
+
+		if (inst.io) {
+			try { inst.io.disconnect(); } catch (_) {}
+		}
+		if (inst.video) {
+			(inst.videoListeners || []).forEach(function (l) {
+				try { inst.video.removeEventListener(l.type, l.fn); } catch (_) {}
+			});
+			try { inst.video.pause(); } catch (_) {}
+			try { inst.video.removeAttribute('src'); inst.video.load(); } catch (_) {}
+		}
+		if (inst.clickHandler) {
+			try { player.removeEventListener('click', inst.clickHandler); } catch (_) {}
+		}
+		if (inst.pointerEnter) {
+			try { player.removeEventListener('pointerenter', inst.pointerEnter); } catch (_) {}
+		}
+		if (inst.pointerLeave) {
+			try { player.removeEventListener('pointerleave', inst.pointerLeave); } catch (_) {}
+		}
+		if (inst.hls) {
+			try { inst.hls.destroy(); } catch (_) {}
+		}
+		player._hls = null;
+		instances.delete(player);
+		delete player.dataset.bunnyInit;
+	}
+
+	function cleanupStale() {
+		instances.forEach(function (_inst, player) {
+			if (!player.isConnected) destroyInstance(player);
+		});
+	}
+
 	function initPlayer(player) {
-		if (player.dataset.bunnyInit === '1') return;
+		if (player.dataset.bunnyInit === '1') {
+			destroyInstance(player);
+		}
 		player.dataset.bunnyInit = '1';
 
 		var src = player.getAttribute('data-player-src');
@@ -130,6 +177,16 @@
 
 		var video = player.querySelector('video');
 		if (!video) return;
+
+		// Editor preview: tampilkan placeholder + ratio default, jangan load HLS / autoplay.
+		if (isEditorPreview()) {
+			try { video.pause(); } catch (_) {}
+			try { video.removeAttribute('src'); video.load(); } catch (_) {}
+			player.setAttribute('data-player-status', 'ready');
+			player.setAttribute('data-player-activated', 'false');
+			instances.set(player, { editor: true });
+			return;
+		}
 
 		try { video.pause(); } catch (_) {}
 		try { video.removeAttribute('src'); video.load(); } catch (_) {}
@@ -151,6 +208,21 @@
 		var autoplay   = player.getAttribute('data-player-autoplay') === 'true';
 
 		var pendingPlay = false;
+
+		var inst = {
+			video: video,
+			videoListeners: [],
+			clickHandler: null,
+			pointerEnter: null,
+			pointerLeave: null,
+			hls: null,
+			io: null,
+		};
+
+		function bindVideo(type, fn) {
+			video.addEventListener(type, fn);
+			inst.videoListeners.push({ type: type, fn: fn });
+		}
 
 		video.muted = !!autoplay;
 		if (autoplay) video.loop = true;
@@ -175,12 +247,14 @@
 					video.preload = prev || '';
 				};
 				video.addEventListener('loadedmetadata', onMeta2, { once: true });
+				inst.videoListeners.push({ type: 'loadedmetadata', fn: onMeta2 });
 				video.src = src;
 			}
 		}
 
 		function fetchMetaOnce() {
 			getSourceMeta(src, canUseHlsJs).then(function (meta) {
+				if (!player.isConnected) return;
 				if (meta.width && meta.height) setBeforeRatio(player, updateSize, meta.width, meta.height);
 				readyIfIdle(player, pendingPlay);
 			});
@@ -193,20 +267,22 @@
 			if (isAttached) return;
 			isAttached = true;
 
-			if (player._hls) {
-				try { player._hls.destroy(); } catch (_) {}
-				player._hls = null;
+			if (inst.hls) {
+				try { inst.hls.destroy(); } catch (_) {}
+				inst.hls = null;
 			}
 
 			if (isSafariNative) {
 				video.preload = (isLazyTrue || isLazyMeta) ? 'auto' : video.preload;
 				video.src = src;
-				video.addEventListener('loadedmetadata', function () {
+				var onSafariMeta = function () {
 					readyIfIdle(player, pendingPlay);
 					if (updateSize === 'true') {
 						setBeforeRatio(player, updateSize, video.videoWidth, video.videoHeight);
 					}
-				}, { once: true });
+				};
+				video.addEventListener('loadedmetadata', onSafariMeta, { once: true });
+				inst.videoListeners.push({ type: 'loadedmetadata', fn: onSafariMeta });
 			} else if (canUseHlsJs) {
 				var hls = new Hls({ maxBufferLength: 10 });
 				hls.attachMedia(video);
@@ -221,6 +297,7 @@
 						}
 					}
 				});
+				inst.hls = hls;
 				player._hls = hls;
 			} else {
 				video.src = src;
@@ -254,20 +331,21 @@
 			player.setAttribute('data-player-muted', video.muted ? 'true' : 'false');
 		}
 
-		player.addEventListener('click', function (e) {
+		inst.clickHandler = function (e) {
 			var btn = e.target.closest('[data-player-control]');
 			if (!btn || !player.contains(btn)) return;
 			var type = btn.getAttribute('data-player-control');
 			if (type === 'play' || type === 'pause' || type === 'playpause') togglePlay();
 			else if (type === 'mute') toggleMute();
-		});
+		};
+		player.addEventListener('click', inst.clickHandler);
 
-		video.addEventListener('play',    function () { setActivated(true); setStatus('playing'); });
-		video.addEventListener('playing', function () { pendingPlay = false; setStatus('playing'); });
-		video.addEventListener('pause',   function () { pendingPlay = false; setStatus('paused'); });
-		video.addEventListener('waiting', function () { setStatus('loading'); });
-		video.addEventListener('canplay', function () { readyIfIdle(player, pendingPlay); });
-		video.addEventListener('ended',   function () { pendingPlay = false; setStatus('paused'); setActivated(false); });
+		bindVideo('play',    function () { setActivated(true); setStatus('playing'); });
+		bindVideo('playing', function () { pendingPlay = false; setStatus('playing'); });
+		bindVideo('pause',   function () { pendingPlay = false; setStatus('paused'); });
+		bindVideo('waiting', function () { setStatus('loading'); });
+		bindVideo('canplay', function () { readyIfIdle(player, pendingPlay); });
+		bindVideo('ended',   function () { pendingPlay = false; setStatus('paused'); setActivated(false); });
 
 		var ratioSet = false;
 		function maybeSetRatioOnce() {
@@ -279,20 +357,22 @@
 				ratioSet = true;
 			}
 		}
-		video.addEventListener('loadedmetadata', maybeSetRatioOnce);
-		video.addEventListener('loadeddata',    maybeSetRatioOnce);
-		video.addEventListener('playing',       maybeSetRatioOnce);
+		bindVideo('loadedmetadata', maybeSetRatioOnce);
+		bindVideo('loadeddata',     maybeSetRatioOnce);
+		bindVideo('playing',        maybeSetRatioOnce);
 
 		function setHover(state) {
 			if (player.getAttribute('data-player-hover') !== state) {
 				player.setAttribute('data-player-hover', state);
 			}
 		}
-		player.addEventListener('pointerenter', function () { setHover('active'); });
-		player.addEventListener('pointerleave', function () { setHover('idle'); });
+		inst.pointerEnter = function () { setHover('active'); };
+		inst.pointerLeave = function () { setHover('idle'); };
+		player.addEventListener('pointerenter', inst.pointerEnter);
+		player.addEventListener('pointerleave', inst.pointerLeave);
 
-		if (autoplay) {
-			var io = new IntersectionObserver(function (entries) {
+		if (autoplay && typeof IntersectionObserver !== 'undefined') {
+			inst.io = new IntersectionObserver(function (entries) {
 				entries.forEach(function (entry) {
 					var inView = entry.isIntersecting && entry.intersectionRatio > 0;
 					if (inView) {
@@ -310,11 +390,14 @@
 					}
 				});
 			}, { threshold: 0.1 });
-			io.observe(player);
+			inst.io.observe(player);
 		}
+
+		instances.set(player, inst);
 	}
 
 	function initAll(scope) {
+		cleanupStale();
 		var root = scope || document;
 		root.querySelectorAll('[data-bunny-player-init]').forEach(initPlayer);
 	}
