@@ -4,7 +4,7 @@ Tags: elementor, gsap, loading animation, preloader, page transition, hls player
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Elementor tested up to: 4.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -48,7 +48,9 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 
 6. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw and snap, plus thumbnail navigation, powered by GSAP Draggable + InertiaPlugin. Repeater for slides (image + caption), active-slide offset mode or center mode, animated "01 / 04" counter, prev/next buttons with corner overlay hover effect, and full per-instance styling.
 
-7. **Button Draw Button** - a draw button with svg line and use the attribute to specific which element should trigger the line drawing animation hover.
+7. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin). Choose between 6 hand-drawn underline variants or random cycle; duration, easing, color, and thickness configurable.
+
+8. **Button Character Stagger** — an Osmo-style button where each character slides up on hover with a staggered delay, paired with an inset background that shrinks on hover. Pure CSS transitions (no GSAP needed); stagger offset, duration, easing, character travel distance, hover inset, padding, max-width, radius, typography, and colors all configurable.
 ## Editor Preview
 
 While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
@@ -164,6 +166,10 @@ Make sure both `gsap-draggable` and `gsap-inertia` are loading. Check the browse
 Toggle **Animate Once Only** in the widget's Animation tab.
 
 == Changelog ==
+
+= 1.2.2 =
+
+* Added **Button Character Stagger** widget — Osmo-style hover-stagger button with per-character transition delay and shrinking inset background. Pure CSS animation, no GSAP dependency.
 
 = 1.2.0 =
 
