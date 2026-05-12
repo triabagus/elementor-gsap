@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Elementor GSAP with Osmo
  * Description: Ekstensi Elementor bertenaga GSAP bergaya Osmo.
- * Version: 1.2.2
+ * Version: 1.2.1
  * Author: Creativetria
  * Requires Plugins: elementor
  * Elementor tested up to: 4.0.7
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ELEMENTOR_GSAP_VERSION', '1.2.2' );
+define( 'ELEMENTOR_GSAP_VERSION', '1.2.1' );
 define( 'ELEMENTOR_GSAP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ELEMENTOR_GSAP_URL', plugin_dir_url( __FILE__ ) );
 define( 'ELEMENTOR_GSAP_GSAP_VER', '3.15.0' );
@@ -109,6 +109,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/pixelated-transition.css',
 		'assets/css/button-draw-underline.css',
 		'assets/css/button-character-stagger.css',
+		'assets/css/looping-words-selector.css',
 		'assets/css/pixelated-image-reveal.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
@@ -118,6 +119,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/pixelated-transition.js',
 		'assets/js/button-draw-underline.js',
 		'assets/js/button-character-stagger.js',
+		'assets/js/looping-words-selector.js',
 		'assets/js/pixelated-image-reveal.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
@@ -127,6 +129,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-draggable-infinite-slider-widget.php',
 		'widgets/class-button-draw-underline-widget.php',
 		'widgets/class-button-character-stagger-widget.php',
+		'widgets/class-looping-words-selector-widget.php',
 		'widgets/class-pixelated-image-reveal-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
@@ -255,6 +258,9 @@ add_action( 'plugins_loaded', function () {
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-button-character-stagger-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Button_Character_Stagger_Widget() );
 
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-looping-words-selector-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Looping_Words_Selector_Widget() );
+
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-pixelated-image-reveal-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Pixelated_Image_Reveal_Widget() );
 	} );
@@ -334,6 +340,13 @@ add_action( 'plugins_loaded', function () {
 			true
 		);
 		wp_register_script(
+			'elementor-looping-words-selector',
+			ELEMENTOR_GSAP_URL . 'assets/js/looping-words-selector.js',
+			[ 'gsap' ],
+			elementor_gsap_asset_ver( 'assets/js/looping-words-selector.js' ),
+			true
+		);
+		wp_register_script(
 			'elementor-pixelated-image-reveal',
 			ELEMENTOR_GSAP_URL . 'assets/js/pixelated-image-reveal.js',
 			[ 'gsap' ],
@@ -390,6 +403,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/button-character-stagger.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/button-character-stagger.css' )
+		);
+		wp_register_style(
+			'elementor-looping-words-selector',
+			ELEMENTOR_GSAP_URL . 'assets/css/looping-words-selector.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/looping-words-selector.css' )
 		);
 		wp_register_style(
 			'elementor-pixelated-image-reveal',

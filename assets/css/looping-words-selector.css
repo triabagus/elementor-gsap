@@ -1,0 +1,97 @@
+.looping-words {
+	--lws-bg: #e6e2f7;
+	--lws-edge-color: #2600ff;
+	--lws-edge-size: 0.035em;
+	--lws-edge-length: 0.125em;
+	--lws-selector-height: 0.9em;
+
+	height: 2.7em;
+	padding-left: 0.1em;
+	padding-right: 0.1em;
+	font-size: 10em;
+	font-weight: 700;
+	line-height: 0.9;
+	position: relative;
+}
+
+.looping-words__containers {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.looping-words__list {
+	text-align: center;
+	text-transform: uppercase;
+	white-space: nowrap;
+	flex-flow: column;
+	align-items: center;
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+	position: relative;
+	will-change: transform;
+}
+
+.looping-words__item {
+	width: 100%;
+	text-align: center;
+}
+
+.looping-words__p {
+	margin: 0;
+}
+
+.looping-words__fade {
+	pointer-events: none;
+	background-image: linear-gradient(
+		var(--lws-bg) 5%,
+		transparent 40%,
+		transparent 60%,
+		var(--lws-bg) 95%
+	);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.looping-words__selector {
+	pointer-events: none;
+	width: 100%;
+	height: var(--lws-selector-height);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.looping-words__edge {
+	border-top: var(--lws-edge-size) solid var(--lws-edge-color);
+	border-left: var(--lws-edge-size) solid var(--lws-edge-color);
+	width: var(--lws-edge-length);
+	height: var(--lws-edge-length);
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.looping-words__edge.is--2 {
+	left: auto;
+	right: 0;
+	transform: rotate(90deg);
+}
+
+.looping-words__edge.is--3 {
+	inset: auto 0 0 auto;
+	transform: rotate(180deg);
+}
+
+.looping-words__edge.is--4 {
+	top: auto;
+	bottom: 0;
+	transform: rotate(270deg);
+}
