@@ -53,6 +53,8 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 8. **Button Character Stagger** — an Osmo-style button where each character slides up on hover with a staggered delay, paired with an inset background that shrinks on hover. Pure CSS transitions (no GSAP needed); stagger offset, duration, easing, character travel distance, hover inset, padding, max-width, radius, typography, and colors all configurable.
 
 9. **Looping Words with Selector** — a vertical word carousel where the visible word is highlighted by an animated corner-edge "selector" that snaps to the word's width. Powered by GSAP. Repeater for the word list, configurable word/selector durations, easing (Elastic / Bounce / Expo presets), fade gradient color, edge color/thickness/length, and selector height.
+
+10. **Image Scroll** — a fixed-size frame that reveals a tall/wide image by scrolling its content on hover or via mouse-tracking. Useful for long screenshots, full-page mockups, before/after panoramas. Direction (vertical / horizontal), trigger (hover / mouse-track), reverse, duration, easing, frame height, max-width, border radius, border, shadow, and optional centered overlay icon — all controllable. Pure CSS transitions; no GSAP dependency.
 ## Editor Preview
 
 While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
@@ -173,6 +175,7 @@ Toggle **Animate Once Only** in the widget's Animation tab.
 
 * Added **Button Character Stagger** widget — Osmo-style hover-stagger button with per-character transition delay and shrinking inset background. Pure CSS animation, no GSAP dependency.
 * Added **Looping Words with Selector** widget — vertical word carousel highlighted by an animated corner-edge selector that snaps to each word's width. Powered by GSAP (Elastic / Bounce / Expo easing supported). Words list, durations, easing, fade color, and edge styling all configurable.
+* Added **Image Scroll** widget — frame that reveals a tall or wide image by scrolling on hover or following the mouse pointer. Vertical/horizontal direction, hover/mouse-track triggers, reverse mode, duration, easing, frame height, max-width, radius, border, shadow, and optional overlay icon. Pure CSS transitions, no GSAP dependency.
 
 = 1.2.0 =
 

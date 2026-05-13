@@ -110,6 +110,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/button-draw-underline.css',
 		'assets/css/button-character-stagger.css',
 		'assets/css/looping-words-selector.css',
+		'assets/css/image-scroll.css',
 		'assets/css/pixelated-image-reveal.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
@@ -120,6 +121,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/button-draw-underline.js',
 		'assets/js/button-character-stagger.js',
 		'assets/js/looping-words-selector.js',
+		'assets/js/image-scroll.js',
 		'assets/js/pixelated-image-reveal.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
@@ -130,6 +132,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-button-draw-underline-widget.php',
 		'widgets/class-button-character-stagger-widget.php',
 		'widgets/class-looping-words-selector-widget.php',
+		'widgets/class-image-scroll-widget.php',
 		'widgets/class-pixelated-image-reveal-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
@@ -261,6 +264,9 @@ add_action( 'plugins_loaded', function () {
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-looping-words-selector-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Looping_Words_Selector_Widget() );
 
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-image-scroll-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Image_Scroll_Widget() );
+
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-pixelated-image-reveal-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Pixelated_Image_Reveal_Widget() );
 	} );
@@ -347,6 +353,13 @@ add_action( 'plugins_loaded', function () {
 			true
 		);
 		wp_register_script(
+			'elementor-image-scroll',
+			ELEMENTOR_GSAP_URL . 'assets/js/image-scroll.js',
+			[],
+			elementor_gsap_asset_ver( 'assets/js/image-scroll.js' ),
+			true
+		);
+		wp_register_script(
 			'elementor-pixelated-image-reveal',
 			ELEMENTOR_GSAP_URL . 'assets/js/pixelated-image-reveal.js',
 			[ 'gsap' ],
@@ -409,6 +422,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/looping-words-selector.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/looping-words-selector.css' )
+		);
+		wp_register_style(
+			'elementor-image-scroll',
+			ELEMENTOR_GSAP_URL . 'assets/css/image-scroll.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/image-scroll.css' )
 		);
 		wp_register_style(
 			'elementor-pixelated-image-reveal',
