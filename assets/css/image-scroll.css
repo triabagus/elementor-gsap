@@ -1,0 +1,106 @@
+.image-scroll {
+	--is-duration: 3s;
+	--is-easing: cubic-bezier(0.4, 0, 0.2, 1);
+	--is-scroll: 0px;
+	--is-radius: 0;
+
+	position: relative;
+	display: block;
+	width: 100%;
+	overflow: hidden;
+	border-radius: var(--is-radius);
+	background-color: #f5f5f5;
+	cursor: pointer;
+	isolation: isolate;
+}
+
+.image-scroll__link {
+	display: block;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	color: inherit;
+}
+
+.image-scroll__image {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-width: none;
+	transform: translate3d(0, 0, 0);
+	transition: transform var(--is-duration) var(--is-easing);
+	will-change: transform;
+}
+
+/* Horizontal: image is sized by height instead of width, so it overflows on X axis. */
+.image-scroll[data-direction="horizontal"] .image-scroll__image {
+	width: auto;
+	height: 100%;
+}
+
+/* Hover trigger — translate by the JS-computed scroll distance. */
+.image-scroll[data-trigger="hover"][data-direction="vertical"]:hover .image-scroll__image,
+.image-scroll[data-trigger="hover"][data-direction="vertical"]:focus-within .image-scroll__image {
+	transform: translate3d(0, var(--is-scroll), 0);
+}
+
+.image-scroll[data-trigger="hover"][data-direction="horizontal"]:hover .image-scroll__image,
+.image-scroll[data-trigger="hover"][data-direction="horizontal"]:focus-within .image-scroll__image {
+	transform: translate3d(var(--is-scroll), 0, 0);
+}
+
+/* Mouse-track trigger — JS sets the transform inline each frame, so use a snappy transition. */
+.image-scroll[data-trigger="mouse-track"] .image-scroll__image {
+	transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Reverse direction — start image at the end, scroll back to start on hover. */
+.image-scroll[data-reverse="1"][data-direction="vertical"] .image-scroll__image {
+	transform: translate3d(0, var(--is-scroll), 0);
+}
+
+.image-scroll[data-reverse="1"][data-direction="horizontal"] .image-scroll__image {
+	transform: translate3d(var(--is-scroll), 0, 0);
+}
+
+.image-scroll[data-reverse="1"][data-trigger="hover"]:hover .image-scroll__image,
+.image-scroll[data-reverse="1"][data-trigger="hover"]:focus-within .image-scroll__image {
+	transform: translate3d(0, 0, 0);
+}
+
+/* Overlay (optional). Fades out on hover. */
+.image-scroll__overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+	z-index: 1;
+}
+
+.image-scroll:hover .image-scroll__overlay {
+	opacity: 0;
+}
+
+.image-scroll__overlay-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3em;
+	height: 3em;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	font-size: 1em;
+}
+
+.image-scroll__overlay-icon svg,
+.image-scroll__overlay-icon i {
+	width: 1em;
+	height: 1em;
+	font-size: 1.2em;
+	fill: currentColor;
+}
