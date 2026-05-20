@@ -4,7 +4,7 @@ Tags: elementor, gsap, loading animation, preloader, page transition, hls player
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Elementor tested up to: 4.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -55,6 +55,11 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 9. **Looping Words with Selector** — a vertical word carousel where the visible word is highlighted by an animated corner-edge "selector" that snaps to the word's width. Powered by GSAP. Repeater for the word list, configurable word/selector durations, easing (Elastic / Bounce / Expo presets), fade gradient color, edge color/thickness/length, and selector height.
 
 10. **Image Scroll** — a fixed-size frame that reveals a tall/wide image by scrolling its content on hover or via mouse-tracking. Useful for long screenshots, full-page mockups, before/after panoramas. Direction (vertical / horizontal), trigger (hover / mouse-track), reverse, duration, easing, frame height, max-width, border radius, border, shadow, and optional centered overlay icon — all controllable. Pure CSS transitions; no GSAP dependency.
+
+11. **Side Navigation Wipe** — a fixed-position trigger button that opens a right-side drawer menu with a staggered, three-panel wipe effect (Osmo-style). Powered by GSAP + CustomEase. Menu items repeater (label + eyebrow + link), socials repeater, Escape key to close, ARIA-expanded sync, configurable trigger position, panel colors (3 layers), overlay color, menu width/radius, and typography per text role. Editor preview renders menu inline so content stays editable.
+
+12. **Fixed Underlay Navigation** — a fixed-position trigger button where the entire page content slides left to reveal a navigation menu that was sitting *underneath* the whole time (vs. Side Navigation Wipe which slides a drawer over the content). Powered by GSAP + CustomEase with the "easeReverse" technique from the GSAP 3.15 announcement, so the open and close motions feel distinct, and mid-animation interruptions stay responsive without snapping. Includes logo (default SVG / image upload / none), Menu/Close toggle with animated label flip + bars rotating into an X, large menu items repeater with current-item highlight, separate Socials and Quick Links columns at the bottom, decorative overlay borders + corner cutouts framing the menu edge, animated bottom-border scaleX, Escape/overlay-click to close, ARIA-expanded sync, and an auto-wrap fallback for the main content wrapper (or a custom CSS selector via the "Main Wrapper Selector" control). Fully configurable via CSS custom properties exposed as Elementor controls.
+
 ## Editor Preview
 
 While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
@@ -171,11 +176,16 @@ Toggle **Animate Once Only** in the widget's Animation tab.
 
 == Changelog ==
 
+= 1.2.2 =
+
+* Added **Fixed Underlay Navigation** widget — a *page-slides-over-fixed-menu* navigation (distinct from Side Navigation Wipe's *drawer-slides-in-over-page* pattern).
+
 = 1.2.1 =
 
 * Added **Button Character Stagger** widget — Osmo-style hover-stagger button with per-character transition delay and shrinking inset background. Pure CSS animation, no GSAP dependency.
 * Added **Looping Words with Selector** widget — vertical word carousel highlighted by an animated corner-edge selector that snaps to each word's width. Powered by GSAP (Elastic / Bounce / Expo easing supported). Words list, durations, easing, fade color, and edge styling all configurable.
 * Added **Image Scroll** widget — frame that reveals a tall or wide image by scrolling on hover or following the mouse pointer. Vertical/horizontal direction, hover/mouse-track triggers, reverse mode, duration, easing, frame height, max-width, radius, border, shadow, and optional overlay icon. Pure CSS transitions, no GSAP dependency.
+* Added **Side Navigation Wipe** widget — fixed Menu/Close trigger that opens an Osmo-style drawer with a three-panel staggered wipe (powered by GSAP + CustomEase). Menu items + socials repeaters, Escape-to-close, ARIA-expanded sync, configurable trigger offsets, panel colors, overlay, menu width/radius, and typography. Editor preview renders content inline.
 
 = 1.2.0 =
 

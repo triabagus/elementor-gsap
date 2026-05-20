@@ -2,17 +2,25 @@
 /**
  * Plugin Name: Elementor GSAP with Osmo
  * Description: Ekstensi Elementor bertenaga GSAP bergaya Osmo.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Creativetria
  * Requires Plugins: elementor
- * Elementor tested up to: 4.0.7
+ * Elementor tested up to: 4.0.8
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ELEMENTOR_GSAP_VERSION', '1.2.1' );
+define( 'ELEMENTOR_GSAP_VERSION', '1.2.2' );
+/**
+ * Asset revision — bump this string to force asset fingerprint to change and
+ * trigger a one-time cache purge across editor preview, browser, and Elementor
+ * CSS files, WITHOUT bumping the user-facing plugin version. Use it after
+ * non-version-worthy fixes (CSS tweaks, JS micro-fixes, etc.) when stale
+ * caches make the change invisible.
+ */
+define( 'ELEMENTOR_GSAP_ASSET_REVISION', '2' );
 define( 'ELEMENTOR_GSAP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ELEMENTOR_GSAP_URL', plugin_dir_url( __FILE__ ) );
 define( 'ELEMENTOR_GSAP_GSAP_VER', '3.15.0' );
@@ -89,9 +97,9 @@ function elementor_gsap_resolve_vendor( $kind ) {
 function elementor_gsap_asset_ver( $rel_path ) {
 	$abs = ELEMENTOR_GSAP_PATH . ltrim( $rel_path, '/' );
 	if ( file_exists( $abs ) ) {
-		return ELEMENTOR_GSAP_VERSION . '.' . filemtime( $abs );
+		return ELEMENTOR_GSAP_VERSION . '.r' . ELEMENTOR_GSAP_ASSET_REVISION . '.' . filemtime( $abs );
 	}
-	return ELEMENTOR_GSAP_VERSION;
+	return ELEMENTOR_GSAP_VERSION . '.r' . ELEMENTOR_GSAP_ASSET_REVISION;
 }
 
 /**
@@ -111,7 +119,9 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/button-character-stagger.css',
 		'assets/css/looping-words-selector.css',
 		'assets/css/image-scroll.css',
+		'assets/css/sidenav-wipe.css',
 		'assets/css/pixelated-image-reveal.css',
+		'assets/css/fixed-underlay-navigation.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -122,7 +132,9 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/button-character-stagger.js',
 		'assets/js/looping-words-selector.js',
 		'assets/js/image-scroll.js',
+		'assets/js/sidenav-wipe.js',
 		'assets/js/pixelated-image-reveal.js',
+		'assets/js/fixed-underlay-navigation.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-pixelated-transition-template.php',
@@ -133,7 +145,9 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-button-character-stagger-widget.php',
 		'widgets/class-looping-words-selector-widget.php',
 		'widgets/class-image-scroll-widget.php',
+		'widgets/class-sidenav-wipe-widget.php',
 		'widgets/class-pixelated-image-reveal-widget.php',
+		'widgets/class-fixed-underlay-navigation-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -149,20 +163,33 @@ function elementor_gsap_assets_fingerprint() {
 		$abs = ELEMENTOR_GSAP_PATH . $rel;
 		$mtimes[] = file_exists( $abs ) ? filemtime( $abs ) : 0;
 	}
-	return md5( ELEMENTOR_GSAP_VERSION . '|' . implode( '|', $mtimes ) );
+	return md5( ELEMENTOR_GSAP_VERSION . '|r' . ELEMENTOR_GSAP_ASSET_REVISION . '|' . implode( '|', $mtimes ) );
 }
 
 /**
- * Hapus cache CSS Elementor (per-post & global) — supaya next refresh user
- * langsung dapat style baru tanpa harus klik "Regenerate CSS".
+ * Hapus cache CSS Elementor (per-post & global) + cache lain yang mungkin
+ * menyimpan output stale, supaya next refresh user langsung dapat style baru
+ * tanpa harus klik "Regenerate CSS" atau hard-refresh manual.
  */
 function elementor_gsap_purge_elementor_cache() {
 	if ( ! class_exists( '\Elementor\Plugin' ) ) {
 		return;
 	}
 	$plugin = \Elementor\Plugin::$instance;
+
+	// 1) Files manager: hapus per-post CSS files & global CSS.
 	if ( $plugin && isset( $plugin->files_manager ) && method_exists( $plugin->files_manager, 'clear_cache' ) ) {
 		$plugin->files_manager->clear_cache();
+	}
+
+	// 2) Frontend assets cache (Elementor 3.10+) — hapus transient yang menyimpan
+	//    daftar widget per-post sehingga script/style dependency re-resolve.
+	delete_option( '_elementor_assets_data' );
+	delete_option( 'elementor_assets_data_version' );
+
+	// 3) Object cache: flush group Elementor jika support per-group flush.
+	if ( function_exists( 'wp_cache_flush_group' ) ) {
+		wp_cache_flush_group( 'elementor' );
 	}
 }
 
@@ -267,8 +294,14 @@ add_action( 'plugins_loaded', function () {
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-image-scroll-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Image_Scroll_Widget() );
 
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-sidenav-wipe-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Sidenav_Wipe_Widget() );
+
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-pixelated-image-reveal-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Pixelated_Image_Reveal_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-fixed-underlay-navigation-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Fixed_Underlay_Navigation_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -360,10 +393,24 @@ add_action( 'plugins_loaded', function () {
 			true
 		);
 		wp_register_script(
+			'elementor-sidenav-wipe',
+			ELEMENTOR_GSAP_URL . 'assets/js/sidenav-wipe.js',
+			[ 'gsap', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/sidenav-wipe.js' ),
+			true
+		);
+		wp_register_script(
 			'elementor-pixelated-image-reveal',
 			ELEMENTOR_GSAP_URL . 'assets/js/pixelated-image-reveal.js',
 			[ 'gsap' ],
 			elementor_gsap_asset_ver( 'assets/js/pixelated-image-reveal.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-fixed-underlay-navigation',
+			ELEMENTOR_GSAP_URL . 'assets/js/fixed-underlay-navigation.js',
+			[ 'gsap', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/fixed-underlay-navigation.js' ),
 			true
 		);
 	} );
@@ -430,10 +477,22 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/css/image-scroll.css' )
 		);
 		wp_register_style(
+			'elementor-sidenav-wipe',
+			ELEMENTOR_GSAP_URL . 'assets/css/sidenav-wipe.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/sidenav-wipe.css' )
+		);
+		wp_register_style(
 			'elementor-pixelated-image-reveal',
 			ELEMENTOR_GSAP_URL . 'assets/css/pixelated-image-reveal.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/pixelated-image-reveal.css' )
+		);
+		wp_register_style(
+			'elementor-fixed-underlay-navigation',
+			ELEMENTOR_GSAP_URL . 'assets/css/fixed-underlay-navigation.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/fixed-underlay-navigation.css' )
 		);
 	} );
 } );
