@@ -1,0 +1,489 @@
+/* Fixed Underlay Navigation — scoped to widget root to avoid collisions.
+   Defaults mirror the Osmo "Fixed Underlay Navigation" Webflow reference so
+   the widget looks like the demo out of the box. */
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+.fun-underlay-nav {
+	--fun-menu-width: 30em;
+	--fun-z-header: 100;
+	--fun-z-menu: 1;
+	--fun-z-overlay: 100;
+
+	--fun-header-padding-y: 2.5em;
+	--fun-header-padding-x: 2.5em;
+
+	--fun-logo-width: 6.875em;
+	--fun-logo-color: #f4f4f4;
+	--fun-logo-accent: #f85931;
+	--fun-logo-blend: multiply;
+
+	--fun-toggle-color-closed: #ffffff;
+	--fun-toggle-color-open: #201d1d;
+	--fun-toggle-label-size: 1.25em;
+	--fun-toggle-gap: 0.75em;
+	--fun-toggle-icon-size: 1.5em;
+	--fun-toggle-bar-thickness: 0.125em;
+	--fun-toggle-bar-gap: 0.375em;
+
+	--fun-menu-bg: #f4f4f4;
+	--fun-menu-text: #201d1d;
+	--fun-menu-padding-top: 7.5em;
+	--fun-menu-padding-x: 2em;
+	--fun-menu-padding-bottom: 2em;
+
+	--fun-link-large-size: 3.25em;
+	--fun-link-large-radius: 0.25em;
+	--fun-link-large-padding-y: 0.75em;
+	--fun-link-large-padding-x: 1em;
+	--fun-link-large-line-height: 0.9;
+	--fun-link-large-letter-spacing: -0.04em;
+	--fun-current-bg: #f85931;
+	--fun-current-color: #ededed;
+
+	--fun-link-small-size: 1em;
+	--fun-link-small-faded-opacity: 0.5;
+	--fun-bottom-gap: 1em;
+	--fun-bottom-padding-top: 1.5em;
+	--fun-bottom-border-color: currentColor;
+	--fun-bottom-border-opacity: 0.15;
+
+	--fun-overlay-dark-color: rgba(0, 0, 0, 0.3);
+	--fun-overlay-frame-color: #ffffff;
+	--fun-overlay-border-height: 1em;
+	--fun-overlay-corner-size: 2em;
+}
+
+.fun-underlay-nav a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* HEADER (logo + toggle row, fixed at top) */
+.fun-underlay-nav .underlay-nav__header {
+	z-index: var(--fun-z-header);
+	color: var(--fun-toggle-color-closed);
+	position: fixed;
+	inset: 0 0 auto;
+}
+
+.fun-underlay-nav .underlay-nav__bar {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.fun-underlay-nav .underlay-nav__container {
+	justify-content: space-between;
+	align-items: center;
+	padding: var(--fun-header-padding-y) var(--fun-header-padding-x);
+	display: flex;
+}
+
+.fun-underlay-nav .underlay-nav__logo {
+	mix-blend-mode: var(--fun-logo-blend);
+	justify-content: center;
+	align-items: center;
+	width: var(--fun-logo-width);
+	display: flex;
+	color: var(--fun-logo-color);
+}
+
+.fun-underlay-nav .underlay-nav__logo img,
+.fun-underlay-nav .underlay-nav__logo svg {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Path fill di-set via CSS (bukan presentation attribute) supaya CSS
+   custom property var() resolve dengan reliable di semua browser modern. */
+.fun-underlay-nav .underlay-nav__logo-main {
+	fill: currentColor;
+}
+
+.fun-underlay-nav .underlay-nav__logo-accent {
+	fill: var(--fun-logo-accent);
+}
+
+/* TOGGLE */
+.fun-underlay-nav .underlay-nav__toggle {
+	gap: var(--fun-toggle-gap);
+	outline-offset: 0;
+	background-color: transparent;
+	border: 1px solid transparent;
+	color: var(--fun-toggle-color-open);
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+	margin: -1em;
+	padding: 1em;
+	display: flex;
+	font: inherit;
+}
+
+.fun-underlay-nav .underlay-nav__toggle:focus-visible {
+	outline: 3px solid #555;
+}
+
+.fun-underlay-nav .underlay-nav__toggle-text {
+	flex-flow: column;
+	flex: none;
+	justify-content: flex-start;
+	align-items: flex-end;
+	height: var(--fun-toggle-label-size);
+	display: flex;
+	overflow: hidden;
+}
+
+.fun-underlay-nav .underlay-nav__toggle-label {
+	font-size: var(--fun-toggle-label-size);
+	line-height: 1;
+	margin: 0;
+}
+
+.fun-underlay-nav .underlay-nav__toggle-icon {
+	gap: var(--fun-toggle-bar-gap);
+	flex-flow: column;
+	flex: none;
+	justify-content: center;
+	align-items: center;
+	width: var(--fun-toggle-icon-size);
+	margin-bottom: -0.3em;
+	display: flex;
+}
+
+.fun-underlay-nav .underlay-nav__toggle-bar {
+	background-color: currentColor;
+	flex: none;
+	width: 100%;
+	height: var(--fun-toggle-bar-thickness);
+	padding: 0;
+}
+
+/* MENU PANEL (sits behind page content; revealed by sliding [data-fun-main]) */
+.fun-underlay-nav .underlay-nav__menu {
+	z-index: var(--fun-z-menu);
+	width: var(--fun-menu-width);
+	background-color: transparent;
+	color: var(--fun-menu-text);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	/* Disembunyikan sampai JS init selesai (detach + wrap [data-fun-main]).
+	   Tanpa ini, panel kanan sempat flash sebelum trik z-index aktif.
+	   Editor preview & saat menu open meng-override via aturan di bawah. */
+	visibility: hidden;
+}
+
+.fun-underlay-nav .underlay-nav__inner {
+	gap: 2em;
+	flex-flow: column;
+	justify-content: space-between;
+	align-items: stretch;
+	width: 100%;
+	height: 100%;
+	padding: var(--fun-menu-padding-top) var(--fun-menu-padding-x) var(--fun-menu-padding-bottom);
+	display: flex;
+	overflow: auto;
+}
+
+.fun-underlay-nav .underlay-nav__list {
+	flex-flow: column;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+}
+
+.fun-underlay-nav .underlay-nav__list.is--small {
+	gap: 0.75em;
+}
+
+.fun-underlay-nav .underlay-nav__link-large {
+	border-radius: var(--fun-link-large-radius);
+	width: 100%;
+	padding: var(--fun-link-large-padding-y) var(--fun-link-large-padding-x);
+	display: block;
+	transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.fun-underlay-nav .underlay-nav__link-large:hover,
+.fun-underlay-nav .underlay-nav__link-large.w--current,
+.fun-underlay-nav .underlay-nav__link-large.is--current {
+	color: var(--fun-current-color);
+	background-color: var(--fun-current-bg);
+}
+
+/* Saat ada item yang sedang di-hover di list, drop highlight current item
+   yang tidak sedang di-hover — supaya mark "aktif" mengikuti kursor,
+   bukan menumpuk dengan penanda current. */
+.fun-underlay-nav .underlay-nav__list:has(.underlay-nav__link-large:hover) .underlay-nav__link-large.w--current:not(:hover),
+.fun-underlay-nav .underlay-nav__list:has(.underlay-nav__link-large:hover) .underlay-nav__link-large.is--current:not(:hover) {
+	color: inherit;
+	background-color: transparent;
+}
+
+.fun-underlay-nav .underlay-nav__link-label {
+	letter-spacing: var(--fun-link-large-letter-spacing);
+	font-size: var(--fun-link-large-size);
+	line-height: var(--fun-link-large-line-height);
+}
+
+.fun-underlay-nav .underlay-nav__bottom {
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 100%;
+	padding-top: var(--fun-bottom-padding-top);
+	display: flex;
+	position: relative;
+}
+
+.fun-underlay-nav .underlay-nav__bottom-col {
+	gap: var(--fun-bottom-gap);
+	flex-flow: column;
+	flex: 1;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+}
+
+.fun-underlay-nav .underlay-nav__link-small {
+	font-size: var(--fun-link-small-size);
+	line-height: 1.1;
+}
+
+.fun-underlay-nav .underlay-nav__link-small.is--faded {
+	opacity: var(--fun-link-small-faded-opacity);
+}
+
+/* Layout untuk link dengan icon (Socials / Quick Links). Pakai inline-flex
+   hanya saat icon ada, supaya label section (.is--faded, tanpa icon)
+   tetap render inline natural seperti sebelumnya. */
+.fun-underlay-nav .underlay-nav__link-small.has--icon {
+	gap: var(--fun-link-small-icon-gap, 0.5em);
+	align-items: center;
+	display: inline-flex;
+}
+
+.fun-underlay-nav .underlay-nav__link-small.is--icon-after {
+	flex-direction: row-reverse;
+}
+
+.fun-underlay-nav .underlay-nav__link-small-icon {
+	font-size: var(--fun-link-small-icon-size, 1em);
+	flex: none;
+	align-items: center;
+	display: inline-flex;
+}
+
+.fun-underlay-nav .underlay-nav__link-small-icon svg {
+	width: 1em;
+	height: 1em;
+	display: block;
+}
+
+/* Hover underline animasi — pakai gradient di bottom yang slide dari left,
+   bukan text-decoration (yang tidak animatable). Hanya untuk <a> (link),
+   tidak untuk label section yang juga pakai class .underlay-nav__link-small. */
+.fun-underlay-nav a.underlay-nav__link-small {
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-position: 0 100%;
+	background-size: 0 1px;
+	transition: background-size 0.3s ease;
+}
+
+.fun-underlay-nav a.underlay-nav__link-small:hover {
+	background-size: 100% 1px;
+}
+
+.fun-underlay-nav .underlay-nav__bottom-border {
+	opacity: var(--fun-bottom-border-opacity);
+	transform-origin: 0%;
+	background-color: var(--fun-bottom-border-color);
+	width: 100%;
+	height: 1px;
+	position: absolute;
+	inset: 0 0 auto;
+}
+
+/* OVERLAY (dim + decorative borders/corners framing the menu edge) */
+.fun-underlay-nav .underlay-nav__overlay {
+	z-index: var(--fun-z-overlay);
+	pointer-events: none;
+	cursor: pointer;
+	visibility: hidden;
+	position: fixed;
+	inset: 0 -1px 0 0;
+	overflow: clip;
+}
+
+.fun-underlay-nav .underlay-nav__dark {
+	opacity: 0;
+	background-color: var(--fun-overlay-dark-color);
+	position: absolute;
+	inset: 0;
+}
+
+.fun-underlay-nav .underlay-nav__borders {
+	flex-flow: column;
+	justify-content: space-between;
+	align-items: stretch;
+	display: flex;
+	position: absolute;
+	inset: 0;
+}
+
+.fun-underlay-nav .underlay-nav__border-row {
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-end;
+	display: flex;
+}
+
+.fun-underlay-nav .underlay-nav__border {
+	background-color: var(--fun-overlay-frame-color);
+	width: 100%;
+	height: var(--fun-overlay-border-height);
+}
+
+.fun-underlay-nav .underlay-nav__corner {
+	transform-origin: 100% 0;
+	color: var(--fun-overlay-frame-color);
+	background-image: radial-gradient(circle farthest-side at 0 100%, rgba(255, 255, 255, 0) 99%, currentColor);
+	width: var(--fun-overlay-corner-size);
+	height: var(--fun-overlay-corner-size);
+}
+
+.fun-underlay-nav .underlay-nav__corner.is--bottom {
+	transform-origin: 100% 100%;
+	background-image: radial-gradient(circle farthest-side at 0 0, rgba(255, 255, 255, 0) 99%, currentColor);
+}
+
+/* Auto-wrap helper added by JS — keeps page content above the menu */
+[data-fun-main] {
+	position: relative;
+	z-index: 2;
+}
+
+/* When the menu is open, prevent body scroll */
+body[data-fun-menu-status="open"] {
+	overflow: hidden;
+}
+
+/* Mobile */
+@media screen and (max-width: 767px) {
+	.fun-underlay-nav {
+		--fun-menu-width: 80vw;
+		--fun-header-padding-y: 1.25em;
+		--fun-header-padding-x: 1.25em;
+		--fun-logo-width: 5em;
+		--fun-toggle-label-size: 1em;
+		--fun-menu-padding-top: 5em;
+		--fun-menu-padding-x: 1.25em;
+		--fun-menu-padding-bottom: 1.25em;
+		--fun-link-large-size: 2em;
+	}
+
+	.fun-underlay-nav .underlay-nav__bottom {
+		gap: 2em;
+		flex-flow: column;
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+}
+
+/* === ELEMENTOR EDITOR PREVIEW ===
+   Editor preview replays the live "open state" — same fixed positioning,
+   same dimensions, same colors as the actual frontend output. What the user
+   styles here is exactly what they'll see when the menu is opened on the
+   site. Differences vs frontend pre-open:
+     – overlay decorations visible (visibility: visible) and shifted left by
+       --fun-menu-width so the corners frame the menu edge
+     – dark dim layer kept at opacity 0 (would otherwise dim the canvas)
+     – reveal items at final state (opacity 1, no transform)
+     – toggle button in its OPEN state (Close label, X icon, open color)
+
+   Triple-selector fallback so the rules apply via ANY of:
+   – PHP-output class:           .fun-underlay-nav--editor
+   – JS-added class (runtime):   .fun-underlay-nav--editor
+   – Elementor body class fall.: body.elementor-editor-active */
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__menu{
+	display: none;
+}
+
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__menu {
+	visibility: visible;
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__overlay{
+	display: none;
+}
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__overlay {
+	visibility: visible;
+	pointer-events: none;
+	transform: translateX(calc(var(--fun-menu-width) * -1));
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__dark,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__dark {
+	opacity: 0;
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__border-row,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__border-row {
+	transform: translateY(0);
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__corner,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__corner {
+	transform: scale(1);
+}
+
+body.elementor-editor-active .fun-underlay-nav [data-reveal-l],
+body.elementor-editor-active .fun-underlay-nav [data-reveal-s],
+.fun-underlay-nav.fun-underlay-nav--editor [data-reveal-l],
+.fun-underlay-nav.fun-underlay-nav--editor [data-reveal-s] {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__bottom-border,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__bottom-border {
+	transform: scaleX(1);
+}
+
+/* Toggle button shown in OPEN state (matches frontend when menu is open) */
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__header,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__header {
+	color: var(--fun-toggle-color-open);
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__toggle-label{
+	transform: none;
+}
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__toggle-label {
+	transform: translateY(-100%);
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__toggle-bar:nth-child(1){
+	transform: none;
+}
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__toggle-bar:nth-child(1) {
+	transform: translateY(0.25em) rotate(45deg);
+}
+
+body.elementor-editor-active .fun-underlay-nav .underlay-nav__toggle-bar:nth-child(2){
+	transform: none;
+}
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__toggle-bar:nth-child(2) {
+	transform: translateY(-0.25em) rotate(-45deg);
+}
