@@ -40,6 +40,24 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 		return [ 'elementor-fixed-underlay-navigation' ];
 	}
 
+	/**
+	 * Sanitize user-provided SVG. Strips <script>, <foreignObject>, on* event
+	 * handlers, dan javascript: URLs. Case attribut (viewBox, dll.) tetap
+	 * dipertahankan supaya render SVG tidak break.
+	 */
+	public function sanitize_custom_svg( $svg ) {
+		if ( empty( $svg ) ) {
+			return '';
+		}
+		$svg = trim( (string) $svg );
+		$svg = preg_replace( '#<\s*script[^>]*>.*?<\s*/\s*script\s*>#is', '', $svg );
+		$svg = preg_replace( '#<\s*script[^>]*/?>#i', '', $svg );
+		$svg = preg_replace( '#<\s*foreignObject[^>]*>.*?<\s*/\s*foreignObject\s*>#is', '', $svg );
+		$svg = preg_replace( '#\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)#i', '', $svg );
+		$svg = preg_replace( '#\s+(xlink:href|href)\s*=\s*("|\')?\s*javascript:[^"\'>\s]*("|\')?#i', '', $svg );
+		return $svg;
+	}
+
 	public function default_logo_svg() {
 		return '<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 110 25" fill="none" class="underlay-nav__logo-svg"><path class="underlay-nav__logo-main" d="M38.6539 24.1686C42.7853 24.1686 46.43 22.0917 48.6052 18.9263C49.8548 22.1497 53.0871 24.1686 57.3667 24.1686C60.4499 24.1686 63.0505 23.1833 64.7214 21.5632L64.4805 23.6683H69.7011L70.9507 12.7679L73.8518 23.6683H79.0772L81.9784 12.7679L83.2271 23.6683H88.4477L87.8886 18.7885C90.0518 22.0313 93.7424 24.1686 97.9334 24.1686C104.598 24.1686 110 18.766 110 12.1016C110 5.43732 104.596 0.0346429 97.9318 0.0346429C92.7612 0.0346429 88.3518 3.28785 86.6342 7.85749L85.7907 0.499502H80.0215L76.4629 13.8708L72.9044 0.499502H67.1351L66.3246 7.56906C66.2264 5.51224 65.382 3.64878 63.9254 2.29932C62.3021 0.795175 60.0342 0 57.3659 0C54.8659 0 52.7116 0.712193 51.1358 2.06004C49.974 3.05421 49.2135 4.33761 48.9194 5.76119C46.7933 2.32429 42.9923 0.0346429 38.6539 0.0346429C31.9896 0.0346429 26.5869 5.43732 26.5869 12.1016C26.5869 18.766 31.9896 24.1686 38.6539 24.1686ZM97.9318 5.46471C101.597 5.46471 104.569 8.43594 104.569 12.1016C104.569 15.7673 101.597 18.7386 97.9318 18.7386C94.2661 18.7386 91.2949 15.7673 91.2949 12.1016C91.2949 8.43594 94.2661 5.46471 97.9318 5.46471ZM57.3667 5.05786C59.6321 5.05786 61.0227 6.10681 61.0855 7.86393L61.1049 8.39808H66.2304L65.7019 13.0128C65.4392 12.5899 65.1275 12.1991 64.7641 11.8438C63.5685 10.6773 61.8154 9.88289 59.5524 9.48328L56.5014 8.93706C54.48 8.5729 54.0659 7.94127 54.0659 7.10501C54.0659 6.89554 54.1586 5.05705 57.3667 5.05705V5.05786ZM55.1761 14.0094L58.7709 14.6837C61.092 15.1293 61.4046 16.0711 61.4046 16.9339C61.4046 18.2963 59.8569 19.1422 57.365 19.1422C54.4059 19.1422 53.2877 17.4729 53.2289 16.0437L53.2071 15.5128H50.2278C50.5461 14.4308 50.7201 13.2868 50.7201 12.1016C50.7201 12.0452 50.7168 11.9889 50.716 11.9325C51.7876 12.95 53.2836 13.6598 55.1753 14.0094H55.1761ZM38.6539 5.46471C42.3196 5.46471 45.2908 8.43594 45.2908 12.1016C45.2908 15.7673 42.3196 18.7386 38.6539 18.7386C34.9882 18.7386 32.017 15.7673 32.017 12.1016C32.017 8.43594 34.9882 5.46471 38.6539 5.46471Z"></path><path class="underlay-nav__logo-accent" d="M16.3506 9.9554L21.6985 4.6075L19.5619 2.47092L14.214 7.81882C13.986 8.04762 13.5953 7.88569 13.5953 7.56262V0H10.5741V9.12397C10.5741 9.92478 9.92476 10.5741 9.12395 10.5741H0V13.5953H7.56261C7.88567 13.5953 8.04761 13.9861 7.8188 14.2141L2.47172 19.5619L4.6083 21.6985L9.95618 16.3506C10.1842 16.1226 10.5749 16.2838 10.5749 16.6068V24.1694H13.5961V15.0455C13.5961 14.2447 14.2454 13.5953 15.0463 13.5953H24.1702V10.5741H16.6076C16.2845 10.5741 16.1226 10.1834 16.3514 9.9554H16.3506Z"></path></svg>';
 	}
@@ -58,6 +76,8 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'options' => [
 				'default' => __( 'Default SVG', 'elementor-gsap' ),
 				'image'   => __( 'Image Upload', 'elementor-gsap' ),
+				'svg'     => __( 'Custom SVG', 'elementor-gsap' ),
+				'text'    => __( 'Text', 'elementor-gsap' ),
 				'none'    => __( 'None', 'elementor-gsap' ),
 			],
 			'default' => 'default',
@@ -75,6 +95,29 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'type'      => Controls_Manager::TEXT,
 			'default'   => 'Logo',
 			'condition' => [ 'logo_type' => 'image' ],
+		] );
+
+		$this->add_control( 'logo_text', [
+			'label'     => __( 'Logo Text', 'elementor-gsap' ),
+			'type'      => Controls_Manager::TEXT,
+			'default'   => 'Studio',
+			'condition' => [ 'logo_type' => 'text' ],
+		] );
+
+		$this->add_control( 'logo_svg', [
+			'label'       => __( 'Custom SVG Code', 'elementor-gsap' ),
+			'description' => __( 'Paste kode <code>&lt;svg&gt;…&lt;/svg&gt;</code>. Gunakan <code>fill="currentColor"</code> pada path yang ingin ikut warna dari <strong>Logo Main Color</strong>.', 'elementor-gsap' ),
+			'type'        => Controls_Manager::TEXTAREA,
+			'rows'        => 10,
+			'default'     => '',
+			'condition'   => [ 'logo_type' => 'svg' ],
+		] );
+
+		$this->add_control( 'logo_svg_alt', [
+			'label'     => __( 'SVG Aria Label', 'elementor-gsap' ),
+			'type'      => Controls_Manager::TEXT,
+			'default'   => 'Logo',
+			'condition' => [ 'logo_type' => 'svg' ],
 		] );
 
 		$this->add_control( 'logo_link', [
@@ -363,16 +406,18 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'selectors'  => [
 				'{{WRAPPER}} .fun-underlay-nav' => '--fun-logo-width: {{SIZE}}{{UNIT}};',
 			],
+			'condition'  => [ 'logo_type!' => 'text' ],
 		] );
 
 		$this->add_control( 'logo_color', [
-			'label'     => __( 'Logo Main Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'default'   => '#f4f4f4',
-			'selectors' => [
+			'label'       => __( 'Logo Main Color', 'elementor-gsap' ),
+			'description' => __( 'Untuk <strong>Custom SVG</strong>, warna ini hanya berlaku pada path yang menggunakan <code>fill="currentColor"</code>.', 'elementor-gsap' ),
+			'type'        => Controls_Manager::COLOR,
+			'default'     => '#f4f4f4',
+			'selectors'   => [
 				'{{WRAPPER}} .fun-underlay-nav' => '--fun-logo-color: {{VALUE}};',
 			],
-			'condition' => [ 'logo_type' => 'default' ],
+			'condition'   => [ 'logo_type' => [ 'default', 'text', 'svg' ] ],
 		] );
 
 		$this->add_control( 'logo_accent', [
@@ -385,21 +430,11 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'condition' => [ 'logo_type' => 'default' ],
 		] );
 
-		$this->add_control( 'logo_blend', [
-			'label'       => __( 'Logo Blend Mode', 'elementor-gsap' ),
-			'description' => __( '<code>multiply</code> bikin logo putih jadi gelap di atas background terang & menyatu di atas hero gelap — sesuai default Osmo Webflow. Pilih <code>normal</code> kalau logo anda berwarna.', 'elementor-gsap' ),
-			'type'        => Controls_Manager::SELECT,
-			'options'     => [
-				'multiply' => __( 'Multiply', 'elementor-gsap' ),
-				'normal'   => __( 'Normal', 'elementor-gsap' ),
-				'screen'   => __( 'Screen', 'elementor-gsap' ),
-				'overlay'  => __( 'Overlay', 'elementor-gsap' ),
-				'difference' => __( 'Difference', 'elementor-gsap' ),
-			],
-			'default'     => 'multiply',
-			'selectors'   => [
-				'{{WRAPPER}} .fun-underlay-nav' => '--fun-logo-blend: {{VALUE}};',
-			],
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name'      => 'logo_text_typography',
+			'label'     => __( 'Text Typography', 'elementor-gsap' ),
+			'selector'  => '{{WRAPPER}} .fun-underlay-nav .underlay-nav__logo-text',
+			'condition' => [ 'logo_type' => 'text' ],
 		] );
 
 		$this->end_controls_section();
@@ -411,8 +446,8 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 		] );
 
 		$this->add_control( 'toggle_color_closed', [
-			'label'       => __( 'Color (Closed)', 'elementor-gsap' ),
-			'description' => __( 'Warna tombol saat menu tertutup. Default putih cocok untuk hero gelap.', 'elementor-gsap' ),
+			'label'       => __( 'Color (Open)', 'elementor-gsap' ),
+			'description' => __( 'Warna tombol saat label "Open" tampil (menu tertutup). Default putih cocok untuk hero gelap.', 'elementor-gsap' ),
 			'type'        => Controls_Manager::COLOR,
 			'default'     => '#ffffff',
 			'selectors'   => [
@@ -421,8 +456,8 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 		] );
 
 		$this->add_control( 'toggle_color_open', [
-			'label'       => __( 'Color (Open)', 'elementor-gsap' ),
-			'description' => __( 'Warna tombol saat menu terbuka. Cocokkan dengan warna teks menu.', 'elementor-gsap' ),
+			'label'       => __( 'Color (Close)', 'elementor-gsap' ),
+			'description' => __( 'Warna tombol saat label "Close" tampil (menu terbuka). Cocokkan dengan warna teks menu.', 'elementor-gsap' ),
 			'type'        => Controls_Manager::COLOR,
 			'default'     => '#201d1d',
 			'selectors'   => [
@@ -740,15 +775,6 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			],
 		] );
 
-		$this->add_control( 'overlay_border_color', [
-			'label'     => __( 'Border / Corner Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'default'   => '#ffffff',
-			'selectors' => [
-				'{{WRAPPER}} .fun-underlay-nav' => '--fun-overlay-border-color: {{VALUE}};',
-			],
-		] );
-
 		$this->add_responsive_control( 'overlay_border_height', [
 			'label'      => __( 'Border Height', 'elementor-gsap' ),
 			'type'       => Controls_Manager::SLIDER,
@@ -825,14 +851,34 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 				<div class="underlay-nav__bar">
 					<div class="underlay-nav__container">
 						<?php if ( 'none' !== $logo_type ) :
-							$logo_attrs = $this->render_link_attrs( isset( $s['logo_link'] ) ? $s['logo_link'] : [] );
+							$logo_attrs   = $this->render_link_attrs( isset( $s['logo_link'] ) ? $s['logo_link'] : [] );
+							$logo_modifier = '';
+							if ( 'text' === $logo_type ) {
+								$logo_modifier = ' underlay-nav__logo--text';
+							} elseif ( 'svg' === $logo_type ) {
+								$logo_modifier = ' underlay-nav__logo--svg';
+							}
+							$logo_classes = 'underlay-nav__logo' . $logo_modifier;
 							?>
-							<a<?php echo $logo_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> class="underlay-nav__logo">
+							<a<?php echo $logo_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> class="<?php echo esc_attr( $logo_classes ); ?>">
 								<?php if ( 'image' === $logo_type && ! empty( $s['logo_image']['url'] ) ) :
 									$alt = ! empty( $s['logo_alt'] ) ? $s['logo_alt'] : '';
 									?>
 									<img src="<?php echo esc_url( $s['logo_image']['url'] ); ?>" alt="<?php echo esc_attr( $alt ); ?>" />
-								<?php else :
+								<?php elseif ( 'text' === $logo_type ) :
+									$logo_text = isset( $s['logo_text'] ) ? $s['logo_text'] : '';
+									?>
+									<span class="underlay-nav__logo-text"><?php echo esc_html( $logo_text ); ?></span>
+								<?php elseif ( 'svg' === $logo_type ) :
+									$svg_code  = isset( $s['logo_svg'] ) ? $this->sanitize_custom_svg( $s['logo_svg'] ) : '';
+									$svg_label = isset( $s['logo_svg_alt'] ) ? $s['logo_svg_alt'] : '';
+									if ( '' !== $svg_code ) :
+										?>
+										<span class="underlay-nav__logo-svg-custom" role="img"<?php echo '' !== $svg_label ? ' aria-label="' . esc_attr( $svg_label ) . '"' : ' aria-hidden="true"'; ?>><?php
+											echo $svg_code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										?></span>
+									<?php endif;
+								else :
 									echo $this->default_logo_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								endif; ?>
 							</a>

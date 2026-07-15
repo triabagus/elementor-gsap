@@ -202,8 +202,15 @@
 		var duration = parseFloat(root.dataset.funDuration);
 		if (isNaN(duration) || duration <= 0) duration = 0.7;
 
-		var closedColor = getComputedStyle(toggleBtn).color;
-		var openColor = getComputedStyle(menuEl).color;
+		// Baca dari CSS custom property di root widget supaya kontrol
+		// "Color (Closed)" & "Color (Open)" di Elementor benar-benar mengontrol
+		// warna toggle. Fallback ke computed color kalau variabel kosong
+		// (mis. user hapus default).
+		var rootStyle = getComputedStyle(root);
+		var openColor = rootStyle.getPropertyValue('--fun-toggle-color-open').trim()
+			|| getComputedStyle(menuEl).color;
+		var closedColor = rootStyle.getPropertyValue('--fun-toggle-color-closed').trim()
+			|| getComputedStyle(toggleBtn).color;
 
 		function getMenuOffset() {
 			return -menuEl.offsetWidth;
