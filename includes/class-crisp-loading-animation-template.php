@@ -153,7 +153,9 @@ class Crisp_Loading_Animation_Template {
 
 		$classes = 'crisp-header' . ( $is_edit ? ' egsap-edit-mode' : ' is--loading is--hidden' );
 
-		$style_attr = self::build_style_attr( $s );
+		$style_attr        = self::build_style_attr( $s );
+		$inline_style_html = self::render_inline_style_block( $s, $element_id );
+		echo $inline_style_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 		<section data-slideshow="wrap" class="<?php echo esc_attr( $classes ); ?>" data-egsap-id="<?php echo esc_attr( $element_id ); ?>"<?php echo $style_attr; ?>>
 			<div class="crisp-header__slider">
@@ -228,9 +230,9 @@ class Crisp_Loading_Animation_Template {
 
 	private static function build_style_attr( array $s ) {
 		$map = [
-			'--egsap-crisp-bg'   => $s[ self::key( 'bg_color' ) ] ?? '',
-			'--egsap-crisp-text' => $s[ self::key( 'text_color' ) ] ?? '',
-			'--egsap-crisp-fade' => $s[ self::key( 'fade_color' ) ] ?? '',
+			'--egsap-crisp-bg'   => self::resolve_color_value( $s, self::key( 'bg_color' ) ),
+			'--egsap-crisp-text' => self::resolve_color_value( $s, self::key( 'text_color' ) ),
+			'--egsap-crisp-fade' => self::resolve_color_value( $s, self::key( 'fade_color' ) ),
 		];
 
 		$props = [];
@@ -241,5 +243,146 @@ class Crisp_Loading_Animation_Template {
 		}
 
 		return $props ? ' style="' . esc_attr( implode( '; ', $props ) ) . '"' : '';
+	}
+
+	/**
+	 * Resolve nilai color yang mendukung Elementor Global Colors.
+	 *
+	 * Global Colors disimpan di $s['__globals__'][$key] sebagai URL
+	 * `globals/colors?id=<id>` — bukan di $s[$key]. Kita convert ke
+	 * `var(--e-global-color-<id>)` yang di-define di :root oleh Elementor Kit.
+	 * Kalau tidak ada global, fallback ke raw value dari $s[$key].
+	 */
+	private static function resolve_color_value( array $s, $key ) {
+		$globals = isset( $s['__globals__'] ) && is_array( $s['__globals__'] ) ? $s['__globals__'] : [];
+		if ( ! empty( $globals[ $key ] ) ) {
+			$id = self::extract_global_id( $globals[ $key ] );
+			if ( '' !== $id ) {
+				return 'var(--e-global-color-' . $id . ')';
+			}
+		}
+		return isset( $s[ $key ] ) ? (string) $s[ $key ] : '';
+	}
+
+	private static function extract_global_id( $global_url ) {
+		if ( ! is_string( $global_url ) || false === strpos( $global_url, '?id=' ) ) {
+			return '';
+		}
+		$parts = explode( '?id=', $global_url );
+		return isset( $parts[1] ) ? sanitize_key( $parts[1] ) : '';
+	}
+
+	/**
+	 * Emit inline <style> block untuk colors + typography.
+	 *
+	 * Sama seperti Willem, Elementor tidak mem-regenerate post-CSS file untuk
+	 * perubahan page-settings (Page\Manager::get_css_file_for_update returning
+	 * false). Group_Control_Typography yang di-scope via `selector` sering
+	 * tidak menghasilkan CSS di frontend. Kita bangun rules-nya sendiri
+	 * langsung dari $s supaya tidak bergantung pada CSS generator itu.
+	 */
+	public static function render_inline_style_block( array $s, $element_id ) {
+		if ( empty( $element_id ) ) {
+			return '';
+		}
+
+		$scope = '.crisp-header[data-egsap-id="' . esc_attr( $element_id ) . '"]';
+
+		$rules = [];
+
+		// COLORS — duplikasi dari inline style variable, sekaligus safety net
+		// supaya rule pasti ada meski cascade lain menang atas var().
+		$bg   = self::resolve_color_value( $s, self::key( 'bg_color' ) );
+		$text = self::resolve_color_value( $s, self::key( 'text_color' ) );
+		$fade = self::resolve_color_value( $s, self::key( 'fade_color' ) );
+
+		if ( '' !== $bg ) {
+			$rules[] = $scope . '{background-color:' . $bg . ';}';
+		}
+		if ( '' !== $text ) {
+			$rules[] = $scope . '{color:' . $text . ';}';
+		}
+		if ( '' !== $fade ) {
+			$rules[] = $scope . ' .crisp-loader__fade{background-image:linear-gradient(90deg,' . $fade . ' 20%,transparent);}';
+		}
+
+		// TYPOGRAPHY — 2 group control (heading + paragraph).
+		$typo_groups = [
+			'heading_typography'   => $scope . ' .crisp-header__h1',
+			'paragraph_typography' => $scope . ' .crisp-header__p',
+		];
+		foreach ( $typo_groups as $name => $selector ) {
+			$decl = self::build_typography_declarations( $s, self::key( $name ) );
+			if ( '' !== $decl ) {
+				$rules[] = $selector . '{' . $decl . '}';
+			}
+		}
+
+		if ( empty( $rules ) ) {
+			return '';
+		}
+
+		return '<style>' . implode( '', $rules ) . '</style>';
+	}
+
+	/**
+	 * Bangun deklarasi CSS dari sub-values Group_Control_Typography.
+	 * Sub-key mengikuti konvensi Elementor: {prefix}_font_family, {prefix}_font_size, dst.
+	 *
+	 * Global Typography disimpan sebagai referensi `globals/typography?id=<id>`
+	 * di $s['__globals__'][$prefix.'_typography']. Kalau ada, kita resolve ke
+	 * `var(--e-global-typography-<id>-<property>)`.
+	 */
+	private static function build_typography_declarations( array $s, $prefix ) {
+		$props   = [];
+		$globals = isset( $s['__globals__'] ) && is_array( $s['__globals__'] ) ? $s['__globals__'] : [];
+
+		$global_ref = $globals[ $prefix . '_typography' ] ?? '';
+		$global_id  = '' !== $global_ref ? self::extract_global_id( $global_ref ) : '';
+
+		$all_props = [
+			'font_family'     => 'font-family',
+			'font_weight'     => 'font-weight',
+			'text_transform'  => 'text-transform',
+			'font_style'      => 'font-style',
+			'text_decoration' => 'text-decoration',
+			'font_size'       => 'font-size',
+			'line_height'     => 'line-height',
+			'letter_spacing'  => 'letter-spacing',
+			'word_spacing'    => 'word-spacing',
+		];
+
+		$string_keys = [ 'font_family', 'font_weight', 'text_transform', 'font_style', 'text_decoration' ];
+		$sized_keys  = [ 'font_size', 'line_height', 'letter_spacing', 'word_spacing' ];
+
+		foreach ( $all_props as $key => $css_prop ) {
+			if ( '' !== $global_id ) {
+				$css_var_prop = str_replace( '_', '-', $key );
+				$props[]      = $css_prop . ': var(--e-global-typography-' . $global_id . '-' . $css_var_prop . ')';
+				continue;
+			}
+
+			if ( in_array( $key, $string_keys, true ) ) {
+				$val = $s[ $prefix . '_' . $key ] ?? '';
+				if ( '' === $val ) {
+					continue;
+				}
+				$val = (string) $val;
+				if ( 'font_family' === $key ) {
+					$props[] = $css_prop . ': "' . $val . '"';
+				} else {
+					$props[] = $css_prop . ': ' . $val;
+				}
+			} elseif ( in_array( $key, $sized_keys, true ) ) {
+				$val = $s[ $prefix . '_' . $key ] ?? null;
+				if ( ! is_array( $val ) || ! isset( $val['size'] ) || '' === $val['size'] ) {
+					continue;
+				}
+				$unit    = isset( $val['unit'] ) ? (string) $val['unit'] : 'px';
+				$props[] = $css_prop . ': ' . floatval( $val['size'] ) . $unit;
+			}
+		}
+
+		return implode( ';', $props );
 	}
 }
