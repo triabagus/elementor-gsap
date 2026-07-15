@@ -1,11 +1,8 @@
-# Elementor GSAP styled by Osmo
+# Elementor GSAP
 Contributors: creativetria
-Tags: elementor, gsap, loading animation, preloader, page transition, hls player, video player, splittext, scroll reveal, slider
-Requires at least: 6.7
-Tested up to: 7.0
-Requires PHP: 7.4
-Stable tag: 1.2.2
-Elementor tested up to: 4.0.7
+Tags: gsap, elementor, elementor-plugin, elementor-addons, elementor-widgets
+WordPress tested up to: 7.0.1
+Elementor tested up to: 4.1.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,7 +29,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 The plugin ships **3 page-level animations** (configured via Page Settings) and **3 Elementor widgets** (in the "Elements GSAP" category).
 
-### Page-level Animations
+### Loaders
 
 1. **Willem Loading Animation** — an Osmo-inspired preloader with a split-text logo wrapping a growing image cover that expands to fill the viewport. Configurable logo text, cover image stack (1 final + 3 flash transitions), top navigation bar, colors, typography per text element, and responsive width per logo half. Default font: PP Neue Montreal.
 
@@ -60,18 +57,6 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 
 12. **Fixed Underlay Navigation** — a fixed-position trigger button where the entire page content slides left to reveal a navigation menu that was sitting *underneath* the whole time (vs. Side Navigation Wipe which slides a drawer over the content). Powered by GSAP + CustomEase with the "easeReverse" technique from the GSAP 3.15 announcement, so the open and close motions feel distinct, and mid-animation interruptions stay responsive without snapping. Includes logo (default SVG / image upload / none), Menu/Close toggle with animated label flip + bars rotating into an X, large menu items repeater with current-item highlight, separate Socials and Quick Links columns at the bottom, decorative overlay borders + corner cutouts framing the menu edge, animated bottom-border scaleX, Escape/overlay-click to close, ARIA-expanded sync, and an auto-wrap fallback for the main content wrapper (or a custom CSS selector via the "Main Wrapper Selector" control). Fully configurable via CSS custom properties exposed as Elementor controls.
 
-## Editor Preview
-
-While editing in Elementor, animations are automatically disabled and components render in a static preview state with an identification badge in the top-right corner. Pixelated Transition is skipped entirely in edit mode so it never covers the canvas. You can immediately tell which page has a loading animation enabled without having to save and refresh.
-
-## 🚀 Performance Notes
-
-* Lazy-enqueued assets — CSS/JS for each component only loads on pages that use it.
-* GSAP, hls.js, and helper plugins served from the jsDelivr CDN (versioned and cached).
-* GSAP animations are skipped entirely in edit mode.
-* CSS uses custom properties (`--egsap-*`) for per-instance theming.
-* Per-page / per-widget scoping via `data-egsap-id` prevents style bleed between instances.
-
 ## 📦 Installation
 
 1. Upload the `elementor-gsap` folder to `/wp-content/plugins/`.
@@ -79,40 +64,6 @@ While editing in Elementor, animations are automatically disabled and components
 3. Make sure the **Elementor** plugin is active (latest stable recommended).
 4. **Page-level animations**: open a page in Elementor → click the **gear** icon (Page Settings) → **Style** tab → scroll to the desired section (Willem / Crisp / Pixelated Transition).
 5. **Widgets**: in the Elementor widget panel, find the **Elements GSAP** category and drag the desired widget onto a Section/Container.
-
-## 🛠 Quick Start
-
-### Add a Willem preloader to a landing page
-
-1. Edit the page in Elementor.
-2. Open Page Settings → Style → Willem Loading Animation.
-3. Toggle **Enable**.
-4. Customize logo text, cover image, and colors.
-5. Click **Update** and preview.
-
-### Add a Bunny HLS video to any layout
-
-1. Drag the **Bunny HLS Player (Basic)** widget into a Section/Container.
-2. Paste your `.m3u8` URL into the HLS Source field.
-3. Pick a placeholder image.
-4. Choose a lazy loading mode (`Meta only` is a good default).
-5. Update.
-
-### Trigger the Pixelated Page Transition site-wide
-
-1. Enable the toggle on every page where you want the transition active.
-2. (Optional) Use Elementor Theme Builder to apply it via a global template.
-3. Add `data-transition-prevent` to any link that should bypass the animation.
-
-## 🧰 Requirements
-
-* WordPress 6.7 or later
-* PHP 7.4 or later
-* Elementor (latest stable recommended)
-* Modern browsers with CSS `:has()` support (Chrome 105+, Firefox 121+, Safari 15.4+, Edge 105+)
-* For SVG uploads: Elementor's SVG support enabled, or the **Safe SVG** plugin
-* For Bunny HLS Player: video must be hosted as an HLS stream (`.m3u8` playlist)
-* For page-level loaders: theme must call `wp_body_open()` (WordPress 5.2+ standard)
 
 ## Frequently Asked Questions
 
@@ -128,20 +79,11 @@ No. The plugin works with the free version of Elementor. Some features (like dyn
 
 Yes. PP Neue Montreal is just the fallback default. Use the **Typography** control in any animation section to switch fonts (auto-loaded from Elementor's Google Fonts library) or set a Custom Font via Elementor Pro.
 
-= My loading animation isn't showing on the frontend. =
-
-Check the following:
-
-1. The **Enable** toggle is on in Page Settings → Style.
-2. Your theme calls `wp_body_open()` (standard since WordPress 5.2).
-3. You clicked **Update** and refreshed the frontend.
-4. No conflict with another loading animation plugin.
-
 = How do I enable SVG uploads? =
 
 WordPress blocks SVG by default for security. Enable via:
 
-* Elementor Pro: **Elementor → Settings → General → Enable Unfiltered File Uploads**
+* Elementor: **Elementor → Settings → General → Enable Unfiltered File Uploads**
 * Free plugins: **Safe SVG** (recommended) or **SVG Support**
 
 = Does the Bunny HLS Player support MP4? =
@@ -158,60 +100,11 @@ No. This player is designed exclusively for HLS streams (`.m3u8`). For regular M
 
 Technically yes (Willem + Crisp + Pixelated all enabled), but it's not recommended — they will render simultaneously and look chaotic. Pick one per page.
 
-= The Pixelated Transition only runs on pages where it's enabled. How do I make it site-wide? =
-
-Enable the toggle on every destination page, or use **Elementor Theme Builder** to apply it via a global template (Single, Archive, etc.).
-
-= Why doesn't a specific link trigger the transition? =
-
-Pixelated Transition only intercepts links that are: (a) same domain, (b) don't start with `#`, (c) don't have `target="_blank"`, and (d) don't have the `data-transition-prevent` attribute. Add `data-transition-prevent` to skip the transition on a specific link.
-
-= The Draggable Slider isn't draggable, what's wrong? =
-
-Make sure both `gsap-draggable` and `gsap-inertia` are loading. Check the browser console — if you see a warning about InertiaPlugin being required for momentum-based scrolling, InertiaPlugin failed to load (often due to ad-blockers or CDN issues).
-
-= Masked Text Reveal replays every time I scroll. How do I make it animate just once? =
-
-Toggle **Animate Once Only** in the widget's Animation tab.
-
 == Changelog ==
-
-= 1.2.2 =
-
-* Added **Fixed Underlay Navigation** widget — a *page-slides-over-fixed-menu* navigation (distinct from Side Navigation Wipe's *drawer-slides-in-over-page* pattern).
-
-= 1.2.1 =
-
-* Added **Button Character Stagger** widget — Osmo-style hover-stagger button with per-character transition delay and shrinking inset background. Pure CSS animation, no GSAP dependency.
-* Added **Looping Words with Selector** widget — vertical word carousel highlighted by an animated corner-edge selector that snaps to each word's width. Powered by GSAP (Elastic / Bounce / Expo easing supported). Words list, durations, easing, fade color, and edge styling all configurable.
-* Added **Image Scroll** widget — frame that reveals a tall or wide image by scrolling on hover or following the mouse pointer. Vertical/horizontal direction, hover/mouse-track triggers, reverse mode, duration, easing, frame height, max-width, radius, border, shadow, and optional overlay icon. Pure CSS transitions, no GSAP dependency.
-* Added **Side Navigation Wipe** widget — fixed Menu/Close trigger that opens an Osmo-style drawer with a three-panel staggered wipe (powered by GSAP + CustomEase). Menu items + socials repeaters, Escape-to-close, ARIA-expanded sync, configurable trigger offsets, panel colors, overlay, menu width/radius, and typography. Editor preview renders content inline.
-
-= 1.2.0 =
-
-* Added **Pixelated Page Transition** (page-level transition)
-* Added **Masked Text Reveal** widget (scroll-triggered SplitText reveal)
-* Added **Draggable Infinite Slider** widget (Draggable + InertiaPlugin)
-* Added **Button Draw Underline** widget
-* Added **Pixelated Image Reveal** widget
-* Registered additional GSAP plugins: ScrollTrigger, Draggable, InertiaPlugin
-
-= 1.1.0 =
-
-* Added **Crisp Loading Animation** (slideshow preloader)
-* Added **Bunny HLS Player (Basic)** widget
-* Migrated loading animations from widget to Page Settings (document-level)
-* Editor preview mode with identification badge
-* CSS custom properties for per-instance styling
-* Typography group control per text element
-* Responsive sliders for logo widths (Willem & Crisp)
-* Default font: PP Neue Montreal
-* Upgraded GSAP to 3.15
-* Custom logo image control for Crisp animation
 
 = 1.0.0 =
 
-* Initial release with **Willem Loading Animation** as an Elementor widget
+* Initial release with **Elementor GSAP** as an Elementor.
 
 ## 🤝 Contributing
 
