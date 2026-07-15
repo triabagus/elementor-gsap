@@ -23,7 +23,7 @@ class Bunny_HLS_Player_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-video' ];
 	}
 
 	public function get_keywords() {

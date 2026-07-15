@@ -20,7 +20,7 @@ class Willem_Loading_Animation_Template {
 
 	public static function register_controls( Controls_Stack $element ) {
 		$element->start_controls_section( self::key( 'section' ), [
-			'label' => __( 'Willem Loading Animation', 'elementor-gsap' ),
+			'label' => __( 'Loaders • Willem', 'elementor-gsap' ),
 			'tab'   => Controls_Manager::TAB_STYLE,
 		] );
 

@@ -266,16 +266,29 @@ add_action( 'plugins_loaded', function () {
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-template.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-extension.php';
 
+	// Urutan init menentukan urutan section di Page Settings > Style.
+	// Kelompokkan berdasarkan prefix label ("Loaders •" & "Page Transitions •")
+	// supaya section-nya berdekatan di panel Elementor.
 	\Elementor_GSAP\Willem_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Crisp_Loading_Animation_Extension::init();
-	\Elementor_GSAP\Pixelated_Transition_Extension::init();
 	\Elementor_GSAP\Welcoming_Words_Loader_Extension::init();
+	\Elementor_GSAP\Pixelated_Transition_Extension::init();
 
 	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
-		$manager->add_category( 'elementor-gsap', [
-			'title' => __( 'Elements GSAP', 'elementor-gsap' ),
-			'icon'  => 'eicon-animation',
-		] );
+		$categories = [
+			'elementor-gsap-video'   => [ __( 'GSAP • Video & Audio', 'elementor-gsap' ),      'eicon-video-camera' ],
+			'elementor-gsap-text'    => [ __( 'GSAP • Text Animations', 'elementor-gsap' ),    'eicon-t-letter' ],
+			'elementor-gsap-sliders' => [ __( 'GSAP • Sliders & Marquees', 'elementor-gsap' ), 'eicon-slider-push' ],
+			'elementor-gsap-buttons' => [ __( 'GSAP • Buttons', 'elementor-gsap' ),            'eicon-button' ],
+			'elementor-gsap-hover'   => [ __( 'GSAP • Hover Interactions', 'elementor-gsap' ), 'eicon-image-rollover' ],
+			'elementor-gsap-nav'     => [ __( 'GSAP • Navigation', 'elementor-gsap' ),         'eicon-nav-menu' ],
+		];
+		foreach ( $categories as $slug => $meta ) {
+			$manager->add_category( $slug, [
+				'title' => $meta[0],
+				'icon'  => $meta[1],
+			] );
+		}
 	} );
 
 	add_action( 'elementor/widgets/register', function ( $widgets_manager ) {

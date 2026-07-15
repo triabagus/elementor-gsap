@@ -95,9 +95,9 @@ No. This player is designed exclusively for HLS streams (`.m3u8`). For regular M
 * Chrome, Firefox, Edge: via the hls.js library
 * IE11: not supported
 
-= Can I run multiple loading animations on one page? =
+= Can I run multiple loading animations or transition on one page? =
 
-Technically yes (Willem + Crisp + Pixelated all enabled), but it's not recommended — they will render simultaneously and look chaotic. Pick one per page.
+Not recommended — they will render simultaneously and look chaotic. Pick one per page.
 
 == Changelog ==
 

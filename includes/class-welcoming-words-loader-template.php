@@ -19,7 +19,7 @@ class Welcoming_Words_Loader_Template {
 
 	public static function register_controls( Controls_Stack $element ) {
 		$element->start_controls_section( self::key( 'section' ), [
-			'label' => __( 'Welcoming Words Loader', 'elementor-gsap' ),
+			'label' => __( 'Loaders • Welcoming Words', 'elementor-gsap' ),
 			'tab'   => Controls_Manager::TAB_STYLE,
 		] );
 

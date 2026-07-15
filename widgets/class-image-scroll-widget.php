@@ -27,7 +27,7 @@ class Image_Scroll_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-hover' ];
 	}
 
 	public function get_keywords() {
