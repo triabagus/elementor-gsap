@@ -77,14 +77,6 @@ class Bunny_HLS_Player_Widget extends Widget_Base {
 			'default'      => '',
 		] );
 
-		$this->add_control( 'muted', [
-			'label'        => __( 'Start Muted', 'elementor-gsap' ),
-			'type'         => Controls_Manager::SWITCHER,
-			'return_value' => 'true',
-			'default'      => '',
-			'condition'    => [ 'autoplay!' => 'true' ],
-		] );
-
 		$this->add_control( 'lazy', [
 			'label'       => __( 'Lazy Loading', 'elementor-gsap' ),
 			'type'        => Controls_Manager::SELECT,
@@ -100,11 +92,10 @@ class Bunny_HLS_Player_Widget extends Widget_Base {
 		$this->add_control( 'update_size', [
 			'label'       => __( 'Aspect Ratio', 'elementor-gsap' ),
 			'type'        => Controls_Manager::SELECT,
-			'description' => __( 'Auto = ambil rasio dari video. Cover = isi penuh container (butuh height eksplisit).', 'elementor-gsap' ),
+			'description' => __( 'Auto = ambil rasio dari video.', 'elementor-gsap' ),
 			'options'     => [
-				''      => __( 'Default (16:10 / 62.5% padding)', 'elementor-gsap' ),
-				'true'  => __( 'Auto from video', 'elementor-gsap' ),
-				'cover' => __( 'Cover container', 'elementor-gsap' ),
+				''     => __( 'Default (16:10 / 62.5% padding)', 'elementor-gsap' ),
+				'true' => __( 'Auto from video', 'elementor-gsap' ),
 			],
 			'default'     => '',
 		] );
@@ -167,7 +158,7 @@ class Bunny_HLS_Player_Widget extends Widget_Base {
 		$src         = ! empty( $s['video_src'] ) ? $s['video_src'] : '';
 		$placeholder = ! empty( $s['placeholder_image']['url'] ) ? $s['placeholder_image']['url'] : '';
 		$autoplay    = 'true' === $s['autoplay'] ? 'true' : 'false';
-		$muted       = ( 'true' === $s['autoplay'] || 'true' === $s['muted'] ) ? 'true' : 'false';
+		$muted       = 'true' === $autoplay ? 'true' : 'false';
 		$lazy        = isset( $s['lazy'] ) ? $s['lazy'] : '';
 		$update_size = isset( $s['update_size'] ) ? $s['update_size'] : '';
 		?>

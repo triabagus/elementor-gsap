@@ -206,6 +206,8 @@
 		var isLazyTrue = lazyMode === 'true';
 		var isLazyMeta = lazyMode === 'meta';
 		var autoplay   = player.getAttribute('data-player-autoplay') === 'true';
+		// PHP sudah OR-kan autoplay || user-muted ke data-player-muted; trust it.
+		var startMuted = player.getAttribute('data-player-muted') === 'true';
 
 		var pendingPlay = false;
 
@@ -224,10 +226,16 @@
 			inst.videoListeners.push({ type: type, fn: fn });
 		}
 
-		video.muted = !!autoplay;
+		video.muted = startMuted;
 		if (autoplay) video.loop = true;
 
-		video.setAttribute('muted', '');
+		// HTML `muted` attribute harus reflect state awal — kalau user pilih
+		// unmuted (autoplay off + start muted off), jangan paksa muted.
+		if (startMuted) {
+			video.setAttribute('muted', '');
+		} else {
+			video.removeAttribute('muted');
+		}
 		video.setAttribute('playsinline', '');
 		video.setAttribute('webkit-playsinline', '');
 		video.playsInline = true;
@@ -346,6 +354,21 @@
 		bindVideo('waiting', function () { setStatus('loading'); });
 		bindVideo('canplay', function () { readyIfIdle(player, pendingPlay); });
 		bindVideo('ended',   function () { pendingPlay = false; setStatus('paused'); setActivated(false); });
+
+		// Auto un-mute saat user menggeser volume. Muted awal hanya berlaku
+		// sekali di init; begitu volume value berubah (naik atau turun), kita
+		// anggap user ingin dengar audio. Track lastVolume untuk membedakan
+		// volume-drag vs mute-toggle (mute-toggle tidak mengubah `volume`).
+		var lastVolume = video.volume;
+		bindVideo('volumechange', function () {
+			if (video.volume !== lastVolume) {
+				if (video.muted) {
+					video.muted = false;
+					player.setAttribute('data-player-muted', 'false');
+				}
+				lastVolume = video.volume;
+			}
+		});
 
 		var ratioSet = false;
 		function maybeSetRatioOnce() {
