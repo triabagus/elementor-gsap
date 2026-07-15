@@ -194,7 +194,7 @@
 .fun-underlay-nav .underlay-nav__menu {
 	z-index: var(--fun-z-menu);
 	width: var(--fun-menu-width);
-	background-color: var(--fun-menu-bg);
+	background-color: transparent;
 	color: var(--fun-menu-text);
 	position: fixed;
 	top: 0;
@@ -204,6 +204,14 @@
 	   Tanpa ini, panel kanan sempat flash sebelum trik z-index aktif.
 	   Editor preview & saat menu open meng-override via aturan di bawah. */
 	visibility: hidden;
+}
+
+/* Menu open (frontend) atau editor preview: panel mengambil --fun-menu-bg.
+   State closed tetap transparent supaya body/section bg di belakang bisa
+   mengambil alih sampai user membuka menu. */
+body[data-fun-menu-status="open"] .fun-underlay-nav .underlay-nav__menu,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__menu {
+	background-color: var(--fun-menu-bg);
 }
 
 .fun-underlay-nav .underlay-nav__inner {
