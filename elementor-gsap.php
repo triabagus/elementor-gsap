@@ -122,6 +122,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/sidenav-wipe.css',
 		'assets/css/pixelated-image-reveal.css',
 		'assets/css/fixed-underlay-navigation.css',
+		'assets/css/welcoming-words-loader.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -135,8 +136,10 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/sidenav-wipe.js',
 		'assets/js/pixelated-image-reveal.js',
 		'assets/js/fixed-underlay-navigation.js',
+		'assets/js/welcoming-words-loader.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
+		'includes/class-welcoming-words-loader-template.php',
 		'includes/class-pixelated-transition-template.php',
 		'widgets/class-bunny-hls-player-widget.php',
 		'widgets/class-masked-text-reveal-widget.php',
@@ -260,10 +263,13 @@ add_action( 'plugins_loaded', function () {
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-crisp-loading-animation-extension.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-pixelated-transition-template.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-pixelated-transition-extension.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-template.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-extension.php';
 
 	\Elementor_GSAP\Willem_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Crisp_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Pixelated_Transition_Extension::init();
+	\Elementor_GSAP\Welcoming_Words_Loader_Extension::init();
 
 	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
 		$manager->add_category( 'elementor-gsap', [
@@ -413,6 +419,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/fixed-underlay-navigation.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-welcoming-words-loader',
+			ELEMENTOR_GSAP_URL . 'assets/js/welcoming-words-loader.js',
+			[ 'gsap' ],
+			elementor_gsap_asset_ver( 'assets/js/welcoming-words-loader.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -493,6 +506,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/fixed-underlay-navigation.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/fixed-underlay-navigation.css' )
+		);
+		wp_register_style(
+			'elementor-welcoming-words-loader',
+			ELEMENTOR_GSAP_URL . 'assets/css/welcoming-words-loader.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/welcoming-words-loader.css' )
 		);
 	} );
 } );

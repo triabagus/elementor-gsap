@@ -1,21 +1,16 @@
 # Elementor GSAP
-Contributors: creativetria
-Tags: gsap, elementor, elementor-plugin, elementor-addons, elementor-widgets
-WordPress tested up to: 7.0.1
-Elementor tested up to: 4.1.4
-License: GPLv3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+- Contributors: creativetria
+- Tags: gsap, elementor, elementor-plugin, elementor-addons, elementor-widgets
+- WordPress tested up to: 7.0.1
+- Elementor tested up to: 4.1.4
+- License: GPLv3
+- License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Premium Osmo-style loading animations, page transitions, and interactive widgets for Elementor — powered by GSAP.
 
-## Description
+## Overview
 
 **Elementor GSAP styled by Osmo** brings premium-grade animations to the Elementor page builder. Inspired by the design language of [Osmo](https://www.osmo.supply/) and powered by [GSAP](https://gsap.com/) (GreenSock Animation Platform), this plugin gives designers and developers a curated set of preloaders, page transitions, and animated widgets — all configurable directly from the Elementor panel.
-
-##  📸 Demo
-
-![Demo GIF](https://your-demo-link.com/demo.gif)  
-[Live Site](https://your-live-site.com)
 
 ## Why use this plugin?
 
@@ -27,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **3 page-level animations** (configured via Page Settings) and **3 Elementor widgets** (in the "Elements GSAP" category).
+The plugin ships **4 page-level animations** (configured via Page Settings) and **10 Elementor widgets** (in the "Elements GSAP" category).
 
 ### Loaders
 
@@ -37,32 +32,36 @@ The plugin ships **3 page-level animations** (configured via Page Settings) and 
 
 3. **Pixelated Page Transition** — a retro pixel-grid dissolve between pages. Internal link clicks trigger a randomly-staggered pixel grid that covers the page before navigation; the destination page fades the grid back out for a smooth entry. Pixel color, grid density (responsive), stagger timing, and per-block duration are all configurable.
 
+4. **Welcoming Words Loader** — a minimalist multilingual greeting preloader. A single word cycles through a comma-separated list (e.g. `Hello, Bonjour, स्वागत हे, Ciao, Olá`) with a smooth up/down mask transition, then the whole overlay fades out to reveal the page. Configurable word list, background / text / dot colors, dot size, word typography (with Global Colors + Global Typography support), and per-step / reveal / exit / fade timing. Skipped inside the Elementor editor iframe so it never obstructs editing.
+
 ### Elementor Widgets
 
-4. **Bunny HLS Player (Basic)** — a custom video player for HLS streaming (`.m3u8`), using Safari's native HLS support and [hls.js](https://github.com/video-dev/hls.js) elsewhere. Designed for [Bunny.net](https://bunny.net/), AWS, or any HLS provider. Supports autoplay (muted + loop with IntersectionObserver), lazy loading modes, aspect ratio behaviors, and full styling control.
+1. **Bunny HLS Player (Basic)** — a custom video player for HLS streaming (`.m3u8`), using Safari's native HLS support and [hls.js](https://github.com/video-dev/hls.js) elsewhere. Designed for [Bunny.net](https://bunny.net/), AWS, or any HLS provider. Supports autoplay (muted + loop with IntersectionObserver), lazy loading modes, aspect ratio behaviors, and full styling control.
 
-5. **Masked Text Reveal** — a scroll-triggered reveal using GSAP SplitText + ScrollTrigger. Lines slide up from below a mask when the element enters the viewport. Configurable split type (Lines / Words / Characters), duration, stagger, easing, ScrollTrigger start position, "Animate Once Only" toggle, plus typography group, alignment, and color. Includes built-in FOUC prevention.
+2. **Masked Text Reveal** — a scroll-triggered reveal using GSAP SplitText + ScrollTrigger. Lines slide up from below a mask when the element enters the viewport. Configurable split type (Lines / Words / Characters), duration, stagger, easing, ScrollTrigger start position, "Animate Once Only" toggle, plus typography group, alignment, and color. Includes built-in FOUC prevention.
 
-6. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw and snap, plus thumbnail navigation, powered by GSAP Draggable + InertiaPlugin. Repeater for slides (image + caption), active-slide offset mode or center mode, animated "01 / 04" counter, prev/next buttons with corner overlay hover effect, and full per-instance styling.
+3. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw and snap, plus thumbnail navigation, powered by GSAP Draggable + InertiaPlugin. Repeater for slides (image + caption), active-slide offset mode or center mode, animated "01 / 04" counter, prev/next buttons with corner overlay hover effect, and full per-instance styling.
 
-7. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin). Choose between 6 hand-drawn underline variants or random cycle; duration, easing, color, and thickness configurable.
+4. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin). Choose between 6 hand-drawn underline variants or random cycle; duration, easing, color, and thickness configurable.
 
-8. **Button Character Stagger** — an Osmo-style button where each character slides up on hover with a staggered delay, paired with an inset background that shrinks on hover. Pure CSS transitions (no GSAP needed); stagger offset, duration, easing, character travel distance, hover inset, padding, max-width, radius, typography, and colors all configurable.
+5. **Button Character Stagger** — an Osmo-style button where each character slides up on hover with a staggered delay, paired with an inset background that shrinks on hover. Pure CSS transitions (no GSAP needed); stagger offset, duration, easing, character travel distance, hover inset, padding, max-width, radius, typography, and colors all configurable.
 
-9. **Looping Words with Selector** — a vertical word carousel where the visible word is highlighted by an animated corner-edge "selector" that snaps to the word's width. Powered by GSAP. Repeater for the word list, configurable word/selector durations, easing (Elastic / Bounce / Expo presets), fade gradient color, edge color/thickness/length, and selector height.
+6. **Looping Words with Selector** — a vertical word carousel where the visible word is highlighted by an animated corner-edge "selector" that snaps to the word's width. Powered by GSAP. Repeater for the word list, configurable word/selector durations, easing (Elastic / Bounce / Expo presets), fade gradient color, edge color/thickness/length, and selector height.
 
-10. **Image Scroll** — a fixed-size frame that reveals a tall/wide image by scrolling its content on hover or via mouse-tracking. Useful for long screenshots, full-page mockups, before/after panoramas. Direction (vertical / horizontal), trigger (hover / mouse-track), reverse, duration, easing, frame height, max-width, border radius, border, shadow, and optional centered overlay icon — all controllable. Pure CSS transitions; no GSAP dependency.
+7. **Image Scroll** — a fixed-size frame that reveals a tall/wide image by scrolling its content on hover or via mouse-tracking. Useful for long screenshots, full-page mockups, before/after panoramas. Direction (vertical / horizontal), trigger (hover / mouse-track), reverse, duration, easing, frame height, max-width, border radius, border, shadow, and optional centered overlay icon — all controllable. Pure CSS transitions; no GSAP dependency.
 
-11. **Side Navigation Wipe** — a fixed-position trigger button that opens a right-side drawer menu with a staggered, three-panel wipe effect (Osmo-style). Powered by GSAP + CustomEase. Menu items repeater (label + eyebrow + link), socials repeater, Escape key to close, ARIA-expanded sync, configurable trigger position, panel colors (3 layers), overlay color, menu width/radius, and typography per text role. Editor preview renders menu inline so content stays editable.
+8. **Side Navigation Wipe** — a fixed-position trigger button that opens a right-side drawer menu with a staggered, three-panel wipe effect (Osmo-style). Powered by GSAP + CustomEase. Menu items repeater (label + eyebrow + link), socials repeater, Escape key to close, ARIA-expanded sync, configurable trigger position, panel colors (3 layers), overlay color, menu width/radius, and typography per text role. Editor preview renders menu inline so content stays editable.
 
-12. **Fixed Underlay Navigation** — a fixed-position trigger button where the entire page content slides left to reveal a navigation menu that was sitting *underneath* the whole time (vs. Side Navigation Wipe which slides a drawer over the content). Powered by GSAP + CustomEase with the "easeReverse" technique from the GSAP 3.15 announcement, so the open and close motions feel distinct, and mid-animation interruptions stay responsive without snapping. Includes logo (default SVG / image upload / none), Menu/Close toggle with animated label flip + bars rotating into an X, large menu items repeater with current-item highlight, separate Socials and Quick Links columns at the bottom, decorative overlay borders + corner cutouts framing the menu edge, animated bottom-border scaleX, Escape/overlay-click to close, ARIA-expanded sync, and an auto-wrap fallback for the main content wrapper (or a custom CSS selector via the "Main Wrapper Selector" control). Fully configurable via CSS custom properties exposed as Elementor controls.
+9. **Pixelated Image Reveal** — an image card that transitions from a *default* image to an *active* image via a randomly-staggered pixel-grid reveal (Osmo-style). Powered by GSAP. Hover or click dissolves the first image into pixel blocks and reveals the second underneath. Configurable default / active images (with dynamic tags), alt text, optional link wrapper, step duration, and grid size (rows × columns — larger = finer, but DOM nodes grow quadratically).
+
+10. **Fixed Underlay Navigation** — a fixed-position trigger button where the entire page content slides left to reveal a navigation menu that was sitting *underneath* the whole time (vs. Side Navigation Wipe which slides a drawer over the content). Powered by GSAP + CustomEase with the "easeReverse" technique from the GSAP 3.15 announcement, so the open and close motions feel distinct, and mid-animation interruptions stay responsive without snapping. Includes logo (default SVG / image upload / none), Menu/Close toggle with animated label flip + bars rotating into an X, large menu items repeater with current-item highlight, separate Socials and Quick Links columns at the bottom, decorative overlay borders + corner cutouts framing the menu edge, animated bottom-border scaleX, Escape/overlay-click to close, ARIA-expanded sync, and an auto-wrap fallback for the main content wrapper (or a custom CSS selector via the "Main Wrapper Selector" control). Fully configurable via CSS custom properties exposed as Elementor controls.
 
 ## 📦 Installation
 
 1. Upload the `elementor-gsap` folder to `/wp-content/plugins/`.
 2. Activate the plugin from the **Plugins** menu in WordPress admin.
 3. Make sure the **Elementor** plugin is active (latest stable recommended).
-4. **Page-level animations**: open a page in Elementor → click the **gear** icon (Page Settings) → **Style** tab → scroll to the desired section (Willem / Crisp / Pixelated Transition).
+4. **Page-level animations**: open a page in Elementor → click the **gear** icon (Page Settings) → **Style** tab → scroll to the desired section (Willem / Crisp / Pixelated Transition / Welcoming Words Loader).
 5. **Widgets**: in the Elementor widget panel, find the **Elements GSAP** category and drag the desired widget onto a Section/Container.
 
 ## Frequently Asked Questions
