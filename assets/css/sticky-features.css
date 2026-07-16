@@ -1,0 +1,392 @@
+/* Sticky Features — pinned scroll section dengan swap image (clip-path) &
+   text sync ke progress bar. CSS variables dikontrol via Elementor. */
+
+/* Defensive: pastikan Elementor widget wrapper tidak clip / contain
+   element yang di-pin ScrollTrigger. Beberapa tema/section Elementor
+   default `overflow: hidden` yang bakal potong pinned element. */
+.elementor-widget-sticky_features,
+.elementor-widget-sticky_features > .elementor-widget-container {
+	overflow: visible;
+	contain: none;
+}
+
+.sticky-features__wrap {
+	--sf-container-max:    70em;
+	--sf-container-pad-x:  1.25em;
+	--sf-col-gap:          1.25em;
+	--sf-radius:           0.75em;
+	--sf-img-aspect:       1 / 1.3;
+
+	--sf-text-max:         27.5em;
+	--sf-text-gap:         1.5em;
+
+	--sf-tag-color:        #000000;
+	--sf-tag-bg:           rgba(0, 0, 0, 0.08);
+	--sf-tag-radius:       0.25em;
+	--sf-tag-pad-y:        0.5em;
+	--sf-tag-pad-x:        0.625em;
+	--sf-tag-mb:           1.5em;
+
+	--sf-heading-color:    #000000;
+	--sf-p-color:          rgba(0, 0, 0, 0.7);
+	--sf-link-color:       #000000;
+
+	--sf-progress-track:   rgba(0, 0, 0, 0.15);
+	--sf-progress-bar:     #000000;
+	--sf-progress-height:  0.25em;
+
+	width: 100%;
+	padding-left: var(--sf-container-pad-x);
+	padding-right: var(--sf-container-pad-x);
+	position: relative;
+	/* Reset properties yang berpotensi memutus `position: fixed` yang
+	   dipakai ScrollTrigger pin (mis. transform / filter / contain di
+	   parent theme membikin wrapper jadi containing block untuk fixed). */
+	transform: none;
+	filter: none;
+	perspective: none;
+	will-change: auto;
+}
+
+.sticky-features__scroll {
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	display: flex;
+}
+
+.sticky-features__container {
+	gap: var(--sf-col-gap);
+	justify-content: center;
+	align-items: stretch;
+	width: 100%;
+	max-width: var(--sf-container-max);
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+}
+
+.sticky-feaures__col {
+	flex: 1;
+	position: relative;
+}
+
+.sticky-feaures__col.is--img {
+	overflow: hidden;
+	border-radius: var(--sf-radius);
+}
+
+.sticky-features__progress-w {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: var(--sf-progress-height);
+	background-color: var(--sf-progress-track);
+}
+
+.sticky-features__progress-bar {
+	width: 100%;
+	height: 100%;
+	background-color: var(--sf-progress-bar);
+	transform: scale3d(0, 1, 1);
+	transform-origin: 0% 50%;
+}
+
+.sticky-features__img-collection {
+	width: 100%;
+}
+
+.sticky-features__img-list {
+	aspect-ratio: var(--sf-img-aspect);
+	width: 100%;
+	position: relative;
+}
+
+.sticky-features__img-item {
+	-webkit-clip-path: inset(50% round var(--sf-radius));
+	clip-path: inset(50% round var(--sf-radius));
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	inset: 0;
+}
+
+/* Show only 1st visual on initial render (before/without JS). */
+[data-sticky-feature-visual-wrap]:first-of-type {
+	-webkit-clip-path: inset(0% round var(--sf-radius));
+	clip-path: inset(0% round var(--sf-radius));
+}
+
+.sticky-features__img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+}
+
+.sticky-features__text-collection {
+	height: 100%;
+}
+
+.sticky-features__text-list {
+	flex-flow: column;
+	justify-content: center;
+	align-items: flex-start;
+	height: 100%;
+	max-height: 100%;
+	display: flex;
+	position: relative;
+}
+
+.sticky-features__text-item {
+	gap: var(--sf-text-gap);
+	visibility: hidden;
+	flex-flow: column;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	max-width: var(--sf-text-max);
+	margin-left: auto;
+	display: flex;
+	position: absolute;
+	right: 0;
+}
+
+/* Show only 1st text item on initial render. */
+[data-sticky-feature-item]:first-of-type {
+	visibility: visible;
+}
+
+.sticky-features__heading {
+	color: var(--sf-heading-color);
+	margin: 0;
+	font-size: 3.75em;
+	font-weight: 500;
+	line-height: 1;
+}
+
+.sticky-features__p {
+	color: var(--sf-p-color);
+	margin-bottom: 0;
+	font-size: 1.25em;
+	line-height: 1.2;
+}
+
+.sticky-features__p.is--link {
+	color: var(--sf-link-color);
+	text-decoration: underline;
+}
+
+.sticky-features__p.is--link a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+.sticky-features__tag {
+	color: var(--sf-tag-color);
+	background-color: var(--sf-tag-bg);
+	border-radius: var(--sf-tag-radius);
+	margin-bottom: var(--sf-tag-mb);
+	padding: var(--sf-tag-pad-y) var(--sf-tag-pad-x);
+	font-size: 1em;
+	line-height: 1;
+	display: inline-block;
+}
+
+@media screen and (max-width: 767px) {
+	.sticky-features__scroll {
+		justify-content: center;
+		align-items: center;
+		height: auto;
+		min-height: 100svh;
+		padding-top: 1.25em;
+		padding-bottom: 2.5em;
+	}
+
+	.sticky-features__container {
+		gap: 2em;
+		flex-flow: column;
+		justify-content: flex-start;
+		align-items: stretch;
+	}
+
+	.sticky-features__img-list {
+		aspect-ratio: 1;
+	}
+
+	.sticky-features__text-list {
+		min-height: 20em;
+		max-height: none;
+	}
+
+	.sticky-features__text-item {
+		max-width: none;
+	}
+
+	.sticky-features__heading {
+		font-size: 2.5em;
+	}
+
+	.sticky-features__p {
+		font-size: 1em;
+	}
+
+	.sticky-features__tag {
+		margin-bottom: 0;
+	}
+}
+
+/* ==========================================================================
+   EDITOR PREVIEW
+   Frontend memakai ScrollTrigger pin + scrub yang tidak bisa dijalankan
+   di iframe editor Elementor. Sebagai gantinya kita render setiap fitur
+   sebagai card berurutan (image di atas, text di bawah) + badge label
+   supaya user tetap bisa edit content dengan konteks visual yang jelas.
+   ========================================================================== */
+
+body.elementor-editor-active .sticky-features__wrap,
+.sticky-features__wrap.egsap-edit-mode {
+	height: auto;
+	padding: 3.5em 1.25em 2em;
+	background-color: rgba(0, 0, 0, 0.02);
+	border: 1px dashed rgba(0, 0, 0, 0.12);
+	border-radius: 0.5em;
+	position: relative;
+}
+
+body.elementor-editor-active .sticky-features__wrap::before,
+.sticky-features__wrap.egsap-edit-mode::before {
+	content: 'Sticky Features — Editor Preview (frontend uses pinned scroll)';
+	position: absolute;
+	top: 0.75em;
+	left: 1em;
+	padding: 0.35em 0.7em;
+	background: rgba(0, 0, 0, 0.8);
+	color: #ffffff;
+	border-radius: 0.25em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: 1;
+	z-index: 2;
+	pointer-events: none;
+}
+
+body.elementor-editor-active .sticky-features__scroll,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__scroll {
+	height: auto;
+	min-height: 0;
+	display: block;
+}
+
+/* Container di editor = grid 2 kolom (image col + text col) yang tetap
+   sejajar seperti frontend, tapi tanpa positioning absolut sehingga
+   scroll internal editor bekerja normal. */
+body.elementor-editor-active .sticky-features__container,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__container {
+	flex-flow: row;
+	gap: 1.5em;
+	max-width: none;
+	align-items: flex-start;
+}
+
+body.elementor-editor-active .sticky-feaures__col.is--img,
+.sticky-features__wrap.egsap-edit-mode .sticky-feaures__col.is--img {
+	overflow: visible;
+	border-radius: 0;
+}
+
+/* Image list — stack semua visual sebagai card, sesuai order feature. */
+body.elementor-editor-active .sticky-features__img-list,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__img-list {
+	aspect-ratio: auto;
+	display: flex;
+	flex-flow: column;
+	gap: 1.5em;
+	counter-reset: sf-preview;
+}
+
+body.elementor-editor-active [data-sticky-feature-visual-wrap],
+.sticky-features__wrap.egsap-edit-mode [data-sticky-feature-visual-wrap] {
+	-webkit-clip-path: inset(0% round var(--sf-radius));
+	clip-path: inset(0% round var(--sf-radius));
+	position: relative;
+	inset: auto;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 3;
+	counter-increment: sf-preview;
+}
+
+/* Badge nomor di pojok tiap image supaya user tahu urutan fitur. */
+body.elementor-editor-active [data-sticky-feature-visual-wrap]::after,
+.sticky-features__wrap.egsap-edit-mode [data-sticky-feature-visual-wrap]::after {
+	content: counter(sf-preview, decimal-leading-zero);
+	position: absolute;
+	top: 0.75em;
+	left: 0.75em;
+	padding: 0.3em 0.6em;
+	background: rgba(0, 0, 0, 0.75);
+	color: #ffffff;
+	border-radius: 0.25em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
+	z-index: 1;
+	pointer-events: none;
+}
+
+/* Text list — mirror struktur image list (card per feature dengan aspect
+   ratio yang sama biar rows kiri-kanan sejajar visually). */
+body.elementor-editor-active .sticky-features__text-list,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__text-list {
+	display: flex;
+	flex-flow: column;
+	gap: 1.5em;
+	height: auto;
+	min-height: 0;
+	max-height: none;
+	justify-content: flex-start;
+}
+
+body.elementor-editor-active [data-sticky-feature-item],
+.sticky-features__wrap.egsap-edit-mode [data-sticky-feature-item] {
+	visibility: visible;
+	position: relative;
+	right: auto;
+	max-width: none;
+	margin-left: 0;
+	aspect-ratio: 4 / 3;
+	justify-content: center;
+	padding: 1.25em;
+	background: rgba(0, 0, 0, 0.02);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: var(--sf-radius);
+}
+
+body.elementor-editor-active .sticky-features__progress-w,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__progress-w {
+	display: none;
+}
+
+/* Editor: turunkan font-size heading supaya card tidak overflow konten. */
+body.elementor-editor-active .sticky-features__heading,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__heading {
+	font-size: 1.75em;
+}
+
+body.elementor-editor-active .sticky-features__p,
+.sticky-features__wrap.egsap-edit-mode .sticky-features__p {
+	font-size: 0.95em;
+}
+
+/* Responsive editor preview: di layar sempit stack vertikal (image →
+   text pair) supaya tetap terbaca. */
+@media screen and (max-width: 767px) {
+	body.elementor-editor-active .sticky-features__container,
+	.sticky-features__wrap.egsap-edit-mode .sticky-features__container {
+		flex-flow: column;
+	}
+}

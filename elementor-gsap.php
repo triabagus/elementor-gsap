@@ -125,6 +125,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/welcoming-words-loader.css',
 		'assets/css/sticky-steps.css',
 		'assets/css/logo-wall-cycle.css',
+		'assets/css/sticky-features.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -141,6 +142,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/welcoming-words-loader.js',
 		'assets/js/sticky-steps.js',
 		'assets/js/logo-wall-cycle.js',
+		'assets/js/sticky-features.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -157,6 +159,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-fixed-underlay-navigation-widget.php',
 		'widgets/class-sticky-steps-widget.php',
 		'widgets/class-logo-wall-cycle-widget.php',
+		'widgets/class-sticky-features-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -289,6 +292,7 @@ add_action( 'plugins_loaded', function () {
 			'elementor-gsap-hover'    => [ __( 'GSAP • Hover Interactions', 'elementor-gsap' ), 'eicon-image-rollover' ],
 			'elementor-gsap-nav'      => [ __( 'GSAP • Navigation', 'elementor-gsap' ),         'eicon-nav-menu' ],
 			'elementor-gsap-sections' => [ __( 'GSAP • Sections & Layouts', 'elementor-gsap' ), 'eicon-section' ],
+			'elementor-gsap-scroll'   => [ __( 'GSAP • Scroll Animations', 'elementor-gsap' ), 'eicon-parallax' ],
 		];
 		foreach ( $categories as $slug => $meta ) {
 			$manager->add_category( $slug, [
@@ -334,6 +338,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-logo-wall-cycle-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Logo_Wall_Cycle_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-sticky-features-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Sticky_Features_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -466,6 +473,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/logo-wall-cycle.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-sticky-features',
+			ELEMENTOR_GSAP_URL . 'assets/js/sticky-features.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/sticky-features.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -564,6 +578,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/logo-wall-cycle.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/logo-wall-cycle.css' )
+		);
+		wp_register_style(
+			'elementor-sticky-features',
+			ELEMENTOR_GSAP_URL . 'assets/css/sticky-features.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/sticky-features.css' )
 		);
 	} );
 } );

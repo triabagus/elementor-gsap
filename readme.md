@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **4 page-level animations** (configured via Page Settings) and **12 Elementor widgets** (grouped into 7 sub-categories under the "Elements GSAP" section).
+The plugin ships **4 page-level animations** (configured via Page Settings) and **13 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -59,6 +59,8 @@ The plugin ships **4 page-level animations** (configured via Page Settings) and 
 11. **Sticky Steps (Basic)** — a two-column scroll layout where a sticky media/image column stays in view while text steps scroll past on the left. Powered by GSAP ScrollTrigger. Each step has an eyebrow, heading, description, and image; the step whose anchor is closest to viewport center becomes `active` (visible + full opacity), items before it get `before`, and items after get `after` — states that CSS uses to swap images with fade transitions and dim inactive text. Steps repeater, configurable container max-width, per-breakpoint layout (text width, gap between steps, sticky top offset for fixed headers), typography per role (eyebrow / heading / description), image aspect ratio, border radius, inactive-text opacity, and state transition duration. Responsive: below 992px, layout stacks vertically and sticky is disabled.
 
 12. **Logo Wall Cycle** — a client/partner logo grid where a subset of visible cells continuously cycle through a larger pool of logos with a smooth yPercent + autoAlpha crossfade (Osmo-style). Powered by GSAP + ScrollTrigger — the timeline auto-pauses when the section scrolls out of view and when the browser tab is hidden, resuming when back on screen. Logos repeater (image + alt + optional link), configurable loop delay, swap duration, and "shuffle initial order" toggle. Fully responsive grid: columns per row + visible items count are separately controllable per breakpoint (desktop / tablet / mobile), so you can show 4×2 on desktop, 3×2 on tablet, 2×2 on mobile from the same logo pool. Item aspect ratio, logo target width/height (relative to cell), wall & item backgrounds, and CSS filter (normal + hover) also configurable.
+
+13. **Sticky Features** — a two-column pinned-scroll section (Osmo-style): the left image column stays fixed while a scroll-driven ScrollTrigger scrubs through N features, swapping the image via `clip-path: inset(0% ↔ 50%)` reveal and cross-fading the tag + heading + description + link on the right, all synced to a progress bar underneath the image. Powered by GSAP + ScrollTrigger (`pin: true`, `scrub: true`). Respects `prefers-reduced-motion` (auto-switches to near-instant transitions). Features repeater (image + tag + heading + description + optional link), configurable transition duration, "Scroll Amount" (portion of scroll used for step transitions, 0.9 = 90%), full styling per role (tag color/bg/radius/typography, heading, description, link, progress bar track/bar/height), plus layout controls (container max-width, column gap, image aspect ratio, border radius, text card max-width). On mobile (≤767px) layout stacks vertically and pin/scrub disables gracefully.
 
 ## 📦 Installation
 
