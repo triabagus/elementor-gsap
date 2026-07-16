@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **4 page-level animations** (configured via Page Settings) and **10 Elementor widgets** (in the "Elements GSAP" category).
+The plugin ships **4 page-level animations** (configured via Page Settings) and **11 Elementor widgets** (grouped into 7 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -55,6 +55,8 @@ The plugin ships **4 page-level animations** (configured via Page Settings) and 
 9. **Pixelated Image Reveal** — an image card that transitions from a *default* image to an *active* image via a randomly-staggered pixel-grid reveal (Osmo-style). Powered by GSAP. Hover or click dissolves the first image into pixel blocks and reveals the second underneath. Configurable default / active images (with dynamic tags), alt text, optional link wrapper, step duration, and grid size (rows × columns — larger = finer, but DOM nodes grow quadratically).
 
 10. **Fixed Underlay Navigation** — a fixed-position trigger button where the entire page content slides left to reveal a navigation menu that was sitting *underneath* the whole time (vs. Side Navigation Wipe which slides a drawer over the content). Powered by GSAP + CustomEase with the "easeReverse" technique from the GSAP 3.15 announcement, so the open and close motions feel distinct, and mid-animation interruptions stay responsive without snapping. Includes logo (default SVG / image upload / none), Menu/Close toggle with animated label flip + bars rotating into an X, large menu items repeater with current-item highlight, separate Socials and Quick Links columns at the bottom, decorative overlay borders + corner cutouts framing the menu edge, animated bottom-border scaleX, Escape/overlay-click to close, ARIA-expanded sync, and an auto-wrap fallback for the main content wrapper (or a custom CSS selector via the "Main Wrapper Selector" control). Fully configurable via CSS custom properties exposed as Elementor controls.
+
+11. **Sticky Steps (Basic)** — a two-column scroll layout where a sticky media/image column stays in view while text steps scroll past on the left. Powered by GSAP ScrollTrigger. Each step has an eyebrow, heading, description, and image; the step whose anchor is closest to viewport center becomes `active` (visible + full opacity), items before it get `before`, and items after get `after` — states that CSS uses to swap images with fade transitions and dim inactive text. Steps repeater, configurable container max-width, per-breakpoint layout (text width, gap between steps, sticky top offset for fixed headers), typography per role (eyebrow / heading / description), image aspect ratio, border radius, inactive-text opacity, and state transition duration. Responsive: below 992px, layout stacks vertically and sticky is disabled.
 
 ## 📦 Installation
 

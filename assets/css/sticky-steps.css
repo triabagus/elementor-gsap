@@ -1,0 +1,209 @@
+/* Sticky Steps (Basic) — sticky media column dengan text steps yang scroll
+   dan swap based on which anchor is closest to viewport center (ScrollTrigger).
+   CSS variables dikontrol via Elementor controls. */
+
+.sticky-steps {
+	--sts-container-max:  74em;
+	--sts-container-pad-x: 1.5em;
+	--sts-gap:             30dvh;
+	--sts-list-pad-y:      calc(50dvh - 7.5em);
+	--sts-text-width:      50%;
+	--sts-text-pad-right:  6em;
+	--sts-media-pad-left:  3em;
+	--sts-sticky-top:      0px;
+
+	--sts-eyebrow-color:   currentColor;
+	--sts-eyebrow-opacity: 0.5;
+	--sts-heading-color:   currentColor;
+	--sts-p-color:         currentColor;
+	--sts-p-opacity:       0.6;
+
+	--sts-visual-aspect:   3 / 4;
+	--sts-visual-radius:   500em;
+
+	--sts-inactive-text-opacity: 0.25;
+	--sts-state-duration:  0.5s;
+
+	min-height: 100dvh;
+	position: relative;
+	overflow: clip;
+}
+
+.sticky-steps__container {
+	max-width: var(--sts-container-max);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--sts-container-pad-x);
+	padding-right: var(--sts-container-pad-x);
+}
+
+.sticky-steps__collection {
+	min-height: 100dvh;
+	display: flex;
+	position: relative;
+}
+
+.sticky-steps__list {
+	gap: var(--sts-gap);
+	flex-flow: column;
+	flex: 1;
+	padding-top: var(--sts-list-pad-y);
+	padding-bottom: var(--sts-list-pad-y);
+	display: flex;
+}
+
+/* NOTE: .sticky-steps__item sengaja TIDAK diberi position: relative.
+   Semua .sticky-steps__media (position: absolute) harus anchor ke
+   .sticky-steps__collection (satu-satunya positioned ancestor tinggi)
+   supaya sticky-nya bisa scroll sepanjang seluruh collection. Kalau
+   item jadi positioned, media akan trapped di dalam kotak text tiap
+   item — sticky-nya cuma se-tinggi text (tidak ke-lihat kerja) dan
+   swap image antar-step juga rusak karena media-media tidak overlap
+   di layer yang sama. */
+
+.sticky-steps__text {
+	gap: 2em;
+	flex-flow: column;
+	width: var(--sts-text-width);
+	padding-right: var(--sts-text-pad-right);
+	display: flex;
+}
+
+.sticky-steps__eyebrow {
+	color: var(--sts-eyebrow-color);
+	opacity: var(--sts-eyebrow-opacity);
+	text-transform: uppercase;
+	font-size: 1.3125em;
+	font-weight: 700;
+}
+
+.sticky-steps__h2 {
+	color: var(--sts-heading-color);
+	letter-spacing: -0.04em;
+	margin: 0;
+	font-size: min(5.5em, 15vw);
+	font-weight: 500;
+	line-height: 0.9;
+}
+
+.sticky-steps__p {
+	color: var(--sts-p-color);
+	opacity: var(--sts-p-opacity);
+	margin-bottom: 0;
+	font-size: min(1.4375em, 5vw);
+	line-height: 1.4;
+}
+
+.sticky-steps__media {
+	width: calc(100% - var(--sts-text-width));
+	height: 100%;
+	padding-left: var(--sts-media-pad-left);
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.sticky-steps__sticky {
+	align-items: center;
+	width: 100%;
+	min-height: 100dvh;
+	display: flex;
+	position: sticky;
+	top: var(--sts-sticky-top);
+}
+
+.sticky-steps__visual {
+	aspect-ratio: var(--sts-visual-aspect);
+	border-radius: var(--sts-visual-radius);
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.sticky-steps__cover-image {
+	object-fit: cover;
+	border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* State transitions (desktop only). Text meredup di step yang bukan active,
+   visual fade di step "after" supaya cover-image di-swap smooth. */
+@media screen and (min-width: 992px) {
+	[data-sticky-steps-item-status] .sticky-steps__visual {
+		transition: opacity var(--sts-state-duration) ease-in-out,
+			visibility var(--sts-state-duration) ease-in-out;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	[data-sticky-steps-item-status="before"] .sticky-steps__visual,
+	[data-sticky-steps-item-status="active"] .sticky-steps__visual {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	[data-sticky-steps-item-status] .sticky-steps__text {
+		transition: opacity var(--sts-state-duration) ease-in-out;
+		opacity: var(--sts-inactive-text-opacity);
+	}
+
+	[data-sticky-steps-item-status="active"] .sticky-steps__text {
+		opacity: 1;
+	}
+}
+
+@media screen and (max-width: 991px) {
+	.sticky-steps__list {
+		gap: 7.5em;
+		padding-top: 10em;
+		padding-bottom: 10em;
+	}
+
+	.sticky-steps__text {
+		width: 100%;
+		padding-bottom: 5em;
+		padding-right: 0;
+	}
+
+	.sticky-steps__sticky {
+		min-height: auto;
+		position: relative;
+		top: auto;
+	}
+
+	.sticky-steps__media {
+		width: 100%;
+		height: auto;
+		padding-left: 0;
+		position: relative;
+		top: auto;
+		right: auto;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.sticky-steps__text {
+		gap: 1.5em;
+	}
+}
+
+/* Editor preview — sticky behavior often broken in Elementor iframe. Stack
+   items normally so user can edit content without weird overlap. */
+body.elementor-editor-active .sticky-steps__sticky,
+.sticky-steps.egsap-edit-mode .sticky-steps__sticky {
+	position: relative;
+	top: auto;
+	min-height: auto;
+}
+
+body.elementor-editor-active .sticky-steps [data-sticky-steps-item-status] .sticky-steps__visual,
+body.elementor-editor-active .sticky-steps [data-sticky-steps-item-status] .sticky-steps__text,
+.sticky-steps.egsap-edit-mode [data-sticky-steps-item-status] .sticky-steps__visual,
+.sticky-steps.egsap-edit-mode [data-sticky-steps-item-status] .sticky-steps__text {
+	opacity: 1;
+	visibility: visible;
+}

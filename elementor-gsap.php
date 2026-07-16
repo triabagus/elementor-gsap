@@ -123,6 +123,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/pixelated-image-reveal.css',
 		'assets/css/fixed-underlay-navigation.css',
 		'assets/css/welcoming-words-loader.css',
+		'assets/css/sticky-steps.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -137,6 +138,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/pixelated-image-reveal.js',
 		'assets/js/fixed-underlay-navigation.js',
 		'assets/js/welcoming-words-loader.js',
+		'assets/js/sticky-steps.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -151,6 +153,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-sidenav-wipe-widget.php',
 		'widgets/class-pixelated-image-reveal-widget.php',
 		'widgets/class-fixed-underlay-navigation-widget.php',
+		'widgets/class-sticky-steps-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -276,12 +279,13 @@ add_action( 'plugins_loaded', function () {
 
 	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
 		$categories = [
-			'elementor-gsap-video'   => [ __( 'GSAP • Video & Audio', 'elementor-gsap' ),      'eicon-video-camera' ],
-			'elementor-gsap-text'    => [ __( 'GSAP • Text Animations', 'elementor-gsap' ),    'eicon-t-letter' ],
-			'elementor-gsap-sliders' => [ __( 'GSAP • Sliders & Marquees', 'elementor-gsap' ), 'eicon-slider-push' ],
-			'elementor-gsap-buttons' => [ __( 'GSAP • Buttons', 'elementor-gsap' ),            'eicon-button' ],
-			'elementor-gsap-hover'   => [ __( 'GSAP • Hover Interactions', 'elementor-gsap' ), 'eicon-image-rollover' ],
-			'elementor-gsap-nav'     => [ __( 'GSAP • Navigation', 'elementor-gsap' ),         'eicon-nav-menu' ],
+			'elementor-gsap-video'    => [ __( 'GSAP • Video & Audio', 'elementor-gsap' ),      'eicon-video-camera' ],
+			'elementor-gsap-text'     => [ __( 'GSAP • Text Animations', 'elementor-gsap' ),    'eicon-t-letter' ],
+			'elementor-gsap-sliders'  => [ __( 'GSAP • Sliders & Marquees', 'elementor-gsap' ), 'eicon-slider-push' ],
+			'elementor-gsap-buttons'  => [ __( 'GSAP • Buttons', 'elementor-gsap' ),            'eicon-button' ],
+			'elementor-gsap-hover'    => [ __( 'GSAP • Hover Interactions', 'elementor-gsap' ), 'eicon-image-rollover' ],
+			'elementor-gsap-nav'      => [ __( 'GSAP • Navigation', 'elementor-gsap' ),         'eicon-nav-menu' ],
+			'elementor-gsap-sections' => [ __( 'GSAP • Sections & Layouts', 'elementor-gsap' ), 'eicon-section' ],
 		];
 		foreach ( $categories as $slug => $meta ) {
 			$manager->add_category( $slug, [
@@ -321,6 +325,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-fixed-underlay-navigation-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Fixed_Underlay_Navigation_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-sticky-steps-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Sticky_Steps_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -439,6 +446,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/welcoming-words-loader.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-sticky-steps',
+			ELEMENTOR_GSAP_URL . 'assets/js/sticky-steps.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/sticky-steps.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -525,6 +539,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/welcoming-words-loader.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/welcoming-words-loader.css' )
+		);
+		wp_register_style(
+			'elementor-sticky-steps',
+			ELEMENTOR_GSAP_URL . 'assets/css/sticky-steps.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/sticky-steps.css' )
 		);
 	} );
 } );
