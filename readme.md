@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **4 page-level animations** (configured via Page Settings) and **11 Elementor widgets** (grouped into 7 sub-categories under the "Elements GSAP" section).
+The plugin ships **4 page-level animations** (configured via Page Settings) and **12 Elementor widgets** (grouped into 7 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -57,6 +57,8 @@ The plugin ships **4 page-level animations** (configured via Page Settings) and 
 10. **Fixed Underlay Navigation** — a fixed-position trigger button where the entire page content slides left to reveal a navigation menu that was sitting *underneath* the whole time (vs. Side Navigation Wipe which slides a drawer over the content). Powered by GSAP + CustomEase with the "easeReverse" technique from the GSAP 3.15 announcement, so the open and close motions feel distinct, and mid-animation interruptions stay responsive without snapping. Includes logo (default SVG / image upload / none), Menu/Close toggle with animated label flip + bars rotating into an X, large menu items repeater with current-item highlight, separate Socials and Quick Links columns at the bottom, decorative overlay borders + corner cutouts framing the menu edge, animated bottom-border scaleX, Escape/overlay-click to close, ARIA-expanded sync, and an auto-wrap fallback for the main content wrapper (or a custom CSS selector via the "Main Wrapper Selector" control). Fully configurable via CSS custom properties exposed as Elementor controls.
 
 11. **Sticky Steps (Basic)** — a two-column scroll layout where a sticky media/image column stays in view while text steps scroll past on the left. Powered by GSAP ScrollTrigger. Each step has an eyebrow, heading, description, and image; the step whose anchor is closest to viewport center becomes `active` (visible + full opacity), items before it get `before`, and items after get `after` — states that CSS uses to swap images with fade transitions and dim inactive text. Steps repeater, configurable container max-width, per-breakpoint layout (text width, gap between steps, sticky top offset for fixed headers), typography per role (eyebrow / heading / description), image aspect ratio, border radius, inactive-text opacity, and state transition duration. Responsive: below 992px, layout stacks vertically and sticky is disabled.
+
+12. **Logo Wall Cycle** — a client/partner logo grid where a subset of visible cells continuously cycle through a larger pool of logos with a smooth yPercent + autoAlpha crossfade (Osmo-style). Powered by GSAP + ScrollTrigger — the timeline auto-pauses when the section scrolls out of view and when the browser tab is hidden, resuming when back on screen. Logos repeater (image + alt + optional link), configurable loop delay, swap duration, and "shuffle initial order" toggle. Fully responsive grid: columns per row + visible items count are separately controllable per breakpoint (desktop / tablet / mobile), so you can show 4×2 on desktop, 3×2 on tablet, 2×2 on mobile from the same logo pool. Item aspect ratio, logo target width/height (relative to cell), wall & item backgrounds, and CSS filter (normal + hover) also configurable.
 
 ## 📦 Installation
 

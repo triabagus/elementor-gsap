@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Elementor GSAP with Osmo
- * Description: Ekstensi Elementor bertenaga GSAP bergaya Osmo.
- * Version: 1.2.2
- * Author: Creativetria
+ * Plugin Name: Elementor GSAP
+ * Description: Elementor GSAP styled by Osmo brings premium-grade animations to the Elementor page builder. Inspired by the design language of [Osmo](https://www.osmo.supply/) and powered by [GSAP](https://gsap.com/) (GreenSock Animation Platform), this plugin gives designers and developers a curated set of preloaders, page transitions, and animated widgets — all configurable directly from the Elementor panel.
+ * Version: 1.0.0
+ * Author: creativetria
  * Requires Plugins: elementor
- * Elementor tested up to: 4.0.8
+ * Elementor tested up to: 4.1.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -124,6 +124,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/fixed-underlay-navigation.css',
 		'assets/css/welcoming-words-loader.css',
 		'assets/css/sticky-steps.css',
+		'assets/css/logo-wall-cycle.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -139,6 +140,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/fixed-underlay-navigation.js',
 		'assets/js/welcoming-words-loader.js',
 		'assets/js/sticky-steps.js',
+		'assets/js/logo-wall-cycle.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -154,6 +156,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-pixelated-image-reveal-widget.php',
 		'widgets/class-fixed-underlay-navigation-widget.php',
 		'widgets/class-sticky-steps-widget.php',
+		'widgets/class-logo-wall-cycle-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -328,6 +331,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-sticky-steps-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Sticky_Steps_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-logo-wall-cycle-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Logo_Wall_Cycle_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -453,6 +459,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/sticky-steps.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-logo-wall-cycle',
+			ELEMENTOR_GSAP_URL . 'assets/js/logo-wall-cycle.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/logo-wall-cycle.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -545,6 +558,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/sticky-steps.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/sticky-steps.css' )
+		);
+		wp_register_style(
+			'elementor-logo-wall-cycle',
+			ELEMENTOR_GSAP_URL . 'assets/css/logo-wall-cycle.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/logo-wall-cycle.css' )
 		);
 	} );
 } );
