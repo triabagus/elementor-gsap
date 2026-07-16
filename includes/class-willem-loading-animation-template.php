@@ -20,7 +20,7 @@ class Willem_Loading_Animation_Template {
 
 	public static function register_controls( Controls_Stack $element ) {
 		$element->start_controls_section( self::key( 'section' ), [
-			'label' => __( 'Willem Loading Animation', 'elementor-gsap' ),
+			'label' => __( 'Loaders • Willem', 'elementor-gsap' ),
 			'tab'   => Controls_Manager::TAB_STYLE,
 		] );
 
@@ -90,6 +90,7 @@ class Willem_Loading_Animation_Template {
 			],
 			'condition'  => $cond,
 		] );
+
 
 		$element->add_control( self::key( 'images_heading' ), [
 			'label'     => __( 'Images', 'elementor-gsap' ),
@@ -283,14 +284,16 @@ class Willem_Loading_Animation_Template {
 		$cta_text   = ! empty( $s[ self::key( 'cta_text' ) ] ) ? $s[ self::key( 'cta_text' ) ] : '';
 		$nav_links  = ! empty( $s[ self::key( 'nav_links' ) ] ) ? $s[ self::key( 'nav_links' ) ] : [];
 
-		$style_attr = self::build_style_attr( $s );
-		$id_attr    = $element_id ? ' data-egsap-id="' . esc_attr( $element_id ) . '"' : '';
+		$style_attr        = self::build_style_attr( $s );
+		$id_attr           = $element_id ? ' data-egsap-id="' . esc_attr( $element_id ) . '"' : '';
+		$inline_style_html = self::render_inline_style_block( $s, $element_id );
 
 		$is_edit = class_exists( '\Elementor\Plugin' )
 			&& \Elementor\Plugin::$instance->editor
 			&& \Elementor\Plugin::$instance->editor->is_edit_mode();
 
 		$classes = 'willem-header' . ( $is_edit ? ' egsap-edit-mode' : ' is--loading is--hidden' );
+		echo $inline_style_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 		<section class="<?php echo esc_attr( $classes ); ?>"<?php echo $id_attr; ?><?php echo $style_attr; ?>>
 			<div class="willem-loader">
@@ -343,9 +346,9 @@ class Willem_Loading_Animation_Template {
 
 	private static function build_style_attr( array $s ) {
 		$map = [
-			'--egsap-header-color' => $s[ self::key( 'header_color' ) ] ?? '',
-			'--egsap-loader-color' => $s[ self::key( 'loader_color' ) ] ?? '',
-			'--egsap-bg-color'     => $s[ self::key( 'header_bg' ) ] ?? '',
+			'--egsap-header-color' => self::resolve_color_value( $s, self::key( 'header_color' ) ),
+			'--egsap-loader-color' => self::resolve_color_value( $s, self::key( 'loader_color' ) ),
+			'--egsap-bg-color'     => self::resolve_color_value( $s, self::key( 'header_bg' ) ),
 		];
 
 		$props = [];
@@ -358,6 +361,157 @@ class Willem_Loading_Animation_Template {
 		return $props ? ' style="' . esc_attr( implode( '; ', $props ) ) . '"' : '';
 	}
 
+	/**
+	 * Resolve nilai color yang mendukung Elementor Global Colors.
+	 *
+	 * Global colors disimpan di $s['__globals__'][$key] sebagai URL
+	 * `globals/colors?id=<id>` — bukan di $s[$key]. Kita convert ke
+	 * `var(--e-global-color-<id>)` yang di-define di :root oleh Elementor Kit.
+	 * Kalau tidak ada global, fallback ke raw value dari $s[$key].
+	 */
+	private static function resolve_color_value( array $s, $key ) {
+		$globals = isset( $s['__globals__'] ) && is_array( $s['__globals__'] ) ? $s['__globals__'] : [];
+		if ( ! empty( $globals[ $key ] ) ) {
+			$id = self::extract_global_id( $globals[ $key ] );
+			if ( '' !== $id ) {
+				return 'var(--e-global-color-' . $id . ')';
+			}
+		}
+		return isset( $s[ $key ] ) ? (string) $s[ $key ] : '';
+	}
+
+	private static function extract_global_id( $global_url ) {
+		if ( ! is_string( $global_url ) || false === strpos( $global_url, '?id=' ) ) {
+			return '';
+		}
+		$parts = explode( '?id=', $global_url );
+		return isset( $parts[1] ) ? sanitize_key( $parts[1] ) : '';
+	}
+
+	/**
+	 * Emit inline <style> block untuk colors + typography.
+	 *
+	 * Elementor tidak mem-regenerate post-CSS file untuk perubahan page-settings
+	 * (lihat Page\Manager::get_css_file_for_update returning false), sehingga
+	 * control colors & Group_Control_Typography yang di-scope via `selector`
+	 * sering tidak menghasilkan CSS di frontend. Kita bangun rules-nya sendiri
+	 * dari nilai tersimpan di $s supaya tidak bergantung pada CSS generator itu.
+	 */
+	private static function render_inline_style_block( array $s, $element_id ) {
+		if ( empty( $element_id ) ) {
+			return '';
+		}
+
+		$scope = '.willem-header[data-egsap-id="' . esc_attr( $element_id ) . '"]';
+
+		$rules = [];
+
+		// COLORS — duplikasi dari inline style variable, sekaligus jadi safety net.
+		// Pakai resolver supaya Global Colors Elementor (var(--e-global-color-*)) ikut aktif.
+		$hc = self::resolve_color_value( $s, self::key( 'header_color' ) );
+		$lc = self::resolve_color_value( $s, self::key( 'loader_color' ) );
+		$bg = self::resolve_color_value( $s, self::key( 'header_bg' ) );
+
+		if ( '' !== $hc ) {
+			$rules[] = $scope . '{color:' . $hc . ';}';
+		}
+		if ( '' !== $bg ) {
+			$rules[] = $scope . '{background-color:' . $bg . ';}';
+		}
+		if ( '' !== $lc ) {
+			$rules[] = $scope . ' .willem-loader{color:' . $lc . ';}';
+		}
+
+		// TYPOGRAPHY — baca setiap group typography lalu emit rule sesuai selector-nya.
+		$typo_groups = [
+			'logo_top_typography'    => $scope . ' .willem__letter',
+			'logo_bottom_typography' => $scope . ' .willem__letter-white',
+			'brand_typography'       => $scope . ' .willem-nav__start .willem-nav__link',
+			'nav_typography'         => $scope . ' .willem-nav__links .willem-nav__link',
+			'cta_typography'         => $scope . ' .willem-nav__cta .willem-nav__link',
+		];
+
+		foreach ( $typo_groups as $name => $selector ) {
+			$decl = self::build_typography_declarations( $s, self::key( $name ) );
+			if ( '' !== $decl ) {
+				$rules[] = $selector . '{' . $decl . '}';
+			}
+		}
+
+		if ( empty( $rules ) ) {
+			return '';
+		}
+
+		return '<style>' . implode( '', $rules ) . '</style>';
+	}
+
+	/**
+	 * Bangun deklarasi CSS dari sub-values Group_Control_Typography.
+	 * Sub-key mengikuti konvensi Elementor: {prefix}_font_family, {prefix}_font_size, dst.
+	 *
+	 * Global Typography (Elementor Kit) disimpan sebagai referensi
+	 * `globals/typography?id=<id>` di $s['__globals__'][$prefix.'_typography']
+	 * (atau kadang per-sub-key). Kalau ada, kita resolve ke
+	 * `var(--e-global-typography-<id>-<property>)` sehingga sub-property yang
+	 * di-define di kit ikut aktif tanpa duplikasi nilai.
+	 */
+	private static function build_typography_declarations( array $s, $prefix ) {
+		$props   = [];
+		$globals = isset( $s['__globals__'] ) && is_array( $s['__globals__'] ) ? $s['__globals__'] : [];
+
+		// Elementor menyimpan referensi global typography di key `{prefix}_typography`
+		// (bukan di masing-masing sub-property). Contoh: `egsap_nav_typography_typography`.
+		$global_ref = $globals[ $prefix . '_typography' ] ?? '';
+		$global_id  = '' !== $global_ref ? self::extract_global_id( $global_ref ) : '';
+
+		$all_props = [
+			'font_family'     => 'font-family',
+			'font_weight'     => 'font-weight',
+			'text_transform'  => 'text-transform',
+			'font_style'      => 'font-style',
+			'text_decoration' => 'text-decoration',
+			'font_size'       => 'font-size',
+			'line_height'     => 'line-height',
+			'letter_spacing'  => 'letter-spacing',
+			'word_spacing'    => 'word-spacing',
+		];
+
+		$string_keys = [ 'font_family', 'font_weight', 'text_transform', 'font_style', 'text_decoration' ];
+		$sized_keys  = [ 'font_size', 'line_height', 'letter_spacing', 'word_spacing' ];
+
+		foreach ( $all_props as $key => $css_prop ) {
+			// Prioritas 1: Global typography — pakai var() kalau user pilih preset dari kit.
+			if ( '' !== $global_id ) {
+				$css_var_prop = str_replace( '_', '-', $key );
+				$props[]      = $css_prop . ': var(--e-global-typography-' . $global_id . '-' . $css_var_prop . ')';
+				continue;
+			}
+
+			// Prioritas 2: Nilai raw dari $s.
+			if ( in_array( $key, $string_keys, true ) ) {
+				$val = $s[ $prefix . '_' . $key ] ?? '';
+				if ( '' === $val ) {
+					continue;
+				}
+				$val = (string) $val;
+				if ( 'font_family' === $key ) {
+					$props[] = $css_prop . ': "' . $val . '"';
+				} else {
+					$props[] = $css_prop . ': ' . $val;
+				}
+			} elseif ( in_array( $key, $sized_keys, true ) ) {
+				$val = $s[ $prefix . '_' . $key ] ?? null;
+				if ( ! is_array( $val ) || ! isset( $val['size'] ) || '' === $val['size'] ) {
+					continue;
+				}
+				$unit    = isset( $val['unit'] ) ? (string) $val['unit'] : 'px';
+				$props[] = $css_prop . ': ' . floatval( $val['size'] ) . $unit;
+			}
+		}
+
+		return implode( ';', $props );
+	}
+
 	private static function render_letters( $text, $class = 'willem__letter' ) {
 		$out   = '';
 		$chars = preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY );
@@ -368,4 +522,5 @@ class Willem_Loading_Animation_Template {
 		}
 		return $out;
 	}
+
 }

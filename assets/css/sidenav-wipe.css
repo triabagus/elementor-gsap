@@ -71,6 +71,15 @@
 	margin: 0;
 	font-size: 1.125em;
 	line-height: 1.4;
+	text-decoration: none; /* aman untuk <p> & <a>; hilangkan default browser underline */
+}
+
+/* Modifier layout untuk mode icon (+ optional text) — anchor jadi inline-flex
+   supaya icon & text align center dengan gap. Text-only mode tetap inline. */
+.sidenav__button-label--has-icon {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
 }
 
 .sidenav__nav {
@@ -235,27 +244,16 @@
 
 .sidenav__menu-socials {
 	gap: 1.5em;
-	flex-flow: row;
+	flex-flow: row wrap;
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
 }
 
-.sidenav__menu-socials a {
-	color: inherit;
-	text-decoration: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4em;
-	transition: transform 0.4s cubic-bezier(0.65, 0.05, 0, 1),
-		color 0.4s cubic-bezier(0.65, 0.05, 0, 1);
-}
-
-.sidenav__menu-socials a:hover,
-.sidenav__menu-socials a:focus-visible {
-	transform: translateY(var(--sn-socials-hover-shift, -0.25em));
-	color: var(--sn-socials-hover-color, var(--sn-socials-color));
-}
+/* NOTE: Anchor styling di dalam .sidenav__menu-socials sengaja TIDAK diberi
+   `transition: transform` — animasi masuk (yPercent + autoAlpha) sudah
+   di-handle GSAP via selector `[data-sidenav-fade]` di sidenav-wipe.js.
+   CSS transition transform akan bertabrakan dengan tween GSAP (double
+   animation, janky). Base look (color/font/no-underline) sudah cukup dari
+   class `.sidenav__button-label` di atas. */
 
 .sidenav__social-icon {
 	display: inline-flex;
@@ -264,8 +262,6 @@
 	width: var(--sn-social-icon-size, 1.25em);
 	height: var(--sn-social-icon-size, 1.25em);
 	color: var(--sn-social-icon-color, currentColor);
-	transition: color 0.4s cubic-bezier(0.65, 0.05, 0, 1),
-		transform 0.4s cubic-bezier(0.65, 0.05, 0, 1);
 	line-height: 1;
 }
 
@@ -276,11 +272,6 @@
 	font-size: var(--sn-social-icon-size, 1.25em);
 	fill: currentColor;
 	color: currentColor;
-}
-
-.sidenav__menu-socials a:hover .sidenav__social-icon,
-.sidenav__menu-socials a:focus-visible .sidenav__social-icon {
-	color: var(--sn-social-icon-hover-color, var(--sn-socials-hover-color, var(--sn-social-icon-color, currentColor)));
 }
 
 /* Editor preview — render inline & visible so user can edit content. */

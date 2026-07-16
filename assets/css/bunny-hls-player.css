@@ -132,22 +132,6 @@
 	}
 }
 
-/* Cover Mode */
-[data-bunny-player-init][data-player-update-size="cover"] {
-	height: 100%;
-	top: 0;
-	left: 0;
-	position: absolute;
-}
-
-[data-bunny-player-init][data-player-update-size="cover"] [data-player-before] {
-	display: none;
-}
-
-[data-bunny-player-init][data-player-update-size="cover"][data-player-fullscreen="false"] .bunny-player__video {
-	object-fit: cover;
-}
-
 /* Loading */
 .bunny-player__loading {
 	opacity: 0;

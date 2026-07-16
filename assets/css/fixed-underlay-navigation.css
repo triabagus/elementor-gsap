@@ -20,7 +20,6 @@
 	--fun-logo-width: 6.875em;
 	--fun-logo-color: #f4f4f4;
 	--fun-logo-accent: #f85931;
-	--fun-logo-blend: multiply;
 
 	--fun-toggle-color-closed: #ffffff;
 	--fun-toggle-color-open: #201d1d;
@@ -49,11 +48,9 @@
 	--fun-link-small-faded-opacity: 0.5;
 	--fun-bottom-gap: 1em;
 	--fun-bottom-padding-top: 1.5em;
-	--fun-bottom-border-color: currentColor;
-	--fun-bottom-border-opacity: 0.15;
+	--fun-bottom-border-color: rgba(0, 0, 0, 0.15);
 
 	--fun-overlay-dark-color: rgba(0, 0, 0, 0.3);
-	--fun-overlay-frame-color: #ffffff;
 	--fun-overlay-border-height: 1em;
 	--fun-overlay-corner-size: 2em;
 }
@@ -85,12 +82,40 @@
 }
 
 .fun-underlay-nav .underlay-nav__logo {
-	mix-blend-mode: var(--fun-logo-blend);
 	justify-content: center;
 	align-items: center;
 	width: var(--fun-logo-width);
 	display: flex;
 	color: var(--fun-logo-color);
+}
+
+/* Text logo lebar auto (mengikuti panjang teks & typography), bukan --fun-logo-width. */
+.fun-underlay-nav .underlay-nav__logo--text {
+	width: auto;
+}
+
+/* Custom SVG: paksa isi container (--fun-logo-width) & respect currentColor
+   supaya kontrol Logo Main Color bisa mewarnai path yang pakai
+   fill="currentColor". */
+.fun-underlay-nav .underlay-nav__logo-svg-custom {
+	display: block;
+	width: 100%;
+	line-height: 0;
+}
+
+.fun-underlay-nav .underlay-nav__logo-svg-custom svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.fun-underlay-nav .underlay-nav__logo-text {
+	color: inherit;
+	line-height: 1;
+	white-space: nowrap;
+	font-size: 1.25em;
+	font-weight: 600;
+	letter-spacing: -0.02em;
 }
 
 .fun-underlay-nav .underlay-nav__logo img,
@@ -116,7 +141,7 @@
 	outline-offset: 0;
 	background-color: transparent;
 	border: 1px solid transparent;
-	color: var(--fun-toggle-color-open);
+	color: var(--fun-toggle-color-closed);
 	cursor: pointer;
 	justify-content: center;
 	align-items: center;
@@ -179,6 +204,14 @@
 	   Tanpa ini, panel kanan sempat flash sebelum trik z-index aktif.
 	   Editor preview & saat menu open meng-override via aturan di bawah. */
 	visibility: hidden;
+}
+
+/* Menu open (frontend) atau editor preview: panel mengambil --fun-menu-bg.
+   State closed tetap transparent supaya body/section bg di belakang bisa
+   mengambil alih sampai user membuka menu. */
+body[data-fun-menu-status="open"] .fun-underlay-nav .underlay-nav__menu,
+.fun-underlay-nav.fun-underlay-nav--editor .underlay-nav__menu {
+	background-color: var(--fun-menu-bg);
 }
 
 .fun-underlay-nav .underlay-nav__inner {
@@ -305,7 +338,6 @@
 }
 
 .fun-underlay-nav .underlay-nav__bottom-border {
-	opacity: var(--fun-bottom-border-opacity);
 	transform-origin: 0%;
 	background-color: var(--fun-bottom-border-color);
 	width: 100%;
@@ -349,14 +381,14 @@
 }
 
 .fun-underlay-nav .underlay-nav__border {
-	background-color: var(--fun-overlay-frame-color);
+	background-color: var(--fun-menu-bg);
 	width: 100%;
 	height: var(--fun-overlay-border-height);
 }
 
 .fun-underlay-nav .underlay-nav__corner {
 	transform-origin: 100% 0;
-	color: var(--fun-overlay-frame-color);
+	color: var(--fun-menu-bg);
 	background-image: radial-gradient(circle farthest-side at 0 100%, rgba(255, 255, 255, 0) 99%, currentColor);
 	width: var(--fun-overlay-corner-size);
 	height: var(--fun-overlay-corner-size);

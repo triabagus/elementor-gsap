@@ -63,7 +63,7 @@
 		var isScaleUp = container.querySelectorAll('.crisp-loader__media');
 		var isScaleDown = container.querySelectorAll('.crisp-loader__media .is--scale-down');
 		var isRadius = container.querySelectorAll('.crisp-loader__media.is--scaling.is--radius');
-		var smallElements = container.querySelectorAll('.crisp-header__top, .crisp-header__p');
+		var smallElements = container.querySelectorAll('.crisp-header__p');
 		var sliderNav = container.querySelectorAll('.crisp-header__slider-nav > *');
 
 		var tl = gsap.timeline({

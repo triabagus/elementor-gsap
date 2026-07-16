@@ -24,7 +24,7 @@ class Button_Draw_Underline_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-buttons' ];
 	}
 
 	public function get_keywords() {

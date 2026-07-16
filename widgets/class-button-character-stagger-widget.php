@@ -26,7 +26,7 @@ class Button_Character_Stagger_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-buttons' ];
 	}
 
 	public function get_keywords() {

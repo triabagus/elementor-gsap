@@ -4,8 +4,19 @@
     box-sizing: border-box;
 }
 
+/* Stacking context: lift body while loading, reset after */
+body:has(.crisp-header) .crisp-header{
+	position: relative;
+	z-index: 0;
+}
+
+body:has(.crisp-header.is--loading) .crisp-header{
+	position: relative;
+	z-index: 10001;
+}
+
 /* Disable Scroll on Loading */
-main:has(.crisp-header.is--loading) {
+body:has(.crisp-header.is--loading) {
 	height: 100dvh;
 }
 
@@ -151,13 +162,6 @@ main:has(.crisp-header.is--loading) {
 	position: relative;
 }
 
-.crisp-header__top {
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-	display: flex;
-}
-
 .crisp-header__center {
 	width: 100%;
 	padding: 1.5em;
@@ -172,41 +176,6 @@ main:has(.crisp-header.is--loading) {
 	align-items: center;
 	margin-top: auto;
 	display: flex;
-}
-
-.osmo-logo {
-	color: unset;
-	width: 8em;
-	text-decoration: none;
-	display: flex;
-}
-
-.osmo-logo__svg {
-	display: block;
-}
-
-.osmo-logo__img {
-	width: 100%;
-	height: auto;
-	object-fit: contain;
-	display: block;
-}
-
-.crisp-header__hamburger {
-	grid-column-gap: .375em;
-	grid-row-gap: .375em;
-	flex-flow: column;
-	justify-content: center;
-	align-items: center;
-	width: 2em;
-	height: 2em;
-	display: flex;
-}
-
-.crisp-header__hamburger-bar {
-	background-color: currentColor;
-	width: 1.875em;
-	height: .125em;
 }
 
 .crisp-header__slider-list {
@@ -229,6 +198,7 @@ main:has(.crisp-header.is--loading) {
 }
 
 .crisp-header__slider-nav-btn {
+	overflow: hidden;
 	cursor: pointer;
 	border: 1px solid transparent;
 	border-radius: .25em;

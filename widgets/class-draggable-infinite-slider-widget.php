@@ -25,7 +25,7 @@ class Draggable_Infinite_Slider_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-sliders' ];
 	}
 
 	public function get_keywords() {

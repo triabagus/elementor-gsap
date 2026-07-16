@@ -25,7 +25,7 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-nav' ];
 	}
 
 	public function get_keywords() {
@@ -38,6 +38,24 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 
 	public function get_style_depends() {
 		return [ 'elementor-fixed-underlay-navigation' ];
+	}
+
+	/**
+	 * Sanitize user-provided SVG. Strips <script>, <foreignObject>, on* event
+	 * handlers, dan javascript: URLs. Case attribut (viewBox, dll.) tetap
+	 * dipertahankan supaya render SVG tidak break.
+	 */
+	public function sanitize_custom_svg( $svg ) {
+		if ( empty( $svg ) ) {
+			return '';
+		}
+		$svg = trim( (string) $svg );
+		$svg = preg_replace( '#<\s*script[^>]*>.*?<\s*/\s*script\s*>#is', '', $svg );
+		$svg = preg_replace( '#<\s*script[^>]*/?>#i', '', $svg );
+		$svg = preg_replace( '#<\s*foreignObject[^>]*>.*?<\s*/\s*foreignObject\s*>#is', '', $svg );
+		$svg = preg_replace( '#\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)#i', '', $svg );
+		$svg = preg_replace( '#\s+(xlink:href|href)\s*=\s*("|\')?\s*javascript:[^"\'>\s]*("|\')?#i', '', $svg );
+		return $svg;
 	}
 
 	public function default_logo_svg() {
@@ -58,6 +76,8 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'options' => [
 				'default' => __( 'Default SVG', 'elementor-gsap' ),
 				'image'   => __( 'Image Upload', 'elementor-gsap' ),
+				'svg'     => __( 'Custom SVG', 'elementor-gsap' ),
+				'text'    => __( 'Text', 'elementor-gsap' ),
 				'none'    => __( 'None', 'elementor-gsap' ),
 			],
 			'default' => 'default',
@@ -75,6 +95,29 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'type'      => Controls_Manager::TEXT,
 			'default'   => 'Logo',
 			'condition' => [ 'logo_type' => 'image' ],
+		] );
+
+		$this->add_control( 'logo_text', [
+			'label'     => __( 'Logo Text', 'elementor-gsap' ),
+			'type'      => Controls_Manager::TEXT,
+			'default'   => 'Studio',
+			'condition' => [ 'logo_type' => 'text' ],
+		] );
+
+		$this->add_control( 'logo_svg', [
+			'label'       => __( 'Custom SVG Code', 'elementor-gsap' ),
+			'description' => __( 'Paste kode <code>&lt;svg&gt;…&lt;/svg&gt;</code>. Gunakan <code>fill="currentColor"</code> pada path yang ingin ikut warna dari <strong>Logo Main Color</strong>.', 'elementor-gsap' ),
+			'type'        => Controls_Manager::TEXTAREA,
+			'rows'        => 10,
+			'default'     => '',
+			'condition'   => [ 'logo_type' => 'svg' ],
+		] );
+
+		$this->add_control( 'logo_svg_alt', [
+			'label'     => __( 'SVG Aria Label', 'elementor-gsap' ),
+			'type'      => Controls_Manager::TEXT,
+			'default'   => 'Logo',
+			'condition' => [ 'logo_type' => 'svg' ],
 		] );
 
 		$this->add_control( 'logo_link', [
@@ -363,16 +406,18 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'selectors'  => [
 				'{{WRAPPER}} .fun-underlay-nav' => '--fun-logo-width: {{SIZE}}{{UNIT}};',
 			],
+			'condition'  => [ 'logo_type!' => 'text' ],
 		] );
 
 		$this->add_control( 'logo_color', [
-			'label'     => __( 'Logo Main Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'default'   => '#f4f4f4',
-			'selectors' => [
+			'label'       => __( 'Logo Main Color', 'elementor-gsap' ),
+			'description' => __( 'Untuk <strong>Custom SVG</strong>, warna ini hanya berlaku pada path yang menggunakan <code>fill="currentColor"</code>.', 'elementor-gsap' ),
+			'type'        => Controls_Manager::COLOR,
+			'default'     => '#f4f4f4',
+			'selectors'   => [
 				'{{WRAPPER}} .fun-underlay-nav' => '--fun-logo-color: {{VALUE}};',
 			],
-			'condition' => [ 'logo_type' => 'default' ],
+			'condition'   => [ 'logo_type' => [ 'default', 'text', 'svg' ] ],
 		] );
 
 		$this->add_control( 'logo_accent', [
@@ -385,21 +430,11 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			'condition' => [ 'logo_type' => 'default' ],
 		] );
 
-		$this->add_control( 'logo_blend', [
-			'label'       => __( 'Logo Blend Mode', 'elementor-gsap' ),
-			'description' => __( '<code>multiply</code> bikin logo putih jadi gelap di atas background terang & menyatu di atas hero gelap — sesuai default Osmo Webflow. Pilih <code>normal</code> kalau logo anda berwarna.', 'elementor-gsap' ),
-			'type'        => Controls_Manager::SELECT,
-			'options'     => [
-				'multiply' => __( 'Multiply', 'elementor-gsap' ),
-				'normal'   => __( 'Normal', 'elementor-gsap' ),
-				'screen'   => __( 'Screen', 'elementor-gsap' ),
-				'overlay'  => __( 'Overlay', 'elementor-gsap' ),
-				'difference' => __( 'Difference', 'elementor-gsap' ),
-			],
-			'default'     => 'multiply',
-			'selectors'   => [
-				'{{WRAPPER}} .fun-underlay-nav' => '--fun-logo-blend: {{VALUE}};',
-			],
+		$this->add_group_control( Group_Control_Typography::get_type(), [
+			'name'      => 'logo_text_typography',
+			'label'     => __( 'Text Typography', 'elementor-gsap' ),
+			'selector'  => '{{WRAPPER}} .fun-underlay-nav .underlay-nav__logo-text',
+			'condition' => [ 'logo_type' => 'text' ],
 		] );
 
 		$this->end_controls_section();
@@ -411,8 +446,8 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 		] );
 
 		$this->add_control( 'toggle_color_closed', [
-			'label'       => __( 'Color (Closed)', 'elementor-gsap' ),
-			'description' => __( 'Warna tombol saat menu tertutup. Default putih cocok untuk hero gelap.', 'elementor-gsap' ),
+			'label'       => __( 'Color (Open)', 'elementor-gsap' ),
+			'description' => __( 'Warna tombol saat label "Open" tampil (menu tertutup). Default putih cocok untuk hero gelap.', 'elementor-gsap' ),
 			'type'        => Controls_Manager::COLOR,
 			'default'     => '#ffffff',
 			'selectors'   => [
@@ -421,8 +456,8 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 		] );
 
 		$this->add_control( 'toggle_color_open', [
-			'label'       => __( 'Color (Open)', 'elementor-gsap' ),
-			'description' => __( 'Warna tombol saat menu terbuka. Cocokkan dengan warna teks menu.', 'elementor-gsap' ),
+			'label'       => __( 'Color (Close)', 'elementor-gsap' ),
+			'description' => __( 'Warna tombol saat label "Close" tampil (menu terbuka). Cocokkan dengan warna teks menu.', 'elementor-gsap' ),
 			'type'        => Controls_Manager::COLOR,
 			'default'     => '#201d1d',
 			'selectors'   => [
@@ -740,15 +775,6 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 			],
 		] );
 
-		$this->add_control( 'overlay_border_color', [
-			'label'     => __( 'Border / Corner Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'default'   => '#ffffff',
-			'selectors' => [
-				'{{WRAPPER}} .fun-underlay-nav' => '--fun-overlay-border-color: {{VALUE}};',
-			],
-		] );
-
 		$this->add_responsive_control( 'overlay_border_height', [
 			'label'      => __( 'Border Height', 'elementor-gsap' ),
 			'type'       => Controls_Manager::SLIDER,
@@ -825,14 +851,34 @@ class Fixed_Underlay_Navigation_Widget extends Widget_Base {
 				<div class="underlay-nav__bar">
 					<div class="underlay-nav__container">
 						<?php if ( 'none' !== $logo_type ) :
-							$logo_attrs = $this->render_link_attrs( isset( $s['logo_link'] ) ? $s['logo_link'] : [] );
+							$logo_attrs   = $this->render_link_attrs( isset( $s['logo_link'] ) ? $s['logo_link'] : [] );
+							$logo_modifier = '';
+							if ( 'text' === $logo_type ) {
+								$logo_modifier = ' underlay-nav__logo--text';
+							} elseif ( 'svg' === $logo_type ) {
+								$logo_modifier = ' underlay-nav__logo--svg';
+							}
+							$logo_classes = 'underlay-nav__logo' . $logo_modifier;
 							?>
-							<a<?php echo $logo_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> class="underlay-nav__logo">
+							<a<?php echo $logo_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> class="<?php echo esc_attr( $logo_classes ); ?>">
 								<?php if ( 'image' === $logo_type && ! empty( $s['logo_image']['url'] ) ) :
 									$alt = ! empty( $s['logo_alt'] ) ? $s['logo_alt'] : '';
 									?>
 									<img src="<?php echo esc_url( $s['logo_image']['url'] ); ?>" alt="<?php echo esc_attr( $alt ); ?>" />
-								<?php else :
+								<?php elseif ( 'text' === $logo_type ) :
+									$logo_text = isset( $s['logo_text'] ) ? $s['logo_text'] : '';
+									?>
+									<span class="underlay-nav__logo-text"><?php echo esc_html( $logo_text ); ?></span>
+								<?php elseif ( 'svg' === $logo_type ) :
+									$svg_code  = isset( $s['logo_svg'] ) ? $this->sanitize_custom_svg( $s['logo_svg'] ) : '';
+									$svg_label = isset( $s['logo_svg_alt'] ) ? $s['logo_svg_alt'] : '';
+									if ( '' !== $svg_code ) :
+										?>
+										<span class="underlay-nav__logo-svg-custom" role="img"<?php echo '' !== $svg_label ? ' aria-label="' . esc_attr( $svg_label ) . '"' : ' aria-hidden="true"'; ?>><?php
+											echo $svg_code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										?></span>
+									<?php endif;
+								else :
 									echo $this->default_logo_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								endif; ?>
 							</a>

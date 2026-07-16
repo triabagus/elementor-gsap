@@ -25,7 +25,7 @@ class Sidenav_Wipe_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-nav' ];
 	}
 
 	public function get_keywords() {
@@ -388,7 +388,7 @@ class Sidenav_Wipe_Widget extends Widget_Base {
 				'em' => [ 'min' => -2, 'max' => 2, 'step' => 0.025 ],
 				'px' => [ 'min' => -40, 'max' => 40 ],
 			],
-			'default'     => [ 'unit' => 'em', 'size' => 0.3 ],
+			'default'     => [ 'unit' => 'em', 'size' => 0.1 ],
 			'selectors'   => [
 				'{{WRAPPER}} .sidenav' => '--sn-heading-hover-shift: {{SIZE}}{{UNIT}};',
 			],
@@ -503,18 +503,12 @@ class Sidenav_Wipe_Widget extends Widget_Base {
 			'condition'  => [ 'socials_display' => [ 'icon', 'icon_text' ] ],
 		] );
 
-		$this->start_controls_tabs( 'socials_state_tabs' );
-
-		/* Normal state */
-		$this->start_controls_tab( 'socials_state_normal', [
-			'label' => __( 'Normal', 'elementor-gsap' ),
-		] );
-
 		$this->add_control( 'socials_color', [
-			'label'     => __( 'Text Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'default'   => '#131313',
-			'selectors' => [
+			'label'       => __( 'Text Color', 'elementor-gsap' ),
+			'description' => __( 'Warna teks label "Socials" & anchor social. Animasi masuknya di-handle GSAP via <code>[data-sidenav-fade]</code> (bukan CSS), jadi tidak ada hover shift/color untuk hindari konflik dengan tween.', 'elementor-gsap' ),
+			'type'        => Controls_Manager::COLOR,
+			'default'     => '#131313',
+			'selectors'   => [
 				'{{WRAPPER}} .sidenav' => '--sn-socials-color: {{VALUE}};',
 			],
 		] );
@@ -528,52 +522,9 @@ class Sidenav_Wipe_Widget extends Widget_Base {
 			'condition' => [ 'socials_display' => [ 'icon', 'icon_text' ] ],
 		] );
 
-		$this->end_controls_tab();
-
-		/* Hover state */
-		$this->start_controls_tab( 'socials_state_hover', [
-			'label' => __( 'Hover', 'elementor-gsap' ),
-		] );
-
-		$this->add_control( 'socials_hover_color', [
-			'label'     => __( 'Text Hover Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'selectors' => [
-				'{{WRAPPER}} .sidenav' => '--sn-socials-hover-color: {{VALUE}};',
-			],
-		] );
-
-		$this->add_control( 'social_icon_hover_color', [
-			'label'     => __( 'Icon Hover Color', 'elementor-gsap' ),
-			'type'      => Controls_Manager::COLOR,
-			'selectors' => [
-				'{{WRAPPER}} .sidenav' => '--sn-social-icon-hover-color: {{VALUE}};',
-			],
-			'condition' => [ 'socials_display' => [ 'icon', 'icon_text' ] ],
-		] );
-
-		$this->add_responsive_control( 'socials_hover_shift', [
-			'label'       => __( 'Hover Shift (Y)', 'elementor-gsap' ),
-			'description' => __( 'Pergeseran vertikal saat hover. Nilai negatif = naik. Set 0 untuk tanpa shift.', 'elementor-gsap' ),
-			'type'        => Controls_Manager::SLIDER,
-			'size_units'  => [ 'em', 'px' ],
-			'range'       => [
-				'em' => [ 'min' => -1, 'max' => 1, 'step' => 0.025 ],
-				'px' => [ 'min' => -20, 'max' => 20 ],
-			],
-			'default'     => [ 'unit' => 'em', 'size' => -0.25 ],
-			'selectors'   => [
-				'{{WRAPPER}} .sidenav' => '--sn-socials-hover-shift: {{SIZE}}{{UNIT}};',
-			],
-		] );
-
-		$this->end_controls_tab();
-
-		$this->end_controls_tabs();
-
 		$this->add_group_control( Group_Control_Typography::get_type(), [
 			'name'      => 'socials_typography',
-			'selector'  => '{{WRAPPER}} .sidenav__menu-details .sidenav__button-label, {{WRAPPER}} .sidenav__menu-socials a',
+			'selector'  => '{{WRAPPER}} .sidenav__menu-details .sidenav__button-label',
 		] );
 
 		$this->end_controls_section();
@@ -645,22 +596,28 @@ class Sidenav_Wipe_Widget extends Widget_Base {
 								<p data-sidenav-fade class="sidenav__button-label"><?php echo esc_html( $socials_label ); ?></p>
 								<div class="sidenav__menu-socials">
 									<?php foreach ( $socials as $soc ) :
-										$label    = ! empty( $soc['label'] ) ? $soc['label'] : '';
-										$attrs    = $this->render_link_attrs( isset( $soc['link'] ) ? $soc['link'] : [] );
-										$icon     = ! empty( $soc['social_icon'] ) && is_array( $soc['social_icon'] ) ? $soc['social_icon'] : [];
-										$icon_set = ! empty( $icon['value'] );
+										$label     = ! empty( $soc['label'] ) ? $soc['label'] : '';
+										$attrs     = $this->render_link_attrs( isset( $soc['link'] ) ? $soc['link'] : [] );
+										$icon      = ! empty( $soc['social_icon'] ) && is_array( $soc['social_icon'] ) ? $soc['social_icon'] : [];
+										$icon_set  = ! empty( $icon['value'] );
 										$show_icon = $icon_set && ( 'icon' === $soc_display || 'icon_text' === $soc_display );
 										$show_text = ( 'text' === $soc_display || 'icon_text' === $soc_display );
 										// Icon-only needs aria-label so screen readers know the link's purpose.
 										$aria = ( 'icon' === $soc_display && $label ) ? ' aria-label="' . esc_attr( $label ) . '"' : '';
+										// Modifier class hanya diberikan saat ada icon supaya CSS bisa switch
+										// anchor ke inline-flex dengan gap icon-text. Text-only mode tetap
+										// inline biasa (persis seperti Osmo reference).
+										$anchor_class = 'sidenav__button-label' . ( $show_icon ? ' sidenav__button-label--has-icon' : '' );
 										?>
-										<a data-sidenav-fade<?php echo $attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo $aria; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> class="sidenav__button-label">
+										<a data-sidenav-fade<?php echo $attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo $aria; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> class="<?php echo esc_attr( $anchor_class ); ?>">
 											<?php if ( $show_icon ) : ?>
 												<span class="sidenav__social-icon" aria-hidden="true"><?php \Elementor\Icons_Manager::render_icon( $icon, [ 'aria-hidden' => 'true' ] ); ?></span>
-											<?php endif; ?>
-											<?php if ( $show_text ) : ?>
-												<span class="sidenav__social-text"><?php echo esc_html( $label ); ?></span>
-											<?php endif; ?>
+												<?php if ( $show_text ) : ?>
+													<span class="sidenav__social-text"><?php echo esc_html( $label ); ?></span>
+												<?php endif; ?>
+											<?php elseif ( $show_text ) :
+												echo esc_html( $label );
+											endif; ?>
 										</a>
 									<?php endforeach; ?>
 								</div>

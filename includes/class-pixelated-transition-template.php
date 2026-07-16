@@ -18,7 +18,7 @@ class Pixelated_Transition_Template {
 
 	public static function register_controls( Controls_Stack $element ) {
 		$element->start_controls_section( self::key( 'section' ), [
-			'label' => __( 'Pixelated Page Transition', 'elementor-gsap' ),
+			'label' => __( 'Page Transitions • Pixelated', 'elementor-gsap' ),
 			'tab'   => Controls_Manager::TAB_STYLE,
 		] );
 

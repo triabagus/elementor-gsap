@@ -24,7 +24,7 @@ class Masked_Text_Reveal_Widget extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'elementor-gsap' ];
+		return [ 'elementor-gsap-text' ];
 	}
 
 	public function get_keywords() {
