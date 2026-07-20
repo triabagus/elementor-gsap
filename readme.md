@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **4 page-level animations** (configured via Page Settings) and **13 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
+The plugin ships **4 page-level animations** (configured via Page Settings) and **14 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -61,6 +61,8 @@ The plugin ships **4 page-level animations** (configured via Page Settings) and 
 12. **Logo Wall Cycle** — a client/partner logo grid where a subset of visible cells continuously cycle through a larger pool of logos with a smooth yPercent + autoAlpha crossfade (Osmo-style). Powered by GSAP + ScrollTrigger — the timeline auto-pauses when the section scrolls out of view and when the browser tab is hidden, resuming when back on screen. Logos repeater (image + alt + optional link), configurable loop delay, swap duration, and "shuffle initial order" toggle. Fully responsive grid: columns per row + visible items count are separately controllable per breakpoint (desktop / tablet / mobile), so you can show 4×2 on desktop, 3×2 on tablet, 2×2 on mobile from the same logo pool. Item aspect ratio, logo target width/height (relative to cell), wall & item backgrounds, and CSS filter (normal + hover) also configurable.
 
 13. **Sticky Features** — a two-column pinned-scroll section (Osmo-style): the left image column stays fixed while a scroll-driven ScrollTrigger scrubs through N features, swapping the image via `clip-path: inset(0% ↔ 50%)` reveal and cross-fading the tag + heading + description + link on the right, all synced to a progress bar underneath the image. Powered by GSAP + ScrollTrigger (`pin: true`, `scrub: true`). Respects `prefers-reduced-motion` (auto-switches to near-instant transitions). Features repeater (image + tag + heading + description + optional link), configurable transition duration, "Scroll Amount" (portion of scroll used for step transitions, 0.9 = 90%), full styling per role (tag color/bg/radius/typography, heading, description, link, progress bar track/bar/height), plus layout controls (container max-width, column gap, image aspect ratio, border radius, text card max-width). On mobile (≤767px) layout stacks vertically and pin/scrub disables gracefully.
+
+14. **Expanding Bottom Navigation** — a floating pill-shaped nav fixed at the bottom (or top) of the viewport that morphs into a full menu panel when the toggle is clicked (Osmo-style). Powered by GSAP + CustomEase (`osmo` ease preset). The `.inner` container animates its measured `width` + `height` from closed pill dimensions to the panel's natural bounds, the two toggle bars rotate into an X, and each `[data-bottom-nav-reveal]` item staggers in with `yPercent` + `autoAlpha`, while an optional divider `scaleX`-reveals underneath. Repeaters for main menu items (with per-item "Show as CTA" for accent color) and 2 secondary columns (each with label + own items repeater — great for socials, contact, resources). Logo supports Default SVG / Image / Text / None. Configurable position (bottom / top, auto-flips `column-reverse` → `column`), vertical offset, closed & open widths, bar height, z-index, per-role colors + typography, animation durations, and toggle button size/radius. Escape key closes, ARIA-expanded sync included.
 
 ## 📦 Installation
 
