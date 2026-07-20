@@ -1,0 +1,613 @@
+/* Mega Navigation (Directional Hover) — Osmo-style top bar dengan mega dropdown
+   yang animate directional (kiri/kanan) berdasarkan urutan trigger. Semua nilai
+   warna & sizing dikontrol via CSS variables supaya Elementor bisa override
+   lewat --mnd-* di root element (widget wrapper). */
+
+.egsap-mnd-wrap {
+	--mnd-nav-height:        4em;
+	--mnd-z:                 100;
+	--mnd-max-width:         80em;
+	--mnd-top:               1.25em;
+	--mnd-side:              1.25em;
+
+	--mnd-bar-bg:            #ffffff;
+	--mnd-bar-border:        rgba(0,0,0,0.10);
+	--mnd-bar-radius:        0.25em;
+	--mnd-bar-padding-y:     1em;
+	--mnd-bar-padding-x:     1.5em;
+
+	--mnd-text:              #201d1d;
+	--mnd-text-muted:        rgba(32,29,29,0.6);
+	--mnd-link-hover-bg:     rgba(0,0,0,0.04);
+
+	--mnd-cta-bg:            #6840ff;
+	--mnd-cta-text:          #f2f2f2;
+	--mnd-cta-border:        #6840ff;
+
+	--mnd-burger-bg:         #e4e0f5;
+	--mnd-burger-line:       #6840ff;
+
+	--mnd-backdrop:          rgba(0,0,0,0.25);
+	--mnd-panel-bg:          #ffffff;
+	--mnd-panel-col-bg:      #f7f5ff;
+	--mnd-panel-border:      rgba(0,0,0,0.10);
+	--mnd-card-bg:           #ffffff;
+
+	--mnd-logo-width:        5.75em;
+	--mnd-panel-padding-y:   2.5em;
+	--mnd-panel-padding-x:   1.5em;
+}
+
+.egsap-mnd {
+	z-index: var(--mnd-z);
+	position: fixed;
+	top: var(--mnd-top);
+	left: var(--mnd-side);
+	right: var(--mnd-side);
+}
+
+/* Editor preview — supaya widget nggak nutupin Elementor UI saat edit mode */
+.egsap-mnd[data-egsap-mnd-editor="1"] {
+	position: relative;
+	top: auto;
+	left: auto;
+	right: auto;
+}
+
+.egsap-mnd__bar {
+	z-index: 3;
+	background-color: var(--mnd-bar-bg);
+	border-bottom: 1px solid var(--mnd-bar-border);
+	border-radius: var(--mnd-bar-radius);
+	width: 100%;
+	max-width: var(--mnd-max-width);
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+
+.egsap-mnd__container {
+	height: var(--mnd-nav-height);
+	justify-content: space-between;
+	align-items: center;
+	padding: var(--mnd-bar-padding-y) var(--mnd-bar-padding-x);
+	display: flex;
+}
+
+.egsap-mnd__bar-start {
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	display: flex;
+	position: relative;
+}
+
+.egsap-mnd__bar-logo {
+	flex: none;
+	width: var(--mnd-logo-width);
+	margin-right: 3em;
+	display: flex;
+	color: var(--mnd-text);
+}
+
+.egsap-mnd__bar-logo img,
+.egsap-mnd__bar-logo svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.egsap-mnd__bar-list {
+	grid-column-gap: 0.75em;
+	grid-row-gap: 0.75em;
+	justify-content: flex-start;
+	align-items: center;
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+}
+
+.egsap-mnd__bar-list.is--actions {
+	margin-left: auto;
+}
+
+.egsap-mnd__bar-link {
+	color: var(--mnd-text);
+	background-color: transparent;
+	border: 0;
+	border-radius: 0.25em;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 0.25em;
+	padding: 0.55em 0.75em;
+	text-decoration: none;
+	display: flex;
+	cursor: pointer;
+	font: inherit;
+	line-height: 1;
+}
+
+.egsap-mnd__bar-link:hover {
+	background-color: var(--mnd-link-hover-bg);
+}
+
+.egsap-mnd__bar-link-label {
+	font-size: 0.9375em;
+	font-weight: 500;
+	line-height: 1.2;
+}
+
+.egsap-mnd__bar-link-icon {
+	width: 1.25em;
+	flex: none;
+	display: block;
+}
+
+.egsap-mnd__bar-end {
+	grid-column-gap: 0.75em;
+	grid-row-gap: 0.75em;
+	justify-content: flex-end;
+	align-items: center;
+	display: none;
+}
+
+.egsap-mnd__bar-cta {
+	color: var(--mnd-cta-text);
+	background-color: var(--mnd-cta-bg);
+	border: 1px solid transparent;
+	border-radius: 0.3125em;
+	justify-content: center;
+	align-items: center;
+	padding: 0.55em 0.875em;
+	text-decoration: none;
+	display: flex;
+	gap: 0.375em;
+	line-height: 1;
+}
+
+.egsap-mnd__bar-cta.is--secondary {
+	color: var(--mnd-cta-border);
+	background-color: transparent;
+	border-color: var(--mnd-cta-border);
+}
+
+.egsap-mnd__bar-cta .egsap-mnd__bar-link-label {
+	line-height: 1;
+	font-size: 0.9375em;
+	font-weight: 500;
+}
+
+.egsap-mnd__bar-cta .egsap-mnd__bar-link-icon {
+	width: 1em;
+	height: 1em;
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.egsap-mnd__bar-cta .egsap-mnd__bar-link-icon svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.egsap-mnd__bar-inner {
+	grid-column-gap: 0.75em;
+	grid-row-gap: 0.75em;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 0;
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+}
+
+.egsap-mnd__bar-inner.is--actions {
+	margin-left: auto;
+}
+
+.egsap-mnd__burger {
+	grid-column-gap: 0.2em;
+	grid-row-gap: 0.2em;
+	background-color: var(--mnd-burger-bg);
+	border: 0;
+	border-radius: 0.25em;
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	width: 2.5em;
+	height: 2.5em;
+	padding: 0;
+	display: flex;
+	cursor: pointer;
+}
+
+.egsap-mnd__burger-line {
+	z-index: 1;
+	background-color: var(--mnd-burger-line);
+	border-radius: 0.125em;
+	flex: none;
+	width: 1.25em;
+	height: 0.125em;
+	padding: 0;
+	display: block;
+	position: relative;
+}
+
+.egsap-mnd__back {
+	z-index: 2;
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+	left: -0.625em;
+}
+
+.egsap-mnd__back .egsap-mnd__bar-link {
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+}
+
+.egsap-mnd__backdrop {
+	z-index: 0;
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
+	background-color: var(--mnd-backdrop);
+	position: fixed;
+	inset: 0%;
+}
+
+.egsap-mnd__dropdown-wrapper {
+	z-index: 2;
+	pointer-events: none;
+	width: 100%;
+	max-width: var(--mnd-max-width);
+	margin-left: auto;
+	margin-right: auto;
+	position: absolute;
+	top: calc(100% - 0.25em);
+	left: 0;
+	right: 0;
+}
+
+.egsap-mnd__dropdown-container {
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-mnd__dropdown-bg {
+	will-change: transform;
+	background-color: var(--mnd-panel-bg);
+	border-bottom-right-radius: var(--mnd-bar-radius);
+	border-bottom-left-radius: var(--mnd-bar-radius);
+	position: absolute;
+	inset: 0;
+}
+
+.egsap-mnd__dropdown-panel {
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
+	position: absolute;
+	inset: 0 0 auto;
+	overflow: hidden;
+}
+
+.egsap-mnd__dropdown-inner {
+	display: flex;
+}
+
+.egsap-mnd__panel-col {
+	grid-column-gap: 1.25em;
+	grid-row-gap: 1.25em;
+	border-right: 1px solid var(--mnd-panel-border);
+	flex-flow: column;
+	flex: 1;
+	justify-content: flex-start;
+	align-items: flex-start;
+	padding: var(--mnd-panel-padding-y) var(--mnd-panel-padding-x);
+	display: flex;
+}
+
+.egsap-mnd__panel-col:last-of-type {
+	border: none;
+}
+
+.egsap-mnd__panel-col.is--colored {
+	background-color: var(--mnd-panel-col-bg);
+}
+
+.egsap-mnd__panel-col.is--colored.has--card {
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+}
+
+.egsap-mnd__panel-label {
+	text-transform: uppercase;
+	padding-left: 1em;
+	font-family: inherit;
+	font-size: 0.75em;
+	line-height: 1;
+	color: var(--mnd-text);
+	opacity: 0.75;
+}
+
+.egsap-mnd__panel-list {
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+}
+
+.egsap-mnd__panel-link {
+	color: var(--mnd-text);
+	border-radius: 0.25em;
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	padding: 0.625em 0.75em;
+	text-decoration: none;
+	display: flex;
+	transition: background-color 0.15s ease;
+}
+
+.egsap-mnd__panel-link:hover {
+	background-color: var(--mnd-link-hover-bg);
+}
+
+.egsap-mnd__panel-link-text {
+	font-weight: 500;
+}
+
+.egsap-mnd__panel-link-desc {
+	color: var(--mnd-text-muted);
+	font-size: 0.875em;
+	font-weight: 400;
+}
+
+.egsap-mnd__card {
+	background-color: var(--mnd-card-bg);
+	border-radius: 0.5em;
+	flex-flow: column;
+	width: 100%;
+	display: flex;
+	overflow: hidden;
+}
+
+.egsap-mnd__card-img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.egsap-mnd__card-visual {
+	width: 100%;
+	height: 16.25em;
+	position: relative;
+}
+
+.egsap-mnd__card-content {
+	grid-column-gap: 1.25em;
+	grid-row-gap: 1.25em;
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	padding: 1.5em;
+	display: flex;
+}
+
+.egsap-mnd__card-text {
+	grid-column-gap: 0.125em;
+	grid-row-gap: 0.125em;
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+}
+
+.egsap-mnd__card-cta {
+	color: var(--mnd-cta-text);
+	background-color: var(--mnd-cta-bg);
+	border-radius: 0.3125em;
+	justify-content: center;
+	align-items: center;
+	padding: 0.55em 0.875em;
+	text-decoration: none;
+	display: flex;
+	gap: 0.375em;
+	line-height: 1;
+}
+
+.egsap-mnd__card-cta-label {
+	font-size: 0.9375em;
+	font-weight: 500;
+	line-height: 1;
+}
+
+.egsap-mnd__card-cta-icon {
+	width: 1em;
+	height: 1em;
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.egsap-mnd__card-cta-icon svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+@media screen and (max-width: 991px) {
+	.egsap-mnd:not([data-egsap-mnd-editor="1"]) {
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.egsap-mnd__bar-start {
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.egsap-mnd__bar-list {
+		grid-column-gap: 0em;
+		grid-row-gap: 0em;
+		flex-flow: column;
+		justify-content: flex-start;
+		align-items: stretch;
+		width: 100%;
+	}
+
+	.egsap-mnd__bar-list.is--actions {
+		grid-column-gap: 1em;
+		grid-row-gap: 1em;
+		flex-flow: row;
+		justify-content: space-between;
+		align-items: stretch;
+	}
+
+	.egsap-mnd__bar-link {
+		border-bottom: 1px solid var(--mnd-bar-border);
+		border-radius: 0;
+		width: 100%;
+		padding: 0.75em 0;
+		font-size: 1.25em;
+	}
+
+	.egsap-mnd__bar-link.is--dropdown {
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.egsap-mnd__bar-link.is--back {
+		border-bottom-style: none;
+		font-size: 1em;
+	}
+
+	.egsap-mnd__bar-link-label {
+		font-size: 1.25em;
+	}
+
+	.egsap-mnd__bar-link-icon {
+		width: 1.5em;
+	}
+
+	.egsap-mnd__bar-link-icon.is--dropdown {
+		transform: rotate(-90deg);
+	}
+
+	.egsap-mnd__bar-end {
+		display: flex;
+	}
+
+	.egsap-mnd__bar-cta {
+		padding: 1em 0.75em 1em 1em;
+	}
+
+	.egsap-mnd__bar-inner {
+		opacity: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		top: var(--mnd-nav-height);
+		visibility: hidden;
+		background-color: var(--mnd-bar-bg);
+		flex-flow: column;
+		justify-content: space-between;
+		align-items: center;
+		padding: 2em 1.5em;
+		position: fixed;
+		overflow: auto;
+	}
+
+	.egsap-mnd__backdrop {
+		display: none;
+	}
+
+	.egsap-mnd__dropdown-wrapper {
+		z-index: 4;
+		bottom: 0;
+		top: var(--mnd-nav-height);
+		position: fixed;
+	}
+
+	.egsap-mnd__dropdown-container {
+		height: 100%;
+		overflow: auto;
+	}
+
+	.egsap-mnd__dropdown-bg {
+		display: none;
+	}
+
+	.egsap-mnd__dropdown-panel {
+		background-color: var(--mnd-panel-bg);
+		bottom: 0;
+		overflow: auto;
+	}
+
+	.egsap-mnd__dropdown-inner {
+		flex-flow: column;
+	}
+
+	.egsap-mnd__panel-col {
+		border-bottom: 1px solid var(--mnd-bar-border);
+		border-right-style: none;
+		padding-top: 1.5em;
+		padding-bottom: 1.5em;
+	}
+
+	.egsap-mnd__panel-label {
+		width: 100%;
+	}
+
+	.egsap-mnd__bar-action {
+		flex: 1;
+	}
+
+	.egsap-mnd__card-cta-icon.is--dropdown {
+		transform: rotate(-90deg);
+	}
+}
+
+@media screen and (max-width: 479px) {
+	.egsap-mnd__bar-link-label {
+		font-size: 1em;
+	}
+
+	.egsap-mnd__bar-link-icon {
+		width: 1.375em;
+	}
+
+	.egsap-mnd__panel-col.is--colored.has--card {
+		padding: 0;
+	}
+
+	.egsap-mnd__card {
+		border-bottom: 1px solid var(--mnd-bar-border);
+		border-radius: 0;
+	}
+
+	.egsap-mnd__card-content {
+		padding: 1em 1em 1.5em;
+	}
+
+	.egsap-mnd__card-cta-label {
+		font-size: 1em;
+	}
+
+	.egsap-mnd__card-cta-icon {
+		width: 1.375em;
+	}
+}

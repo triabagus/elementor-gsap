@@ -82,6 +82,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 3. **Expanding Bottom Navigation** — a floating pill nav fixed at the bottom (or top) that morphs into a full menu panel on toggle, with staggered item reveal (GSAP + CustomEase `osmo` preset).
 
+4. **Mega Navigation (Directional Hover)** — a top-bar mega menu where hovering a trigger opens a full-width dropdown panel; switching between triggers slides the panel content left/right based on trigger order, with a morphing background height (GSAP) and a full mobile drawer + slide-over sub-panels.
+
 #### GSAP • Sections & Layouts
 
 1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).
