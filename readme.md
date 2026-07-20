@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **6 page-level animations** (configured via Page Settings) and **17 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
+The plugin ships **7 page-level animations** (configured via Page Settings) and **17 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -37,6 +37,8 @@ The plugin ships **6 page-level animations** (configured via Page Settings) and 
 5. **Dropping Cards Loading Animation** — a stack of image cards that elastically settles at center then drops one-by-one (with staggered rotation + x-offset patterns), while the background slides up and the logo fades out to reveal the page (GSAP + CustomEase `osmo` preset).
 
 6. **Logo Reveal Loader** — a fullscreen loader where a progress bar fills across the bottom in sync with the logo being revealed via left-to-right `clip-path` (with a dimmed backdrop copy), plus two rotating text labels split per-char (SplitText), then the background slides up to reveal the page (GSAP + CustomEase `loader` preset).
+
+7. **Number Loader in 3 Steps** — a fullscreen loader with a vertical progress bar on the left and a giant animated percentage counter that rolls through 3 randomized steps (`XX%` → `YY%` → `100%`) using GSAP `yPercent` odometer-style slots, then fades out to reveal the page.
 
 ### Elementor Widgets
 
