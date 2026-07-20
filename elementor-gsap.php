@@ -128,6 +128,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/sticky-features.css',
 		'assets/css/expanding-bottom-nav.css',
 		'assets/css/radial-cards-slider.css',
+		'assets/css/step-timeline.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -147,6 +148,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/sticky-features.js',
 		'assets/js/expanding-bottom-nav.js',
 		'assets/js/radial-cards-slider.js',
+		'assets/js/step-timeline.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -166,6 +168,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-sticky-features-widget.php',
 		'widgets/class-expanding-bottom-nav-widget.php',
 		'widgets/class-radial-cards-slider-widget.php',
+		'widgets/class-step-timeline-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -353,6 +356,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-radial-cards-slider-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Radial_Cards_Slider_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-step-timeline-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Step_Timeline_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -506,6 +512,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/radial-cards-slider.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-step-timeline',
+			ELEMENTOR_GSAP_URL . 'assets/js/step-timeline.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/step-timeline.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -622,6 +635,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/radial-cards-slider.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/radial-cards-slider.css' )
+		);
+		wp_register_style(
+			'elementor-step-timeline',
+			ELEMENTOR_GSAP_URL . 'assets/css/step-timeline.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/step-timeline.css' )
 		);
 	} );
 } );

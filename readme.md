@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **4 page-level animations** (configured via Page Settings) and **15 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
+The plugin ships **4 page-level animations** (configured via Page Settings) and **16 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -65,6 +65,8 @@ The plugin ships **4 page-level animations** (configured via Page Settings) and 
 14. **Expanding Bottom Navigation** — a floating pill nav fixed at the bottom (or top) that morphs into a full menu panel on toggle, with staggered item reveal (GSAP + CustomEase `osmo` preset).
 
 15. **Radial Cards Slider (GSAP)** — cards arranged on a rotating wheel that you can drag with inertia + snap or navigate via Prev/Next + dots (Draggable + InertiaPlugin + CustomEase `radial` easing).
+
+16. **Step-by-step Timeline** — a vertical timeline where a fill line scrubs down as you scroll, toggling each step to `active` / `current` states with animated marker colors and content opacity (GSAP ScrollTrigger, respects `prefers-reduced-motion`).
 
 ## 📦 Installation
 
