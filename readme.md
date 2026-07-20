@@ -86,6 +86,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 5. **Two-step Scaling Navigation** — a centered pill bar (logo + toggle) that scales into a full-width panel on toggle, revealing menu items + a visual image column; pure CSS transitions (cubic-bezier easing) with a two-stage animation — bar expands first, then content fades up from below.
 
+6. **Bold Full Screen Navigation** — a bar with logo + hamburger that opens a full-screen colored tile (via `clip-path` reveal) containing oversized menu links; links slide up with a rotational stagger, hover dims all other items, and hovering a single link slides it up with a text-shadow trick.
+
 #### GSAP • Sections & Layouts
 
 1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).

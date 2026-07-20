@@ -1,0 +1,292 @@
+/* Bold Full Screen Navigation — bar dengan logo + hamburger yang saat di-toggle
+   membuka tile fullscreen (clip-path reveal) berisi menu links besar. Semua
+   transisi pure CSS, JS cuma nge-toggle data-egsap-bfn-status="active". */
+
+.egsap-bfn {
+	--bfn-cubic-tile:      cubic-bezier(.9, 0, .1, 1);
+	--bfn-cubic-link:      cubic-bezier(.7, 0, .3, 1);
+	--bfn-dur-tile:        1s;
+	--bfn-dur-link:        0.75s;
+	--bfn-dur-hover:       0.5s;
+
+	--bfn-z:               100;
+	--bfn-bar-padding:     2.5em;
+	--bfn-bottom-padding-y: 2.25em;
+	--bfn-bottom-padding-x: 2.5em;
+
+	--bfn-tile-bg:         #1b372e;
+	--bfn-logo-color:      #f4f4f4;
+	--bfn-hamburger-color: #f4f4f4;
+	--bfn-link-color:      #f4f4f4;
+	--bfn-link-current:    #d0ff00;
+	--bfn-word-color:      #f4f4f4;
+	--bfn-word-opacity:    0.5;
+	--bfn-hover-dim:       0.15;
+
+	--bfn-logo-width:      8em;
+	--bfn-logo-height:     2em;
+	--bfn-hamburger-size:  3em;
+	--bfn-menu-size:       calc(4vw + 4vh);
+	--bfn-word-size:       1.125em;
+
+	z-index: var(--bfn-z);
+	pointer-events: none;
+	position: fixed;
+	inset: 0;
+}
+
+.egsap-bfn[data-egsap-bfn-editor="1"] {
+	position: relative;
+	inset: auto;
+	min-height: 7em;
+}
+
+/* --------------------------- BAR (logo + hamburger) --------------------------- */
+
+.egsap-bfn__bar {
+	z-index: 1;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: var(--bfn-bar-padding);
+	display: flex;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.egsap-bfn__logo {
+	pointer-events: auto;
+	color: var(--bfn-logo-color);
+	justify-content: center;
+	align-items: center;
+	width: var(--bfn-logo-width);
+	height: var(--bfn-logo-height);
+	display: flex;
+	text-decoration: none;
+}
+
+.egsap-bfn__logo img,
+.egsap-bfn__logo svg {
+	height: 100%;
+	width: auto;
+	max-width: 100%;
+	display: block;
+}
+
+/* --------------------------- HAMBURGER --------------------------- */
+
+.egsap-bfn__hamburger {
+	pointer-events: auto;
+	color: var(--bfn-hamburger-color);
+	cursor: pointer;
+	background-color: transparent;
+	border: 0;
+	justify-content: center;
+	align-items: center;
+	width: var(--bfn-hamburger-size);
+	height: var(--bfn-hamburger-size);
+	padding: 0;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-bfn__hamburger .egsap-bfn__hamburger-bar {
+	background-color: currentColor;
+	width: 2em;
+	height: 0.125em;
+	position: absolute;
+	transform: translate(0, 0) rotate(0.001deg);
+	transition: transform 0.5s cubic-bezier(.7, 0, .3, 1);
+}
+
+.egsap-bfn__hamburger .egsap-bfn__hamburger-bar:nth-child(1) {
+	transform: translate(0, -0.45em) scale(1, 1) rotate(0.001deg);
+}
+
+.egsap-bfn__hamburger .egsap-bfn__hamburger-bar:nth-child(3) {
+	transform: translate(0, 0.45em) scale(1, 1) rotate(0.001deg);
+}
+
+/* Hamburger — Hover (closed) */
+.egsap-bfn__hamburger:hover .egsap-bfn__hamburger-bar:nth-child(1) {
+	transform: translate(0, -0.45em) scale(0.5, 1) rotate(0.001deg);
+}
+
+.egsap-bfn__hamburger:hover .egsap-bfn__hamburger-bar:nth-child(3) {
+	transform: translate(0, 0.45em) scale(0.5, 1) rotate(0.001deg);
+}
+
+/* Hamburger — Active state (X) */
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__hamburger-bar:nth-child(1) {
+	transform: translate(0, 0) rotate(45deg) scale(1, 1);
+}
+
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__hamburger-bar:nth-child(2) {
+	transform: translate(-150%, 0) rotate(0.001deg) scale(1, 1);
+}
+
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__hamburger-bar:nth-child(3) {
+	transform: translate(0, 0) rotate(-45deg) scale(1, 1);
+}
+
+/* Hamburger — Hover on active (X compressed) */
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__hamburger:hover .egsap-bfn__hamburger-bar:nth-child(1) {
+	transform: translate(0, 0) rotate(45deg) scale(0.7, 1);
+}
+
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__hamburger:hover .egsap-bfn__hamburger-bar:nth-child(3) {
+	transform: translate(0, 0) rotate(-45deg) scale(0.7, 1);
+}
+
+/* --------------------------- TILE (fullscreen menu) --------------------------- */
+
+.egsap-bfn__tile {
+	pointer-events: auto;
+	background-color: var(--bfn-tile-bg);
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: clip-path var(--bfn-dur-tile) var(--bfn-cubic-tile);
+	clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+}
+
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__tile {
+	clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.egsap-bfn__ul {
+	flex-flow: column;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+}
+
+.egsap-bfn__li {
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+	transition: opacity var(--bfn-dur-hover) var(--bfn-cubic-link);
+}
+
+.egsap-bfn__link {
+	color: var(--bfn-link-color);
+	letter-spacing: -0.04em;
+	padding-left: 0.075em;
+	padding-right: 0.075em;
+	font-family: inherit;
+	font-size: var(--bfn-menu-size);
+	font-weight: 400;
+	line-height: 1.1;
+	text-decoration: none;
+	transform: translateY(100%) rotate(5deg);
+	transition: transform var(--bfn-dur-link) var(--bfn-cubic-link);
+}
+
+.egsap-bfn__link.is--current {
+	color: var(--bfn-link-current);
+}
+
+/* Link enter delay — sesuai urutan (reverse when closing) */
+.egsap-bfn__li:nth-child(1) .egsap-bfn__link { transition-delay: 0.2s; }
+.egsap-bfn__li:nth-child(2) .egsap-bfn__link { transition-delay: 0.15s; }
+.egsap-bfn__li:nth-child(3) .egsap-bfn__link { transition-delay: 0.1s; }
+.egsap-bfn__li:nth-child(4) .egsap-bfn__link { transition-delay: 0.05s; }
+.egsap-bfn__li:nth-child(5) .egsap-bfn__link { transition-delay: 0s; }
+.egsap-bfn__li:nth-child(6) .egsap-bfn__link { transition-delay: 0s; }
+.egsap-bfn__li:nth-child(7) .egsap-bfn__link { transition-delay: 0s; }
+
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__link {
+	transform: translateY(0) rotate(0.001deg);
+	transition-delay: 0.3s;
+}
+
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(1) .egsap-bfn__link { transition-delay: 0.3s; }
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(2) .egsap-bfn__link { transition-delay: 0.35s; }
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(3) .egsap-bfn__link { transition-delay: 0.4s; }
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(4) .egsap-bfn__link { transition-delay: 0.45s; }
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(5) .egsap-bfn__link { transition-delay: 0.5s; }
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(6) .egsap-bfn__link { transition-delay: 0.55s; }
+.egsap-bfn[data-egsap-bfn-status="active"] .egsap-bfn__li:nth-child(7) .egsap-bfn__link { transition-delay: 0.6s; }
+
+.egsap-bfn__link-text {
+	text-shadow: 0 1.1em 0;
+	display: block;
+	position: relative;
+	transition: transform var(--bfn-dur-hover) var(--bfn-cubic-link);
+	transform: translateY(0) rotate(0.001deg);
+}
+
+.egsap-bfn__link:hover .egsap-bfn__link-text {
+	transform: translateY(-100%) rotate(0.001deg);
+}
+
+/* Dim other links when hovering one */
+.egsap-bfn__ul:has(.egsap-bfn__li:hover) .egsap-bfn__li {
+	opacity: var(--bfn-hover-dim);
+}
+
+.egsap-bfn__ul:has(.egsap-bfn__li:hover) .egsap-bfn__li:hover {
+	opacity: 1;
+}
+
+/* --------------------------- BOTTOM ROW --------------------------- */
+
+.egsap-bfn__bottom {
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: var(--bfn-bottom-padding-y) var(--bfn-bottom-padding-x);
+	display: flex;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	color: var(--bfn-word-color);
+	gap: 1em;
+}
+
+.egsap-bfn__word {
+	opacity: var(--bfn-word-opacity);
+	margin: 0;
+	font-size: var(--bfn-word-size);
+	position: relative;
+	color: inherit;
+	text-decoration: none;
+}
+
+a.egsap-bfn__word {
+	transition: opacity 0.3s ease;
+}
+
+a.egsap-bfn__word:hover {
+	opacity: 1;
+}
+
+@media screen and (max-width: 767px) {
+	.egsap-bfn {
+		--bfn-bar-padding:      1.25em;
+		--bfn-bottom-padding-y: 1.25em;
+		--bfn-bottom-padding-x: 1.25em;
+		--bfn-word-size:        0.9375em;
+	}
+
+	.egsap-bfn__bottom {
+		flex-flow: column;
+		align-items: flex-start;
+		gap: 0.25em;
+	}
+}
