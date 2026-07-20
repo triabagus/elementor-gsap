@@ -127,6 +127,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/logo-wall-cycle.css',
 		'assets/css/sticky-features.css',
 		'assets/css/expanding-bottom-nav.css',
+		'assets/css/radial-cards-slider.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -145,6 +146,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/logo-wall-cycle.js',
 		'assets/js/sticky-features.js',
 		'assets/js/expanding-bottom-nav.js',
+		'assets/js/radial-cards-slider.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -163,6 +165,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-logo-wall-cycle-widget.php',
 		'widgets/class-sticky-features-widget.php',
 		'widgets/class-expanding-bottom-nav-widget.php',
+		'widgets/class-radial-cards-slider-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -347,6 +350,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-expanding-bottom-nav-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Expanding_Bottom_Nav_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-radial-cards-slider-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Radial_Cards_Slider_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -493,6 +499,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/expanding-bottom-nav.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-radial-cards-slider',
+			ELEMENTOR_GSAP_URL . 'assets/js/radial-cards-slider.js',
+			[ 'gsap', 'gsap-draggable', 'gsap-inertia', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/radial-cards-slider.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -603,6 +616,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/expanding-bottom-nav.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/expanding-bottom-nav.css' )
+		);
+		wp_register_style(
+			'elementor-radial-cards-slider',
+			ELEMENTOR_GSAP_URL . 'assets/css/radial-cards-slider.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/radial-cards-slider.css' )
 		);
 	} );
 } );

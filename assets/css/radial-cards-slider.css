@@ -1,0 +1,260 @@
+/* Radial Cards Slider (GSAP) — cards arranged on a rotating wheel with
+   drag + snap + inertia (Draggable + InertiaPlugin), plus prev/next & dots.
+   JS reads --slider-rotate & --slider-radius via getComputedStyle,
+   so those two var names MUST stay stable. Other vars are namespaced --rcs-*. */
+
+.radial-gsap-slider {
+	/* Read by JS — keep names & unit format (deg / %) */
+	--slider-rotate:            18deg;
+	--slider-radius:            375%;
+
+	--rcs-item-width:           20em;
+	--rcs-slider-gap:           5em;
+	--rcs-slider-pad-top:       5em;
+
+	--rcs-card-bg:              #e8e8e2;
+	--rcs-card-color:           #353d35;
+	--rcs-card-radius:          1.375em;
+	--rcs-card-pad:             0.625em;
+	--rcs-card-info-height:     4.5em;
+	--rcs-image-aspect:         8 / 9;
+	--rcs-image-radius:         0.75em;
+
+	--rcs-controls-gap:         1em;
+	--rcs-controls-pad:         3em;
+
+	--rcs-btn-height:           3em;
+	--rcs-btn-pad-x:            1.5em;
+	--rcs-btn-radius:           50em;
+
+	--rcs-prev-bg:              #1f251f;
+	--rcs-prev-color:           #e8e8e2;
+	--rcs-next-bg:              #e8e8e2;
+	--rcs-next-color:           #353d35;
+
+	--rcs-dot-size:             0.875em;
+	--rcs-dot-gap:              0.25em;
+	--rcs-dot-color-inactive:   #4c554c;
+	--rcs-dot-color-active:     #ABA994;
+	--rcs-dot-border-color:     #353d35;
+	--rcs-dot-border-width:     0.1875em;
+
+	gap: var(--rcs-slider-gap);
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding-top: var(--rcs-slider-pad-top);
+	display: flex;
+	position: relative;
+}
+
+/* Drag cursor states */
+[data-radial-slider-init][data-radial-slider-drag-status="grab"] {
+	cursor: grab;
+}
+
+[data-radial-slider-init][data-radial-slider-drag-status="grabbing"] {
+	cursor: grabbing;
+}
+
+.radial-gsap-slider__collection {
+	max-width: 100%;
+	position: relative;
+}
+
+.radial-gsap-slider__list {
+	-webkit-user-select: none;
+	user-select: none;
+	will-change: transform;
+	touch-action: pan-y;
+	backface-visibility: hidden;
+	justify-content: center;
+	align-items: center;
+	max-width: 100%;
+	display: flex;
+	position: relative;
+}
+
+[data-radial-slider-list] > :first-child {
+	position: relative;
+}
+
+.radial-gsap-slider__item {
+	width: var(--rcs-item-width);
+	transform-origin: 50% var(--slider-radius);
+	flex: none;
+	position: absolute;
+}
+
+/* === Card (demo) === */
+.demo-card {
+	color: var(--rcs-card-color);
+	text-align: center;
+	background-color: var(--rcs-card-bg);
+	border-radius: var(--rcs-card-radius);
+	flex-flow: column;
+	align-items: flex-start;
+	width: 100%;
+	padding-top: var(--rcs-card-pad);
+	padding-left: var(--rcs-card-pad);
+	padding-right: var(--rcs-card-pad);
+	display: flex;
+}
+
+.demo-card__media {
+	aspect-ratio: var(--rcs-image-aspect);
+	border-radius: var(--rcs-image-radius);
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.demo-card .cover-image {
+	object-fit: cover;
+	border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.demo-card__info {
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: var(--rcs-card-info-height);
+	padding: 0.625em;
+	display: flex;
+}
+
+.demo-card__h {
+	text-transform: uppercase;
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 1.3125em;
+	font-weight: 900;
+	line-height: 1;
+}
+
+/* === Controls === */
+.radial-gsap-slider__controls {
+	gap: var(--rcs-controls-gap);
+	justify-content: center;
+	align-items: center;
+	padding: var(--rcs-controls-pad);
+	display: flex;
+	position: relative;
+}
+
+.radial-gsap-slider__control-btn {
+	z-index: 1;
+	color: var(--rcs-prev-color);
+	background-color: var(--rcs-prev-bg);
+	letter-spacing: -0.02em;
+	cursor: pointer;
+	border: none;
+	border-radius: var(--rcs-btn-radius);
+	height: var(--rcs-btn-height);
+	padding: 0 var(--rcs-btn-pad-x);
+	font: inherit;
+	font-size: 1em;
+	font-weight: 600;
+	position: relative;
+	transition: opacity 0.2s ease;
+}
+
+.radial-gsap-slider__control-btn:hover {
+	opacity: 0.85;
+}
+
+.radial-gsap-slider__control-btn.is--next {
+	color: var(--rcs-next-color);
+	background-color: var(--rcs-next-bg);
+}
+
+.radial-gsap-slider__dots {
+	gap: var(--rcs-dot-gap);
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}
+
+.radial-gsap-slider__control-dot {
+	z-index: 1;
+	outline-offset: 0;
+	color: var(--rcs-dot-color-inactive);
+	cursor: pointer;
+	background-color: currentColor;
+	border: var(--rcs-dot-border-width) solid var(--rcs-dot-border-color);
+	border-radius: 50em;
+	width: var(--rcs-dot-size);
+	height: var(--rcs-dot-size);
+	padding: 0;
+	font-size: 1em;
+	transition: color 0.1s ease;
+	position: relative;
+	overflow: hidden;
+	outline: 0 !important;
+	box-shadow: 0 0 #0000 !important;
+}
+
+.radial-gsap-slider__control-dot[data-radial-slider-control-status="active"] {
+	color: var(--rcs-dot-color-active);
+}
+
+@media screen and (max-width: 767px) {
+	.radial-gsap-slider {
+		--slider-rotate: 12deg;
+		--slider-radius: 475%;
+		--rcs-item-width: 15em;
+	}
+}
+
+/* === Editor preview — grid layout so user can see all cards + edit content.
+   Draggable + rotation is disabled (JS skips init in edit mode). === */
+body.elementor-editor-active .radial-gsap-slider,
+.radial-gsap-slider.egsap-edit-mode {
+	position: relative;
+	padding-top: 1.5em;
+	gap: 1.5em;
+}
+
+body.elementor-editor-active .radial-gsap-slider::before,
+.radial-gsap-slider.egsap-edit-mode::before {
+	content: 'Radial Cards Slider — Editor Preview (frontend uses draggable rotating wheel)';
+	padding: 0.35em 0.7em;
+	background: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	border-radius: 0.25em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: 1;
+}
+
+body.elementor-editor-active .radial-gsap-slider__list,
+.radial-gsap-slider.egsap-edit-mode .radial-gsap-slider__list {
+	flex-flow: row wrap;
+	gap: 1em;
+	height: auto !important;
+	max-width: 100%;
+	overflow: hidden;
+}
+
+body.elementor-editor-active .radial-gsap-slider__item,
+.radial-gsap-slider.egsap-edit-mode .radial-gsap-slider__item {
+	position: relative;
+	transform: none !important;
+	transform-origin: initial;
+	width: 12em;
+}
+
+body.elementor-editor-active .radial-gsap-slider__controls,
+.radial-gsap-slider.egsap-edit-mode .radial-gsap-slider__controls {
+	pointer-events: none;
+	opacity: 0.7;
+	padding: 1em;
+}
