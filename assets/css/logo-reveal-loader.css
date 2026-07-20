@@ -1,0 +1,129 @@
+/* Logo Reveal Loader — fullscreen overlay dengan progress bar sync ke
+   clip-path reveal logo dari kiri ke kanan, plus 2 text SplitText yang
+   swap masuk-keluar per-char. Semua nilai warna & timing dikontrol via
+   CSS variables (Elementor page settings menulis nilainya). */
+
+.egsap-lrl-loader {
+	--lrl-bg:                 #0a0a0a;
+	--lrl-text-color:         #ffffff;
+	--lrl-logo-color:         #ffffff;
+	--lrl-logo-base-opacity:  0.2;
+	--lrl-logo-width:         12em;
+	--lrl-logo-height:        3em;
+	--lrl-progress-color:     #ffffff;
+	--lrl-progress-height:    0.5em;
+	--lrl-text-bottom:        3.5em;
+	/* Sangat tinggi supaya loader selalu di atas widget apapun (mis. Fixed
+	   Underlay Nav, header sticky user). Setelah loader selesai, CSS
+	   body[data-egsap-lrl-status="done"] menerapkan display: none. */
+	--lrl-z:                  99999;
+
+	z-index: var(--lrl-z);
+	color: var(--lrl-text-color);
+	width: 100%;
+	height: 100dvh;
+	position: fixed;
+	inset: 0 0 auto;
+}
+
+.egsap-lrl-bg {
+	background-color: var(--lrl-bg);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	inset: 0;
+	will-change: transform;
+}
+
+.egsap-lrl-container {
+	z-index: 2;
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	position: relative;
+}
+
+.egsap-lrl-progress {
+	z-index: 1;
+	transform-origin: 0%;
+	background-color: var(--lrl-progress-color);
+	width: 100%;
+	height: var(--lrl-progress-height);
+	position: absolute;
+	inset: auto 0 0;
+	transform: scale3d(0, 1, 1);
+	will-change: transform;
+}
+
+.egsap-lrl-logo-wrap {
+	justify-content: center;
+	align-items: center;
+	width: var(--lrl-logo-width);
+	height: var(--lrl-logo-height);
+	display: flex;
+	position: relative;
+	color: var(--lrl-logo-color);
+}
+
+.egsap-lrl-logo-item {
+	width: 100%;
+	position: absolute;
+	color: inherit;
+	line-height: 0;
+}
+
+.egsap-lrl-logo-item.is--base {
+	opacity: var(--lrl-logo-base-opacity);
+}
+
+.egsap-lrl-logo-item.is--top {
+	-webkit-clip-path: inset(0 100% 0 0);
+	clip-path: inset(0 100% 0 0);
+	will-change: clip-path;
+}
+
+.egsap-lrl-logo-item svg,
+.egsap-lrl-logo-item img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.egsap-lrl-text-wrap {
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	position: absolute;
+	bottom: var(--lrl-text-bottom);
+}
+
+.egsap-lrl-text {
+	text-transform: uppercase;
+	white-space: nowrap;
+	margin-bottom: -0.25em;
+	padding-bottom: 0.25em;
+	font-family: 'Haffer Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	position: absolute;
+}
+
+/* FOUC prevention — target dengan data-load-reset di-set opacity 0 by
+   default. JS akan set autoAlpha 1 di frame pertama timeline. */
+[data-load-reset] {
+	opacity: 0;
+}
+
+/* Prevent body scroll while loader active */
+body[data-egsap-lrl-status="loading"] {
+	overflow: hidden;
+}
+
+/* Setelah timeline selesai (JS set body attribute → 'done'), hilangkan
+   loader dari render supaya z-index & pointer-events tidak intervensi
+   section/widget user. */
+body[data-egsap-lrl-status="done"] .egsap-lrl-loader {
+	display: none;
+}
