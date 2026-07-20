@@ -130,6 +130,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/radial-cards-slider.css',
 		'assets/css/step-timeline.css',
 		'assets/css/gradient-wave-text.css',
+		'assets/css/dropping-cards-loader.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -151,9 +152,11 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/radial-cards-slider.js',
 		'assets/js/step-timeline.js',
 		'assets/js/gradient-wave-text.js',
+		'assets/js/dropping-cards-loader.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
+		'includes/class-dropping-cards-loader-template.php',
 		'includes/class-pixelated-transition-template.php',
 		'widgets/class-bunny-hls-player-widget.php',
 		'widgets/class-masked-text-reveal-widget.php',
@@ -286,6 +289,8 @@ add_action( 'plugins_loaded', function () {
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-pixelated-transition-extension.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-template.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-extension.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-dropping-cards-loader-template.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-dropping-cards-loader-extension.php';
 
 	// Urutan init menentukan urutan section di Page Settings > Style.
 	// Kelompokkan berdasarkan prefix label ("Loaders •" & "Page Transitions •")
@@ -293,6 +298,7 @@ add_action( 'plugins_loaded', function () {
 	\Elementor_GSAP\Willem_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Crisp_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Welcoming_Words_Loader_Extension::init();
+	\Elementor_GSAP\Dropping_Cards_Loader_Extension::init();
 	\Elementor_GSAP\Pixelated_Transition_Extension::init();
 
 	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
@@ -532,6 +538,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/gradient-wave-text.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-dropping-cards-loader',
+			ELEMENTOR_GSAP_URL . 'assets/js/dropping-cards-loader.js',
+			[ 'gsap', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/dropping-cards-loader.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -660,6 +673,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/gradient-wave-text.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/gradient-wave-text.css' )
+		);
+		wp_register_style(
+			'elementor-dropping-cards-loader',
+			ELEMENTOR_GSAP_URL . 'assets/css/dropping-cards-loader.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/dropping-cards-loader.css' )
 		);
 	} );
 } );

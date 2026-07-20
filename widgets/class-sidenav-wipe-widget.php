@@ -197,6 +197,18 @@ class Sidenav_Wipe_Widget extends Widget_Base {
 			'tab'   => Controls_Manager::TAB_STYLE,
 		] );
 
+		$this->add_control( 'z_index', [
+			'label'       => __( 'Z-Index', 'elementor-gsap' ),
+			'description' => __( 'Base stacking. Toggle button otomatis di-set <code>+1</code> supaya selalu di atas drawer overlay (bisa diklik untuk close). Default 98 → button 99 (aman dari section user z-index 100).', 'elementor-gsap' ),
+			'type'        => Controls_Manager::NUMBER,
+			'min'         => 1,
+			'max'         => 9999,
+			'default'     => 98,
+			'selectors'   => [
+				'{{WRAPPER}} .sidenav' => '--sn-z: {{VALUE}};',
+			],
+		] );
+
 		$this->add_responsive_control( 'btn_top', [
 			'label'      => __( 'Top Offset', 'elementor-gsap' ),
 			'type'       => Controls_Manager::SLIDER,

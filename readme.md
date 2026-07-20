@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **4 page-level animations** (configured via Page Settings) and **17 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
+The plugin ships **5 page-level animations** (configured via Page Settings) and **17 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -33,6 +33,8 @@ The plugin ships **4 page-level animations** (configured via Page Settings) and 
 3. **Pixelated Page Transition** — a retro pixel-grid dissolve between pages: link clicks trigger a randomly-staggered grid that covers the page before navigation, then fades back out on entry.
 
 4. **Welcoming Words Loader** — a minimalist multilingual greeting preloader that cycles through a comma-separated word list (`Hello, Bonjour, स्वागत हे, Ciao, Olá`) with an up/down mask transition, then fades out to reveal the page.
+
+5. **Dropping Cards Loading Animation** — a stack of image cards that elastically settles at center then drops one-by-one (with staggered rotation + x-offset patterns), while the background slides up and the logo fades out to reveal the page (GSAP + CustomEase `osmo` preset).
 
 ### Elementor Widgets
 

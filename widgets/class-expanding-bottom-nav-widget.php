@@ -152,7 +152,7 @@ class Expanding_Bottom_Nav_Widget extends Widget_Base {
 			'type'    => Controls_Manager::NUMBER,
 			'min'     => 1,
 			'max'     => 9999,
-			'default' => 100,
+			'default' => 99,
 			'selectors' => [
 				'{{WRAPPER}} .bottom-nav' => '--ebn-z: {{VALUE}};',
 			],

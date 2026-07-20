@@ -92,6 +92,13 @@
 			autoAlpha: 0,
 			duration:  fadeDuration,
 			ease:      'power1.inOut',
+			onComplete: function () {
+				// Setelah loader selesai, hilangkan dari stacking context
+				// supaya z-index 500 tidak konflik dengan section/widget user
+				// yang mungkin juga pakai z-index tinggi.
+				container.style.display       = 'none';
+				container.style.pointerEvents = 'none';
+			},
 		}, '-=0.2');
 
 		instances.set(container, { timeline: tl });
