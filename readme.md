@@ -22,7 +22,7 @@ Premium Osmo-style loading animations, page transitions, and interactive widgets
 
 ## ✨ What's included
 
-The plugin ships **7 page-level animations** (configured via Page Settings) and **17 Elementor widgets** (grouped into 8 sub-categories under the "Elements GSAP" section).
+The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings — Style) and **10+ Elementor widgets** (grouped into 8+ sub-categories under the "Elements GSAP" section).
 
 ### Loaders
 
@@ -30,51 +30,69 @@ The plugin ships **7 page-level animations** (configured via Page Settings) and 
 
 2. **Crisp Loading Animation** — a slideshow-driven preloader where 5 horizontal images move and one scales up as the focal point, staying interactive with thumbnail navigation after loading.
 
-3. **Pixelated Page Transition** — a retro pixel-grid dissolve between pages: link clicks trigger a randomly-staggered grid that covers the page before navigation, then fades back out on entry.
+3. **Welcoming Words Loader** — a minimalist multilingual greeting preloader that cycles through a comma-separated word list (`Hello, Bonjour, स्वागत हे, Ciao, Olá`) with an up/down mask transition, then fades out to reveal the page.
 
-4. **Welcoming Words Loader** — a minimalist multilingual greeting preloader that cycles through a comma-separated word list (`Hello, Bonjour, स्वागत हे, Ciao, Olá`) with an up/down mask transition, then fades out to reveal the page.
+4. **Dropping Cards Loading Animation** — a stack of image cards that elastically settles at center then drops one-by-one (with staggered rotation + x-offset patterns), while the background slides up and the logo fades out to reveal the page (GSAP + CustomEase `osmo` preset).
 
-5. **Dropping Cards Loading Animation** — a stack of image cards that elastically settles at center then drops one-by-one (with staggered rotation + x-offset patterns), while the background slides up and the logo fades out to reveal the page (GSAP + CustomEase `osmo` preset).
+5. **Logo Reveal Loader** — a fullscreen loader where a progress bar fills across the bottom in sync with the logo being revealed via left-to-right `clip-path` (with a dimmed backdrop copy), plus two rotating text labels split per-char (SplitText), then the background slides up to reveal the page (GSAP + CustomEase `loader` preset).
 
-6. **Logo Reveal Loader** — a fullscreen loader where a progress bar fills across the bottom in sync with the logo being revealed via left-to-right `clip-path` (with a dimmed backdrop copy), plus two rotating text labels split per-char (SplitText), then the background slides up to reveal the page (GSAP + CustomEase `loader` preset).
+6. **Number Loader in 3 Steps** — a fullscreen loader with a vertical progress bar on the left and a giant animated percentage counter that rolls through 3 randomized steps (`XX%` → `YY%` → `100%`) using GSAP `yPercent` odometer-style slots, then fades out to reveal the page.
 
-7. **Number Loader in 3 Steps** — a fullscreen loader with a vertical progress bar on the left and a giant animated percentage counter that rolls through 3 randomized steps (`XX%` → `YY%` → `100%`) using GSAP `yPercent` odometer-style slots, then fades out to reveal the page.
+### Transition
+
+1. **Pixelated Page Transition** — a retro pixel-grid dissolve between pages: link clicks trigger a randomly-staggered grid that covers the page before navigation, then fades back out on entry.
 
 ### Elementor Widgets
 
+#### GSAP • Video & Audio
+
 1. **Bunny HLS Player (Basic)** — a custom video player for HLS streaming (`.m3u8`) using Safari native HLS and [hls.js](https://github.com/video-dev/hls.js) elsewhere; supports autoplay-in-view (IntersectionObserver), lazy loading, and aspect ratio modes.
 
-2. **Masked Text Reveal** — a scroll-triggered reveal (SplitText + ScrollTrigger) where lines slide up from below a mask when the element enters the viewport, with configurable split type (Lines/Words/Characters).
+#### GSAP • Text Animations
 
-3. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw + snap, thumbnail navigation, and an animated "01 / 04" counter, powered by Draggable + InertiaPlugin.
+1. **Masked Text Reveal** — a scroll-triggered reveal (SplitText + ScrollTrigger) where lines slide up from below a mask when the element enters the viewport, with configurable split type (Lines/Words/Characters).
 
-4. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
+2. **Looping Words with Selector** — a vertical word carousel where the visible word is highlighted by an animated corner-edge "selector" that snaps to the word's width.
 
-5. **Button Character Stagger** — an Osmo-style button where each character slides up on hover with staggered delay, paired with an inset background that shrinks on hover (pure CSS transitions).
+3. **Gradient Wave Text on Scroll** — text where each character reveals sequentially as you scroll, briefly flashing a `wave` accent color before settling on the base color (SplitText + ScrollTrigger scrub).
 
-6. **Looping Words with Selector** — a vertical word carousel where the visible word is highlighted by an animated corner-edge "selector" that snaps to the word's width.
+#### GSAP • Sliders & Marquees
 
-7. **Image Scroll** — a fixed-size frame that reveals a tall or wide image by scrolling its content on hover or via mouse-tracking; ideal for long screenshots, full-page mockups, and panoramas (pure CSS).
+1. **Draggable Infinite Slider** — a click-and-drag infinite slider with momentum throw + snap, thumbnail navigation, and an animated "01 / 04" counter, powered by Draggable + InertiaPlugin.
 
-8. **Side Navigation Wipe** — a fixed trigger button that opens a right-side drawer menu with a staggered three-panel wipe effect (GSAP + CustomEase), with menu items and socials repeaters.
+2. **Radial Cards Slider (GSAP)** — cards arranged on a rotating wheel that you can drag with inertia + snap or navigate via Prev/Next + dots (Draggable + InertiaPlugin + CustomEase `radial` easing).
 
-9. **Pixelated Image Reveal** — an image card that transitions from a default to an active image via a randomly-staggered pixel-grid reveal on hover or click.
+#### GSAP • Buttons
 
-10. **Fixed Underlay Navigation** — a fixed trigger button that slides the entire page content left to reveal a navigation menu sitting *underneath*, with distinct open/close motion via GSAP's `easeReverse` technique.
+1. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
 
-11. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).
+2. **Button Character Stagger** — an Osmo-style button where each character slides up on hover with staggered delay, paired with an inset background that shrinks on hover (pure CSS transitions).
 
-12. **Logo Wall Cycle** — a client/partner logo grid where a visible subset continuously cycles through a larger pool via smooth `yPercent + autoAlpha` crossfade, with responsive columns × visible-count per breakpoint.
+#### GSAP • Hover Interactions
 
-13. **Sticky Features** — a two-column pinned-scroll section where the left image column stays fixed while ScrollTrigger scrubs through features, swapping images via `clip-path` reveal and cross-fading text with a progress bar underneath.
+1. **Image Scroll** — a fixed-size frame that reveals a tall or wide image by scrolling its content on hover or via mouse-tracking; ideal for long screenshots, full-page mockups, and panoramas (pure CSS).
 
-14. **Expanding Bottom Navigation** — a floating pill nav fixed at the bottom (or top) that morphs into a full menu panel on toggle, with staggered item reveal (GSAP + CustomEase `osmo` preset).
+2. **Pixelated Image Reveal** — an image card that transitions from a default to an active image via a randomly-staggered pixel-grid reveal on hover or click.
 
-15. **Radial Cards Slider (GSAP)** — cards arranged on a rotating wheel that you can drag with inertia + snap or navigate via Prev/Next + dots (Draggable + InertiaPlugin + CustomEase `radial` easing).
+#### GSAP • Navigation
 
-16. **Step-by-step Timeline** — a vertical timeline where a fill line scrubs down as you scroll, toggling each step to `active` / `current` states with animated marker colors and content opacity (GSAP ScrollTrigger, respects `prefers-reduced-motion`).
+1. **Side Navigation Wipe** — a fixed trigger button that opens a right-side drawer menu with a staggered three-panel wipe effect (GSAP + CustomEase), with menu items and socials repeaters.
 
-17. **Gradient Wave Text on Scroll** — text where each character reveals sequentially as you scroll, briefly flashing a `wave` accent color before settling on the base color (SplitText + ScrollTrigger scrub).
+2. **Fixed Underlay Navigation** — a fixed trigger button that slides the entire page content left to reveal a navigation menu sitting *underneath*, with distinct open/close motion via GSAP's `easeReverse` technique.
+
+3. **Expanding Bottom Navigation** — a floating pill nav fixed at the bottom (or top) that morphs into a full menu panel on toggle, with staggered item reveal (GSAP + CustomEase `osmo` preset).
+
+#### GSAP • Sections & Layouts
+
+1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).
+
+2. **Logo Wall Cycle** — a client/partner logo grid where a visible subset continuously cycles through a larger pool via smooth `yPercent + autoAlpha` crossfade, with responsive columns × visible-count per breakpoint.
+
+#### GSAP • Scroll Animations
+
+1. **Sticky Features** — a two-column pinned-scroll section where the left image column stays fixed while ScrollTrigger scrubs through features, swapping images via `clip-path` reveal and cross-fading text with a progress bar underneath.
+
+2. **Step-by-step Timeline** — a vertical timeline where a fill line scrubs down as you scroll, toggling each step to `active` / `current` states with animated marker colors and content opacity (GSAP ScrollTrigger, respects `prefers-reduced-motion`).
 
 ## 📦 Installation
 
