@@ -1,0 +1,35 @@
+/* Gradient Wave Text on Scroll — text yang di-split per-char via SplitText,
+   masing-masing char di-tween color mengikuti scroll progress (ScrollTrigger
+   scrub). Efek "wave": setiap char activation pertama flash ke waveColor
+   dulu sebelum settle di baseColor. */
+
+.egsap-gradient-wave-text {
+	margin: 0;
+	/* Reservasi space + hindari FOUC saat SplitText belum jalan. */
+	display: block;
+}
+
+/* Char/word wrap dari SplitText — pastikan display consistent. */
+.egsap-gradient-wave-text .split-word,
+.egsap-gradient-wave-text .split-char {
+	display: inline-block;
+}
+
+/* Editor preview — SplitText + ScrollTrigger tidak reliable di iframe
+   editor. Tampilkan teks apa adanya + badge kecil supaya user tahu widget-nya. */
+body.elementor-editor-active .egsap-gradient-wave-text::before,
+.egsap-gradient-wave-text.egsap-edit-mode::before {
+	content: 'Gradient Wave Text — frontend animates chars on scroll';
+	display: block;
+	margin-bottom: 0.5em;
+	padding: 0.3em 0.6em;
+	background: rgba(0, 0, 0, 0.75);
+	color: #ffffff;
+	border-radius: 0.25em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: 1;
+	max-width: fit-content;
+}

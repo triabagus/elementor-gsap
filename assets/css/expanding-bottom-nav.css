@@ -1,0 +1,300 @@
+/* Expanding Bottom Navigation — pill toggle yang morph jadi menu panel.
+   CSS variables untuk dimension & warna dikontrol via Elementor. Posisi
+   top/bottom di-switch via [data-bottom-nav-position]. */
+
+.bottom-nav {
+	--ebn-closed-width:  15em;
+	--ebn-open-width:    25em;
+	--ebn-bar-height:    4em;
+	--ebn-offset:        2em;
+	--ebn-z:             99;
+
+	--ebn-bg:            #fafafa;
+	--ebn-border-color:  rgba(0, 0, 0, 0.2);
+	--ebn-border-width:  1px;
+	--ebn-radius:        0.5em;
+
+	--ebn-logo-color:    #201d1d;
+	--ebn-logo-width:    4em;
+
+	--ebn-toggle-bg:     #1e6fec;
+	--ebn-toggle-color:  #ffffff;
+	--ebn-toggle-size:   2.5em;
+	--ebn-toggle-radius: 0.3125em;
+
+	--ebn-link-color:       #201d1d;
+	--ebn-link-hover-color: #1e6fec;
+	--ebn-cta-color:        #1e6fec;
+	--ebn-cta-hover-color:  #201d1d;
+	--ebn-link-transition:  0.25s ease;
+
+	--ebn-divider-color: rgba(0, 0, 0, 0.2);
+	--ebn-label-color:   rgba(32, 29, 29, 0.65);
+	--ebn-sublink-color: #201d1d;
+
+	z-index: var(--ebn-z);
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.bottom-nav[data-bottom-nav-position="bottom"] {
+	bottom: var(--ebn-offset);
+	top: auto;
+}
+
+.bottom-nav[data-bottom-nav-position="top"] {
+	top: var(--ebn-offset);
+	bottom: auto;
+}
+
+.bottom-nav[data-bottom-nav-position="bottom"] .bottom-nav__inner {
+	flex-flow: column-reverse;
+}
+
+.bottom-nav[data-bottom-nav-position="top"] .bottom-nav__inner {
+	flex-flow: column;
+}
+
+.bottom-nav__inner {
+	will-change: width, height;
+	width: var(--ebn-closed-width);
+	height: var(--ebn-bar-height);
+	background-color: var(--ebn-bg);
+	border: var(--ebn-border-width) solid var(--ebn-border-color);
+	border-radius: var(--ebn-radius);
+	justify-content: flex-start;
+	align-items: center;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+
+.bottom-nav__bar {
+	width: 100%;
+	height: var(--ebn-bar-height);
+	flex: none;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5em 0.5em 0.5em 1em;
+	display: flex;
+	position: relative;
+}
+
+.bottom-nav__logo {
+	color: var(--ebn-logo-color);
+	justify-content: center;
+	align-items: center;
+	width: var(--ebn-logo-width);
+	display: flex;
+	text-decoration: none;
+}
+
+.bottom-nav__logo img,
+.bottom-nav__logo svg {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Custom SVG container — pastikan SVG paste-an user fill container penuh
+   (mengabaikan width/height bawaan SVG). */
+.bottom-nav__logo-svg-custom {
+	display: block;
+	width: 100%;
+	line-height: 0;
+	color: inherit;
+}
+
+.bottom-nav__logo-svg-custom svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.bottom-nav__logo-text {
+	color: inherit;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.bottom-nav__toggle {
+	gap: 0.25em;
+	color: var(--ebn-toggle-color);
+	background-color: var(--ebn-toggle-bg);
+	border: none;
+	border-radius: var(--ebn-toggle-radius);
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	width: var(--ebn-toggle-size);
+	height: var(--ebn-toggle-size);
+	padding: 0;
+	display: flex;
+	cursor: pointer;
+	font: inherit;
+}
+
+.bottom-nav__toggle:focus-visible {
+	outline: 2px solid var(--ebn-toggle-bg);
+	outline-offset: 2px;
+}
+
+.bottom-nav__toggle-bar {
+	background-color: currentColor;
+	flex: none;
+	width: 1.25em;
+	height: 0.1em;
+	padding: 0;
+	display: block;
+}
+
+.bottom-nav__panel {
+	gap: 1.5em;
+	scrollbar-width: none;
+	overscroll-behavior: contain;
+	max-height: calc(100svh - 7em);
+	width: var(--ebn-open-width);
+	flex-flow: column;
+	flex: none;
+	padding: 1.25em 1em 1em;
+	display: flex;
+	overflow-y: auto;
+	visibility: hidden;
+	opacity: 0;
+}
+
+.bottom-nav__panel::-webkit-scrollbar {
+	display: none;
+}
+
+.bottom-nav__list {
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+}
+
+.bottom-nav__list-item {
+	display: block;
+}
+
+.bottom-nav__link {
+	letter-spacing: -0.05em;
+	color: var(--ebn-link-color);
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	font-size: 2em;
+	font-weight: 500;
+	line-height: 1;
+	text-decoration: none;
+	display: block;
+	transition: color var(--ebn-link-transition);
+}
+
+.bottom-nav__link:hover,
+.bottom-nav__link:focus-visible {
+	color: var(--ebn-link-hover-color, var(--ebn-link-color));
+}
+
+.bottom-nav__link.is--cta {
+	color: var(--ebn-cta-color);
+}
+
+.bottom-nav__link.is--cta:hover,
+.bottom-nav__link.is--cta:focus-visible {
+	color: var(--ebn-cta-hover-color, var(--ebn-cta-color));
+}
+
+.bottom-nav__divider {
+	background-color: var(--ebn-divider-color);
+	width: 100%;
+	height: 1px;
+	transform-origin: 0 50%;
+}
+
+.bottom-nav__secondary {
+	gap: 3em;
+	flex-flow: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+}
+
+.bottom-nav__col {
+	gap: 0.75em;
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+}
+
+.bottom-nav__label {
+	color: var(--ebn-label-color);
+	text-transform: uppercase;
+	font-family: 'Haffer Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 0.75em;
+	line-height: 1;
+}
+
+.bottom-nav__sublink {
+	letter-spacing: -0.02em;
+	color: var(--ebn-sublink-color);
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+	font-size: 1em;
+	font-weight: 500;
+	line-height: 1;
+	text-decoration: none;
+	display: block;
+}
+
+/* Editor preview — nav dipindah ke position:relative supaya render inline di
+   dalam widget wrapper (bukan floating fixed yang keluar dari flow editor
+   iframe). Animasi tetap aktif — user bisa klik toggle untuk preview
+   close/open persis seperti frontend. JS meng-seek timeline ke state open
+   saat init supaya panel langsung visible untuk editing. */
+
+body.elementor-editor-active .bottom-nav,
+.bottom-nav.egsap-edit-mode {
+	position: relative;
+	left: auto;
+	right: auto;
+	top: auto;
+	bottom: auto;
+	transform: none;
+	margin: 1.5em auto;
+	display: block;
+	width: fit-content;
+	max-width: 100%;
+}
+
+body.elementor-editor-active .bottom-nav::before,
+.bottom-nav.egsap-edit-mode::before {
+	content: 'Expanding Bottom Nav — Editor Preview (click toggle to close/open)';
+	display: block;
+	padding: 0.35em 0.7em;
+	margin-bottom: 0.75em;
+	background: rgba(0, 0, 0, 0.8);
+	color: #ffffff;
+	border-radius: 0.25em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: 1;
+	text-align: center;
+}
+
+/* Pastikan toggle button dapat click di editor — Elementor kadang set
+   pointer-events: none pada widget content yang belum di-select. Force
+   auto supaya user bisa klik toggle langsung untuk preview animasi. */
+body.elementor-editor-active .bottom-nav__toggle,
+.bottom-nav.egsap-edit-mode .bottom-nav__toggle {
+	pointer-events: auto;
+	position: relative;
+	z-index: 2;
+}

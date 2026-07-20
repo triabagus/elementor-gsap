@@ -1,0 +1,231 @@
+/* Step-by-step Timeline — vertical timeline dengan progress line yang
+   scrub via ScrollTrigger. State per item (active / current) di-toggle
+   sesuai posisi fill line vs marker. CSS variables kontrol via Elementor. */
+
+.step-timeline {
+	--stl-max-width:         50em;
+	--stl-header-gap:        1em;
+	--stl-header-mb:         6em;
+	--stl-item-gap-y:        8em;
+	--stl-item-gap-x:        3em;
+
+	--stl-eyebrow-color:     #6b7c51;
+	--stl-heading-color:     inherit;
+	--stl-content-h-color:   inherit;
+	--stl-content-p-color:   inherit;
+
+	--stl-line-color:        rgba(34, 32, 28, 0.14);
+	--stl-line-width:        2px;
+	--stl-line-offset-left:  1.5em;
+
+	--stl-fill-color:        #7d8a69;
+
+	--stl-marker-bg:         #ebe8dd;
+	--stl-marker-color:      #22201c;
+	--stl-marker-border:     rgba(0, 0, 0, 0.2);
+	--stl-marker-border-w:   1px;
+	--stl-marker-size:       3em;
+	--stl-marker-radius:     100em;
+
+	--stl-marker-active-bg:      #7d8a69;
+	--stl-marker-active-color:   #f2efe6;
+	--stl-marker-active-border:  #7d8a69;
+
+	--stl-current-ring-color: rgba(125, 138, 105, 0.16);
+	--stl-current-ring-size:  0.5em;
+
+	--stl-content-max:       28em;
+	--stl-content-gap:       1em;
+	--stl-content-pad-top:   0.4em;
+
+	--stl-opacity-inactive:  0.25;
+	--stl-opacity-active:    0.5;
+	--stl-opacity-current:   1;
+
+	width: 100%;
+	max-width: var(--stl-max-width);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.step-timeline__header {
+	gap: var(--stl-header-gap);
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-bottom: var(--stl-header-mb);
+	display: flex;
+}
+
+.step-timeline__h2 {
+	color: var(--stl-heading-color);
+	letter-spacing: -0.05em;
+	margin: 0;
+	font-size: 4em;
+	font-weight: 400;
+	line-height: 1;
+}
+
+.step-timeline__eyebrow {
+	color: var(--stl-eyebrow-color);
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+.step-timeline__wrapper {
+	position: relative;
+}
+
+.step-timeline__list {
+	gap: var(--stl-item-gap-y);
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	display: flex;
+}
+
+.step-timeline__item {
+	gap: var(--stl-item-gap-x);
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+	position: relative;
+}
+
+/* Line + fill */
+.step-timeline__line {
+	pointer-events: none;
+	background-color: var(--stl-line-color);
+	width: var(--stl-line-width);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: var(--stl-line-offset-left);
+}
+
+.step-timeline__fill {
+	transform-origin: 50% 0;
+	background-color: var(--stl-fill-color);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	inset: 0;
+}
+
+/* Marker */
+.step-timeline__marker {
+	color: var(--stl-marker-color);
+	background-color: var(--stl-marker-bg);
+	border: var(--stl-marker-border-w) solid var(--stl-marker-border);
+	border-radius: var(--stl-marker-radius);
+	flex: none;
+	justify-content: center;
+	align-items: center;
+	width: var(--stl-marker-size);
+	height: var(--stl-marker-size);
+	transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+	display: flex;
+	position: relative;
+	line-height: 1;
+	font-weight: 500;
+}
+
+[data-step-timeline-item][data-status="active"] [data-step-timeline-marker] {
+	background: var(--stl-marker-active-bg);
+	color: var(--stl-marker-active-color);
+	border-color: var(--stl-marker-active-border);
+}
+
+[data-step-timeline-item][data-current] [data-step-timeline-marker] {
+	box-shadow: 0 0 0 var(--stl-current-ring-size) var(--stl-current-ring-color);
+}
+
+/* Content */
+.step-timeline__content {
+	gap: var(--stl-content-gap);
+	flex-flow: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	max-width: var(--stl-content-max);
+	padding-top: var(--stl-content-pad-top);
+	transition: opacity 0.25s;
+	display: flex;
+}
+
+[data-step-timeline-item] .step-timeline__content {
+	opacity: var(--stl-opacity-inactive);
+}
+
+[data-step-timeline-item][data-status="active"] .step-timeline__content {
+	opacity: var(--stl-opacity-active);
+}
+
+[data-step-timeline-item][data-current] .step-timeline__content {
+	opacity: var(--stl-opacity-current);
+}
+
+.step-timeline__content-h {
+	color: var(--stl-content-h-color);
+	letter-spacing: -0.04em;
+	margin: 0;
+	font-size: 2em;
+	font-weight: 400;
+	line-height: 1;
+}
+
+.step-timeline__p {
+	color: var(--stl-content-p-color);
+	margin-bottom: 0;
+	font-size: 1.125em;
+	line-height: 1.4;
+}
+
+@media screen and (max-width: 767px) {
+	.step-timeline {
+		--stl-max-width: none;
+		--stl-item-gap-y: 6em;
+		--stl-item-gap-x: 1.5em;
+	}
+}
+
+/* Editor preview — semua item visible di state 'current' supaya user bisa
+   edit content dengan konteks visual yang jelas. Fill line di-full supaya
+   marker semua terlihat aktif. */
+body.elementor-editor-active .step-timeline,
+.step-timeline.egsap-edit-mode {
+	--stl-item-gap-y: 3em;
+}
+
+body.elementor-editor-active .step-timeline::before,
+.step-timeline.egsap-edit-mode::before {
+	content: 'Step-by-step Timeline — Editor Preview (frontend uses ScrollTrigger scrub)';
+	display: block;
+	padding: 0.35em 0.7em;
+	margin-bottom: 1em;
+	background: rgba(0, 0, 0, 0.8);
+	color: #ffffff;
+	border-radius: 0.25em;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	line-height: 1;
+	text-align: center;
+}
+
+body.elementor-editor-active [data-step-timeline-item] .step-timeline__content,
+.step-timeline.egsap-edit-mode [data-step-timeline-item] .step-timeline__content {
+	opacity: 1;
+}
+
+body.elementor-editor-active [data-step-timeline-item] [data-step-timeline-marker],
+.step-timeline.egsap-edit-mode [data-step-timeline-item] [data-step-timeline-marker] {
+	background: var(--stl-marker-active-bg);
+	color: var(--stl-marker-active-color);
+	border-color: var(--stl-marker-active-border);
+}
+
+body.elementor-editor-active .step-timeline__fill,
+.step-timeline.egsap-edit-mode .step-timeline__fill {
+	transform: scaleY(1) !important;
+}

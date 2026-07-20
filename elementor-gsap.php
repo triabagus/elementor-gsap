@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Elementor GSAP with Osmo
- * Description: Ekstensi Elementor bertenaga GSAP bergaya Osmo.
- * Version: 1.2.2
- * Author: Creativetria
+ * Plugin Name: Elementor GSAP
+ * Description: Elementor GSAP styled by Osmo brings premium-grade animations to the Elementor page builder. Inspired by the design language of [Osmo](https://www.osmo.supply/) and powered by [GSAP](https://gsap.com/) (GreenSock Animation Platform), this plugin gives designers and developers a curated set of preloaders, page transitions, and animated widgets — all configurable directly from the Elementor panel.
+ * Version: 1.0.0
+ * Author: creativetria
  * Requires Plugins: elementor
- * Elementor tested up to: 4.0.8
+ * Elementor tested up to: 4.1.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -124,6 +124,15 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/fixed-underlay-navigation.css',
 		'assets/css/welcoming-words-loader.css',
 		'assets/css/sticky-steps.css',
+		'assets/css/logo-wall-cycle.css',
+		'assets/css/sticky-features.css',
+		'assets/css/expanding-bottom-nav.css',
+		'assets/css/radial-cards-slider.css',
+		'assets/css/step-timeline.css',
+		'assets/css/gradient-wave-text.css',
+		'assets/css/dropping-cards-loader.css',
+		'assets/css/logo-reveal-loader.css',
+		'assets/css/number-loader.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -139,9 +148,21 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/fixed-underlay-navigation.js',
 		'assets/js/welcoming-words-loader.js',
 		'assets/js/sticky-steps.js',
+		'assets/js/logo-wall-cycle.js',
+		'assets/js/sticky-features.js',
+		'assets/js/expanding-bottom-nav.js',
+		'assets/js/radial-cards-slider.js',
+		'assets/js/step-timeline.js',
+		'assets/js/gradient-wave-text.js',
+		'assets/js/dropping-cards-loader.js',
+		'assets/js/logo-reveal-loader.js',
+		'assets/js/number-loader.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
+		'includes/class-dropping-cards-loader-template.php',
+		'includes/class-logo-reveal-loader-template.php',
+		'includes/class-number-loader-template.php',
 		'includes/class-pixelated-transition-template.php',
 		'widgets/class-bunny-hls-player-widget.php',
 		'widgets/class-masked-text-reveal-widget.php',
@@ -154,6 +175,12 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-pixelated-image-reveal-widget.php',
 		'widgets/class-fixed-underlay-navigation-widget.php',
 		'widgets/class-sticky-steps-widget.php',
+		'widgets/class-logo-wall-cycle-widget.php',
+		'widgets/class-sticky-features-widget.php',
+		'widgets/class-expanding-bottom-nav-widget.php',
+		'widgets/class-radial-cards-slider-widget.php',
+		'widgets/class-step-timeline-widget.php',
+		'widgets/class-gradient-wave-text-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -268,6 +295,12 @@ add_action( 'plugins_loaded', function () {
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-pixelated-transition-extension.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-template.php';
 	require_once ELEMENTOR_GSAP_PATH . 'includes/class-welcoming-words-loader-extension.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-dropping-cards-loader-template.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-dropping-cards-loader-extension.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-logo-reveal-loader-template.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-logo-reveal-loader-extension.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-number-loader-template.php';
+	require_once ELEMENTOR_GSAP_PATH . 'includes/class-number-loader-extension.php';
 
 	// Urutan init menentukan urutan section di Page Settings > Style.
 	// Kelompokkan berdasarkan prefix label ("Loaders •" & "Page Transitions •")
@@ -275,6 +308,9 @@ add_action( 'plugins_loaded', function () {
 	\Elementor_GSAP\Willem_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Crisp_Loading_Animation_Extension::init();
 	\Elementor_GSAP\Welcoming_Words_Loader_Extension::init();
+	\Elementor_GSAP\Dropping_Cards_Loader_Extension::init();
+	\Elementor_GSAP\Logo_Reveal_Loader_Extension::init();
+	\Elementor_GSAP\Number_Loader_Extension::init();
 	\Elementor_GSAP\Pixelated_Transition_Extension::init();
 
 	add_action( 'elementor/elements/categories_registered', function ( $manager ) {
@@ -286,6 +322,7 @@ add_action( 'plugins_loaded', function () {
 			'elementor-gsap-hover'    => [ __( 'GSAP • Hover Interactions', 'elementor-gsap' ), 'eicon-image-rollover' ],
 			'elementor-gsap-nav'      => [ __( 'GSAP • Navigation', 'elementor-gsap' ),         'eicon-nav-menu' ],
 			'elementor-gsap-sections' => [ __( 'GSAP • Sections & Layouts', 'elementor-gsap' ), 'eicon-section' ],
+			'elementor-gsap-scroll'   => [ __( 'GSAP • Scroll Animations', 'elementor-gsap' ), 'eicon-parallax' ],
 		];
 		foreach ( $categories as $slug => $meta ) {
 			$manager->add_category( $slug, [
@@ -328,6 +365,24 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-sticky-steps-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Sticky_Steps_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-logo-wall-cycle-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Logo_Wall_Cycle_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-sticky-features-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Sticky_Features_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-expanding-bottom-nav-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Expanding_Bottom_Nav_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-radial-cards-slider-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Radial_Cards_Slider_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-step-timeline-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Step_Timeline_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-gradient-wave-text-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Gradient_Wave_Text_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -453,6 +508,69 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/sticky-steps.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-logo-wall-cycle',
+			ELEMENTOR_GSAP_URL . 'assets/js/logo-wall-cycle.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/logo-wall-cycle.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-sticky-features',
+			ELEMENTOR_GSAP_URL . 'assets/js/sticky-features.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/sticky-features.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-expanding-bottom-nav',
+			ELEMENTOR_GSAP_URL . 'assets/js/expanding-bottom-nav.js',
+			[ 'gsap', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/expanding-bottom-nav.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-radial-cards-slider',
+			ELEMENTOR_GSAP_URL . 'assets/js/radial-cards-slider.js',
+			[ 'gsap', 'gsap-draggable', 'gsap-inertia', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/radial-cards-slider.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-step-timeline',
+			ELEMENTOR_GSAP_URL . 'assets/js/step-timeline.js',
+			[ 'gsap', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/step-timeline.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-gradient-wave-text',
+			ELEMENTOR_GSAP_URL . 'assets/js/gradient-wave-text.js',
+			[ 'gsap', 'gsap-scrolltrigger', 'gsap-splittext' ],
+			elementor_gsap_asset_ver( 'assets/js/gradient-wave-text.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-dropping-cards-loader',
+			ELEMENTOR_GSAP_URL . 'assets/js/dropping-cards-loader.js',
+			[ 'gsap', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/dropping-cards-loader.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-logo-reveal-loader',
+			ELEMENTOR_GSAP_URL . 'assets/js/logo-reveal-loader.js',
+			[ 'gsap', 'gsap-customease', 'gsap-splittext' ],
+			elementor_gsap_asset_ver( 'assets/js/logo-reveal-loader.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-number-loader',
+			ELEMENTOR_GSAP_URL . 'assets/js/number-loader.js',
+			[ 'gsap' ],
+			elementor_gsap_asset_ver( 'assets/js/number-loader.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -545,6 +663,60 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/sticky-steps.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/sticky-steps.css' )
+		);
+		wp_register_style(
+			'elementor-logo-wall-cycle',
+			ELEMENTOR_GSAP_URL . 'assets/css/logo-wall-cycle.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/logo-wall-cycle.css' )
+		);
+		wp_register_style(
+			'elementor-sticky-features',
+			ELEMENTOR_GSAP_URL . 'assets/css/sticky-features.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/sticky-features.css' )
+		);
+		wp_register_style(
+			'elementor-expanding-bottom-nav',
+			ELEMENTOR_GSAP_URL . 'assets/css/expanding-bottom-nav.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/expanding-bottom-nav.css' )
+		);
+		wp_register_style(
+			'elementor-radial-cards-slider',
+			ELEMENTOR_GSAP_URL . 'assets/css/radial-cards-slider.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/radial-cards-slider.css' )
+		);
+		wp_register_style(
+			'elementor-step-timeline',
+			ELEMENTOR_GSAP_URL . 'assets/css/step-timeline.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/step-timeline.css' )
+		);
+		wp_register_style(
+			'elementor-gradient-wave-text',
+			ELEMENTOR_GSAP_URL . 'assets/css/gradient-wave-text.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/gradient-wave-text.css' )
+		);
+		wp_register_style(
+			'elementor-dropping-cards-loader',
+			ELEMENTOR_GSAP_URL . 'assets/css/dropping-cards-loader.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/dropping-cards-loader.css' )
+		);
+		wp_register_style(
+			'elementor-logo-reveal-loader',
+			ELEMENTOR_GSAP_URL . 'assets/css/logo-reveal-loader.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/logo-reveal-loader.css' )
+		);
+		wp_register_style(
+			'elementor-number-loader',
+			ELEMENTOR_GSAP_URL . 'assets/css/number-loader.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/number-loader.css' )
 		);
 	} );
 } );

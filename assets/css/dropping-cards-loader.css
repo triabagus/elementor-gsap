@@ -1,0 +1,103 @@
+/* Dropping Cards Loader — fullscreen overlay dengan stack cards yang jatuh
+   satu-per-satu (GSAP timeline). Semua nilai warna & ukuran dikontrol via
+   CSS variables — Elementor page settings menulis nilainya. */
+
+.egsap-dcl-container {
+	--dcl-bg:           #14273a;
+	--dcl-logo-color:   #ffffff;
+	--dcl-logo-width:   clamp(6em, 7.5vw, 10em);
+	--dcl-logo-bottom:  2em;
+	--dcl-card-width:   10em;
+	--dcl-card-gap:     0.5em;
+	--dcl-card-radius:  0.5em;
+	--dcl-card-aspect:  3 / 4;
+	/* Sangat tinggi supaya loader SELALU di atas widget apapun (mis. Fixed
+	   Underlay Navigation yang detach ke body dengan z-index 100). Setelah
+	   loader selesai, CSS body[data-egsap-dcl-status="done"] menerapkan
+	   display: none — jadi nilai z-index tidak lagi relevan. */
+	--dcl-z:            99999;
+
+	z-index: var(--dcl-z);
+	pointer-events: none;
+	position: fixed;
+	inset: 0;
+}
+
+.egsap-dcl-screen {
+	pointer-events: auto;
+	color: var(--dcl-logo-color);
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: clip;
+}
+
+.egsap-dcl-background {
+	background-color: var(--dcl-bg);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	will-change: transform;
+}
+
+.egsap-dcl-logo {
+	width: var(--dcl-logo-width);
+	position: absolute;
+	bottom: var(--dcl-logo-bottom);
+	color: var(--dcl-logo-color);
+	line-height: 0;
+	will-change: transform, opacity;
+}
+
+.egsap-dcl-logo svg,
+.egsap-dcl-logo img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.egsap-dcl-list {
+	gap: var(--dcl-card-gap);
+	opacity: 0;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	position: relative;
+}
+
+.egsap-dcl-card {
+	aspect-ratio: var(--dcl-card-aspect);
+	border-radius: var(--dcl-card-radius);
+	width: var(--dcl-card-width);
+	font-size: max(1.5vw, 2em);
+	position: absolute;
+	will-change: transform;
+}
+
+.egsap-dcl-card img {
+	object-fit: cover;
+	border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* Prevent body scroll while loader is active */
+body[data-egsap-dcl-status="loading"] {
+	overflow: hidden;
+}
+
+/* Setelah timeline loader selesai (JS set body attribute → 'done'),
+   hilangkan container dari render supaya z-index 100 tidak stack dengan
+   section/widget lain yang mungkin juga di z-index tinggi. */
+body[data-egsap-dcl-status="done"] .egsap-dcl-container {
+	display: none;
+}

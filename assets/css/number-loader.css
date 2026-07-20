@@ -1,0 +1,112 @@
+/* Number Loader in 3 Steps — fullscreen loader dengan progress bar vertikal
+   di kiri + counter angka besar yang animasi 3-step ke 100%. Semua nilai
+   dikontrol via CSS variables (Elementor page settings). */
+
+.egsap-nl-container {
+	--nl-bg:              #E2E1DF;
+	--nl-text-color:      #000000;
+	--nl-progress-color:  #ff4c24;
+	--nl-progress-width:  1em;
+	--nl-number-size:     calc(10vw + 10vh);
+	--nl-z:               99999;
+
+	z-index: var(--nl-z);
+	pointer-events: none;
+	background-color: var(--nl-bg);
+	position: fixed;
+	inset: 0;
+	overflow: hidden;
+}
+
+.egsap-nl-screen {
+	pointer-events: auto;
+	background-color: var(--nl-bg);
+	width: 100%;
+	height: 100%;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.egsap-nl-progress {
+	width: var(--nl-progress-width);
+	height: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.egsap-nl-progress-inner {
+	transform-origin: bottom;
+	background-color: var(--nl-progress-color);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	will-change: transform;
+}
+
+.egsap-nl-numbers {
+	color: var(--nl-text-color);
+	flex-flow: row;
+	align-items: flex-start;
+	font-size: var(--nl-number-size);
+	display: flex;
+	position: absolute;
+	bottom: 0.1em;
+	left: 0.23em;
+}
+
+.egsap-nl-number-group {
+	flex-flow: column;
+	height: 1em;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-nl-number-wrap {
+	will-change: transform;
+	flex-flow: column;
+	display: flex;
+	position: relative;
+}
+
+.egsap-nl-number {
+	text-transform: uppercase;
+	font-family: 'PP Neue Corp Tight', Arial, sans-serif;
+	font-weight: 700;
+	line-height: 1;
+	position: relative;
+}
+
+.egsap-nl-percentage-wrap {
+	flex-flow: column;
+	justify-content: flex-start;
+	margin-top: 0.375em;
+	font-size: 0.3em;
+	display: flex;
+	overflow: hidden;
+}
+
+.egsap-nl-percentage {
+	text-transform: uppercase;
+	will-change: transform;
+	font-family: 'PP Neue Corp Tight', Arial, sans-serif;
+	font-weight: 700;
+	line-height: 1;
+	position: relative;
+}
+
+/* Body lock scroll saat loader aktif */
+body[data-egsap-nl-status="loading"] {
+	overflow: hidden;
+}
+
+/* Setelah timeline selesai + fade-out, hilangkan container dari render
+   supaya z-index tidak stack lagi. */
+body[data-egsap-nl-status="done"] .egsap-nl-container {
+	display: none;
+}

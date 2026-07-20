@@ -12,7 +12,11 @@
 	--sn-heading-color: #131313;
 	--sn-eyebrow-color: #e04645;
 	--sn-socials-color: #131313;
-	--sn-z: 1000;
+	/* Base z-index untuk drawer nav. Header/button pakai `calc(--sn-z + 1)`
+	   supaya tombol toggle selalu di atas overlay drawer (biar bisa diklik
+	   untuk close menu). Base 98 → drawer = 98, button = 99 (max, tidak
+	   melebihi cap 99 supaya tidak konflik dengan section user z-index 100). */
+	--sn-z: 98;
 }
 
 .sidenav__header {
