@@ -84,6 +84,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 4. **Mega Navigation (Directional Hover)** — a top-bar mega menu where hovering a trigger opens a full-width dropdown panel; switching between triggers slides the panel content left/right based on trigger order, with a morphing background height (GSAP) and a full mobile drawer + slide-over sub-panels.
 
+5. **Two-step Scaling Navigation** — a centered pill bar (logo + toggle) that scales into a full-width panel on toggle, revealing menu items + a visual image column; pure CSS transitions (cubic-bezier easing) with a two-stage animation — bar expands first, then content fades up from below.
+
 #### GSAP • Sections & Layouts
 
 1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).
