@@ -129,6 +129,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/expanding-bottom-nav.css',
 		'assets/css/radial-cards-slider.css',
 		'assets/css/step-timeline.css',
+		'assets/css/gradient-wave-text.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -149,6 +150,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/expanding-bottom-nav.js',
 		'assets/js/radial-cards-slider.js',
 		'assets/js/step-timeline.js',
+		'assets/js/gradient-wave-text.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -169,6 +171,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-expanding-bottom-nav-widget.php',
 		'widgets/class-radial-cards-slider-widget.php',
 		'widgets/class-step-timeline-widget.php',
+		'widgets/class-gradient-wave-text-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -359,6 +362,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-step-timeline-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Step_Timeline_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-gradient-wave-text-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Gradient_Wave_Text_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -519,6 +525,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/step-timeline.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-gradient-wave-text',
+			ELEMENTOR_GSAP_URL . 'assets/js/gradient-wave-text.js',
+			[ 'gsap', 'gsap-scrolltrigger', 'gsap-splittext' ],
+			elementor_gsap_asset_ver( 'assets/js/gradient-wave-text.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -641,6 +654,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/step-timeline.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/step-timeline.css' )
+		);
+		wp_register_style(
+			'elementor-gradient-wave-text',
+			ELEMENTOR_GSAP_URL . 'assets/css/gradient-wave-text.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/gradient-wave-text.css' )
 		);
 	} );
 } );
