@@ -1,0 +1,152 @@
+/* Radial Cards Marquee — cards diatur mengelilingi titik pusat via
+   transform-origin di bawah container, kemudian keseluruhan list di-rotate
+   infinite. Pure CSS animation, JS opsional untuk clone/remove card sesuai
+   --total dan pause-when-offscreen. */
+
+.egsap-rcm {
+	--rcm-font:          'PP Neue Montreal', Arial, sans-serif;
+
+	--rcm-card-width:    18.125em;
+	--rcm-card-bg:       #201d1d;
+	--rcm-card-text:     #f4f4f4;
+	--rcm-card-radius:   0.375em;
+	--rcm-card-pad:      0.5em;
+	--rcm-media-aspect:  62.5%;
+	--rcm-media-radius:  0.1875em;
+	--rcm-info-pad:      0.75em 0.5em 0.375em;
+	--rcm-title-size:    0.8125em;
+
+	font-family: var(--rcm-font);
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+
+.egsap-rcm__collection {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	padding-top: 1.5rem;
+}
+
+/* List — di-rotate infinite mengelilingi titik pusat di bawahnya
+   (--rcm-radius). Total cards di-set via --total, JS optional untuk
+   nge-clone/remove card supaya count matching. */
+.egsap-rcm__list {
+	--total:    12;
+	--rcm-radius: 52em;
+	--duration: 60s;
+
+	display: grid;
+	transform-origin: 50% var(--rcm-radius);
+	animation: egsap-rcm-rotate var(--duration) linear infinite;
+}
+
+.egsap-rcm__list > * {
+	grid-area: 1 / 1;
+	transform-origin: 50% var(--rcm-radius);
+	transform: rotate(calc(360deg / var(--total) * (var(--card, 1) - 1)));
+}
+
+@keyframes egsap-rcm-rotate {
+	to { transform: rotate(-360deg); }
+}
+
+.egsap-rcm[data-egsap-rcm-direction="reverse"] .egsap-rcm__list {
+	animation-direction: reverse;
+}
+
+/* Reduced motion — freeze animation */
+@media (prefers-reduced-motion: reduce) {
+	.egsap-rcm__list {
+		animation: none;
+	}
+}
+
+/* Editor preview — freeze animation supaya nggak ganggu editor iframe */
+.egsap-rcm[data-egsap-rcm-editor="1"] .egsap-rcm__list {
+	animation: none;
+}
+
+/* Fallback :nth-child() untuk --card assignment kalau JS gagal / disabled.
+   Sampai 24 items — di atas itu, user harus enable JS untuk auto-index. */
+.egsap-rcm__list > :nth-child(1)  { --card:  1; }
+.egsap-rcm__list > :nth-child(2)  { --card:  2; }
+.egsap-rcm__list > :nth-child(3)  { --card:  3; }
+.egsap-rcm__list > :nth-child(4)  { --card:  4; }
+.egsap-rcm__list > :nth-child(5)  { --card:  5; }
+.egsap-rcm__list > :nth-child(6)  { --card:  6; }
+.egsap-rcm__list > :nth-child(7)  { --card:  7; }
+.egsap-rcm__list > :nth-child(8)  { --card:  8; }
+.egsap-rcm__list > :nth-child(9)  { --card:  9; }
+.egsap-rcm__list > :nth-child(10) { --card: 10; }
+.egsap-rcm__list > :nth-child(11) { --card: 11; }
+.egsap-rcm__list > :nth-child(12) { --card: 12; }
+.egsap-rcm__list > :nth-child(13) { --card: 13; }
+.egsap-rcm__list > :nth-child(14) { --card: 14; }
+.egsap-rcm__list > :nth-child(15) { --card: 15; }
+.egsap-rcm__list > :nth-child(16) { --card: 16; }
+.egsap-rcm__list > :nth-child(17) { --card: 17; }
+.egsap-rcm__list > :nth-child(18) { --card: 18; }
+.egsap-rcm__list > :nth-child(19) { --card: 19; }
+.egsap-rcm__list > :nth-child(20) { --card: 20; }
+.egsap-rcm__list > :nth-child(21) { --card: 21; }
+.egsap-rcm__list > :nth-child(22) { --card: 22; }
+.egsap-rcm__list > :nth-child(23) { --card: 23; }
+.egsap-rcm__list > :nth-child(24) { --card: 24; }
+
+/* Card */
+.egsap-rcm__item {
+	display: block;
+}
+
+.egsap-rcm__card {
+	color: var(--rcm-card-text);
+	background-color: var(--rcm-card-bg);
+	border-radius: var(--rcm-card-radius);
+	width: var(--rcm-card-width);
+	padding: var(--rcm-card-pad);
+	display: block;
+	text-decoration: none;
+}
+
+.egsap-rcm__card-visual {
+	width: 100%;
+}
+
+.egsap-rcm__card-info {
+	width: 100%;
+	padding: var(--rcm-info-pad);
+}
+
+.egsap-rcm__card-media {
+	border-radius: var(--rcm-media-radius);
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-rcm__card-media-before {
+	padding-top: var(--rcm-media-aspect);
+}
+
+.egsap-rcm__card-h {
+	letter-spacing: -0.01em;
+	margin: 0;
+	font-size: var(--rcm-title-size);
+	font-weight: 400;
+	line-height: 1.2;
+	color: inherit;
+	font-family: inherit;
+}
+
+.egsap-rcm__cover-image {
+	object-fit: cover;
+	border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}

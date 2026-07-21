@@ -1,0 +1,115 @@
+/* Apple Dock Navigation Bar — dock icons dengan hover magnification 2-tier
+   (hover item paling besar, 2 sibling di kiri/kanan ikut membesar dengan
+   ukuran menurun). Pure CSS transition width, JS cuma nge-toggle class
+   is--hover / is--sibling-close / is--sibling-far pada mouseenter/leave. */
+
+.egsap-adn {
+	--adn-scale:              1.4vw;
+	--adn-item-width:         5em;
+	--adn-item-close:         6em;
+	--adn-item-far:           7em;
+	--adn-item-hover:         8em;
+
+	--adn-item-pad-x:         0.5em;
+	--adn-transition-dur:     0.5s;
+	--adn-transition-ease:    cubic-bezier(0.16, 1, 0.3, 1);
+
+	--adn-tooltip-bg:         #f4f4f4;
+	--adn-tooltip-text:       #131313;
+	--adn-tooltip-radius:     0.25em;
+	--adn-tooltip-pad-y:      0.4em;
+	--adn-tooltip-pad-x:      0.5em;
+	--adn-tooltip-size:       1em;
+
+	--adn-font:               'PP Neue Montreal', Arial, sans-serif;
+
+	font-family: var(--adn-font);
+	display: block;
+}
+
+.egsap-adn__list {
+	flex-flow: row;
+	justify-content: center;
+	align-items: flex-end;
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+	font-size: var(--adn-scale);
+}
+
+.egsap-adn__item {
+	justify-content: center;
+	align-items: center;
+	width: var(--adn-item-width);
+	transition: width var(--adn-transition-dur) var(--adn-transition-ease);
+	display: flex;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.egsap-adn__item.is--sibling-far {
+	width: var(--adn-item-far);
+}
+
+.egsap-adn__item.is--sibling-close {
+	width: var(--adn-item-close);
+}
+
+.egsap-adn__item.is--hover {
+	width: var(--adn-item-hover);
+}
+
+.egsap-adn__link {
+	z-index: 1;
+	pointer-events: auto;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	padding-left: var(--adn-item-pad-x);
+	padding-right: var(--adn-item-pad-x);
+	display: flex;
+	position: relative;
+	text-decoration: none;
+}
+
+.egsap-adn__img {
+	object-fit: contain;
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.egsap-adn__tooltip {
+	z-index: 0;
+	background-color: var(--adn-tooltip-bg);
+	color: var(--adn-tooltip-text);
+	opacity: 0;
+	white-space: nowrap;
+	border-radius: var(--adn-tooltip-radius);
+	padding: var(--adn-tooltip-pad-y) var(--adn-tooltip-pad-x);
+	font-size: var(--adn-tooltip-size);
+	font-weight: 400;
+	transition:
+		transform var(--adn-transition-dur) var(--adn-transition-ease),
+		opacity var(--adn-transition-dur) var(--adn-transition-ease);
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, -80%);
+	pointer-events: none;
+}
+
+.egsap-adn__item:hover .egsap-adn__tooltip {
+	opacity: 1;
+	transform: translate(-50%, -140%);
+}
+
+/* Editor preview — dock nggak butuh position override (default block flow).
+   Tapi force ukuran scale kalau vw terlalu kecil di iframe preview. */
+.egsap-adn[data-egsap-adn-editor="1"] {
+	--adn-scale: max(14px, 1.4vw);
+}

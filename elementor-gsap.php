@@ -139,6 +139,8 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/multilevel-nav.css',
 		'assets/css/centered-scaling-nav.css',
 		'assets/css/scaling-hamburger-nav.css',
+		'assets/css/apple-dock-nav.css',
+		'assets/css/radial-cards-marquee.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -169,6 +171,8 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/multilevel-nav.js',
 		'assets/js/centered-scaling-nav.js',
 		'assets/js/scaling-hamburger-nav.js',
+		'assets/js/apple-dock-nav.js',
+		'assets/js/radial-cards-marquee.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -199,6 +203,8 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-multilevel-nav-widget.php',
 		'widgets/class-centered-scaling-nav-widget.php',
 		'widgets/class-scaling-hamburger-nav-widget.php',
+		'widgets/class-apple-dock-nav-widget.php',
+		'widgets/class-radial-cards-marquee-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -419,6 +425,12 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-scaling-hamburger-nav-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Scaling_Hamburger_Nav_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-apple-dock-nav-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Apple_Dock_Nav_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-radial-cards-marquee-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Radial_Cards_Marquee_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -649,6 +661,20 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/scaling-hamburger-nav.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-apple-dock-nav',
+			ELEMENTOR_GSAP_URL . 'assets/js/apple-dock-nav.js',
+			[],
+			elementor_gsap_asset_ver( 'assets/js/apple-dock-nav.js' ),
+			true
+		);
+		wp_register_script(
+			'elementor-radial-cards-marquee',
+			ELEMENTOR_GSAP_URL . 'assets/js/radial-cards-marquee.js',
+			[],
+			elementor_gsap_asset_ver( 'assets/js/radial-cards-marquee.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -831,6 +857,18 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/scaling-hamburger-nav.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/scaling-hamburger-nav.css' )
+		);
+		wp_register_style(
+			'elementor-apple-dock-nav',
+			ELEMENTOR_GSAP_URL . 'assets/css/apple-dock-nav.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/apple-dock-nav.css' )
+		);
+		wp_register_style(
+			'elementor-radial-cards-marquee',
+			ELEMENTOR_GSAP_URL . 'assets/css/radial-cards-marquee.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/radial-cards-marquee.css' )
 		);
 	} );
 } );

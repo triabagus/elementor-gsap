@@ -62,6 +62,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 2. **Radial Cards Slider (GSAP)** — cards arranged on a rotating wheel that you can drag with inertia + snap or navigate via Prev/Next + dots (Draggable + InertiaPlugin + CustomEase `radial` easing).
 
+3. **Radial Cards Marquee** — cards distributed around a large invisible circle that rotates continuously (pure CSS `@keyframes` linear infinite). JS auto-clones or trims cards to match a configurable `--total`, and pauses the animation when the ring is scrolled out of view to save CPU.
+
 #### GSAP • Buttons
 
 1. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
@@ -93,6 +95,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 8. **Centered Scaling Navigation Bar** — a small pill bar centered at top (logo + 2-line toggle) that expands downward into a menu list (via `grid-template-rows: 0fr → 1fr`) with each item's underline draw + text slide-up on stagger delay, plus an optional marquee CTA banner at the bottom whose animation pauses/resumes with the menu state.
 
 9. **Scaling Hamburger Navigation** — a small circular pill (3.5em default) pinned top-right with a 2-line toggle; on click the pill scales into a full menu panel while the menu content itself grows from the corner (`transform-origin: 100% 0`) with dots appearing next to the current item. Pure CSS transitions with a dark backdrop that fades in behind.
+
+10. **Apple Dock Navigation Bar** — a macOS-style dock of app icons with hover magnification: the hovered icon grows largest, ±1 sibling grows a bit less, ±2 siblings grow less still — creating a smooth "bulge" effect. Pure CSS width transitions triggered by JS toggling `is--hover`/`is--sibling-close`/`is--sibling-far` classes; tooltip label fades in above each icon on hover.
 
 #### GSAP • Sections & Layouts
 
