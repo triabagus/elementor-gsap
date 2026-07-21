@@ -92,6 +92,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 8. **Centered Scaling Navigation Bar** — a small pill bar centered at top (logo + 2-line toggle) that expands downward into a menu list (via `grid-template-rows: 0fr → 1fr`) with each item's underline draw + text slide-up on stagger delay, plus an optional marquee CTA banner at the bottom whose animation pauses/resumes with the menu state.
 
+9. **Scaling Hamburger Navigation** — a small circular pill (3.5em default) pinned top-right with a 2-line toggle; on click the pill scales into a full menu panel while the menu content itself grows from the corner (`transform-origin: 100% 0`) with dots appearing next to the current item. Pure CSS transitions with a dark backdrop that fades in behind.
+
 #### GSAP • Sections & Layouts
 
 1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).

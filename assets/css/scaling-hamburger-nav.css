@@ -1,0 +1,256 @@
+/* Scaling Hamburger Navigation — pill kecil (3.5em) top-right yang saat
+   toggle: scale ke full panel + menu group scale-up dari corner + toggle
+   translate ke dalam. Pure CSS transitions, JS cuma toggle
+   data-egsap-shn-status="active" / "not-active". */
+
+.egsap-shn {
+	--shn-cubic:            cubic-bezier(0.5, 0.5, 0, 1);
+	--shn-dur-open:         0.7s;
+	--shn-dur-group:        0.5s;
+
+	--shn-font:             'PP Neue Montreal', Arial, sans-serif;
+
+	--shn-z:                500;
+	--shn-top:              2em;
+	--shn-right:            2em;
+
+	--shn-toggle-size:      3.5em;
+	--shn-bar-radius:       1.5em;
+	--shn-bar-bg-radius:    1.75em;
+
+	--shn-bar-bg:           #e2e1df;
+	--shn-text:             #131313;
+	--shn-toggle-color:     #131313;
+	--shn-backdrop:         #000000;
+	--shn-backdrop-opacity: 0.33;
+
+	--shn-menu-label-color:   currentColor;
+	--shn-menu-label-opacity: 0.5;
+	--shn-menu-label-size:    1em;
+	--shn-link-size:          2em;
+	--shn-dot-color:          currentColor;
+
+	--shn-group-pad-top:    2.25em;
+	--shn-group-pad-right:  2.5em;
+	--shn-group-pad-bottom: 2em;
+	--shn-group-pad-left:   2em;
+	--shn-toggle-shift:     1em;
+
+	z-index: var(--shn-z);
+	pointer-events: none;
+	position: fixed;
+	inset: 0;
+	font-family: var(--shn-font);
+}
+
+.egsap-shn[data-egsap-shn-editor="1"] {
+	position: relative;
+	inset: auto;
+	min-height: 6em;
+}
+
+/* Backdrop */
+.egsap-shn__backdrop {
+	transition: all var(--shn-dur-open) var(--shn-cubic);
+	opacity: 0;
+	pointer-events: auto;
+	visibility: hidden;
+	background-color: var(--shn-backdrop);
+	position: absolute;
+	inset: 0;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+}
+
+.egsap-shn[data-egsap-shn-status="active"] .egsap-shn__backdrop {
+	opacity: var(--shn-backdrop-opacity);
+	visibility: visible;
+}
+
+/* Bar (positioned pill top-right) */
+.egsap-shn__bar {
+	border-radius: var(--shn-bar-radius);
+	position: absolute;
+	top: var(--shn-top);
+	right: var(--shn-right);
+}
+
+.egsap-shn__bg {
+	transition: all var(--shn-dur-open) var(--shn-cubic);
+	background-color: var(--shn-bar-bg);
+	border-radius: var(--shn-bar-bg-radius);
+	width: var(--shn-toggle-size);
+	height: var(--shn-toggle-size);
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.egsap-shn[data-egsap-shn-status="active"] .egsap-shn__bg {
+	width: 100%;
+	height: 100%;
+}
+
+/* Menu group (scales from top-right corner) */
+.egsap-shn__group {
+	transition:
+		opacity var(--shn-dur-group) var(--shn-cubic),
+		visibility var(--shn-dur-group) var(--shn-cubic),
+		transform var(--shn-dur-open) var(--shn-cubic);
+	gap: 1em;
+	pointer-events: auto;
+	transform-origin: 100% 0;
+	flex-flow: column;
+	padding: var(--shn-group-pad-top) var(--shn-group-pad-right) var(--shn-group-pad-bottom) var(--shn-group-pad-left);
+	display: flex;
+	position: relative;
+	transform: scale(0.15) rotate(0.001deg);
+	opacity: 0;
+	visibility: hidden;
+}
+
+.egsap-shn[data-egsap-shn-status="active"] .egsap-shn__group {
+	transform: scale(1) rotate(0.001deg);
+	opacity: 1;
+	visibility: visible;
+}
+
+.egsap-shn__menu-label {
+	opacity: var(--shn-menu-label-opacity);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--shn-menu-label-color);
+	margin: 0;
+	font-family: inherit;
+	font-size: var(--shn-menu-label-size);
+	font-weight: 400;
+}
+
+.egsap-shn__ul {
+	gap: 0.375em;
+	flex-flow: column;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	position: relative;
+	list-style: none;
+}
+
+.egsap-shn__li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.egsap-shn__link {
+	color: var(--shn-text);
+	justify-content: space-between;
+	align-items: center;
+	text-decoration: none;
+	display: flex;
+}
+
+.egsap-shn__link[aria-current] .egsap-shn__link-text {
+	opacity: 0.33;
+}
+
+.egsap-shn__link-text {
+	white-space: nowrap;
+	margin: 0;
+	padding-right: 1.25em;
+	font-size: var(--shn-link-size);
+	color: inherit;
+	font-family: inherit;
+}
+
+.egsap-shn__dot {
+	transition: all var(--shn-dur-open) var(--shn-cubic);
+	background-color: var(--shn-dot-color);
+	border-radius: 50%;
+	flex-shrink: 0;
+	width: 0.5em;
+	height: 0.5em;
+	transform: scale(0) rotate(0.001deg);
+	opacity: 0.5;
+}
+
+.egsap-shn__link[aria-current] .egsap-shn__dot {
+	transform: scale(1) rotate(0.001deg);
+	opacity: 1;
+}
+
+/* Dim other dots (& hide current dot) when any link is hovered */
+.egsap-shn__bar:has(.egsap-shn__link:hover) .egsap-shn__dot {
+	transform: scale(0) rotate(0.001deg);
+}
+
+.egsap-shn__bar .egsap-shn__link:hover .egsap-shn__dot {
+	transform: scale(1) rotate(0.001deg);
+	opacity: 0.25;
+}
+
+/* Toggle button — <div role="button"> supaya default browser styling <button>
+   nggak interfere dengan flex-center untuk absolute-positioned bars. */
+.egsap-shn__toggle {
+	transition: transform var(--shn-dur-open) var(--shn-cubic);
+	pointer-events: auto;
+	cursor: pointer;
+	border-radius: 50%;
+	justify-content: center;
+	align-items: center;
+	width: var(--shn-toggle-size);
+	height: var(--shn-toggle-size);
+	display: flex;
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(0, 0) rotate(0.001deg);
+}
+
+.egsap-shn__toggle:focus-visible {
+	outline: 2px solid var(--shn-toggle-color);
+	outline-offset: 2px;
+}
+
+.egsap-shn[data-egsap-shn-status="active"] .egsap-shn__toggle {
+	transform: translate(calc(var(--shn-toggle-shift) * -1), var(--shn-toggle-shift)) rotate(0.001deg);
+}
+
+/* Bars absolut di dalam flex-centered parent — static position auto center
+   via flex, translateY offset dua bar ± 0.15em untuk gap visual. */
+.egsap-shn__toggle-bar {
+	transition: transform var(--shn-dur-open) var(--shn-cubic);
+	background-color: var(--shn-toggle-color);
+	width: 40%;
+	height: 0.125em;
+	position: absolute;
+	transform: translateY(-0.15em) rotate(0.001deg);
+}
+
+.egsap-shn__toggle:hover .egsap-shn__toggle-bar {
+	transform: translateY(0.15em) rotate(0.001deg);
+}
+
+.egsap-shn[data-egsap-shn-status="active"] .egsap-shn__toggle .egsap-shn__toggle-bar {
+	transform: translateY(0) rotate(45deg);
+}
+
+.egsap-shn__toggle .egsap-shn__toggle-bar:nth-child(2) {
+	transform: translateY(0.15em) rotate(0.001deg);
+}
+
+.egsap-shn__toggle:hover .egsap-shn__toggle-bar:nth-child(2) {
+	transform: translateY(-0.15em) rotate(0.001deg);
+}
+
+.egsap-shn[data-egsap-shn-status="active"] .egsap-shn__toggle .egsap-shn__toggle-bar:nth-child(2) {
+	transform: translateY(0) rotate(-45deg);
+}
+
+@media screen and (max-width: 479px) {
+	.egsap-shn {
+		--shn-top:   1em;
+		--shn-right: 1em;
+	}
+}
