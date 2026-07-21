@@ -90,6 +90,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 7. **Multilevel Navigation** — a top bar with logo, center menu (mix of plain links + dropdown triggers), and CTA buttons; hovering a dropdown trigger grows a white bar background from top and reveals a full-width mega dropdown with either large image cards or static text items, with staggered fade-in of columns and hover zoom on card images. Full accessibility (aria + arrow-key navigation) and mobile drawer with accordion sub-menus.
 
+8. **Centered Scaling Navigation Bar** — a small pill bar centered at top (logo + 2-line toggle) that expands downward into a menu list (via `grid-template-rows: 0fr → 1fr`) with each item's underline draw + text slide-up on stagger delay, plus an optional marquee CTA banner at the bottom whose animation pauses/resumes with the menu state.
+
 #### GSAP • Sections & Layouts
 
 1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).
