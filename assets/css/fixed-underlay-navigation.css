@@ -53,6 +53,8 @@
 	--fun-overlay-dark-color: rgba(0, 0, 0, 0.3);
 	--fun-overlay-border-height: 1em;
 	--fun-overlay-corner-size: 2em;
+
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .fun-underlay-nav a {

@@ -7,6 +7,7 @@
 	margin: 0;
 	/* Reservasi space + hindari FOUC saat SplitText belum jalan. */
 	display: block;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 /* Char/word wrap dari SplitText — pastikan display consistent. */

@@ -27,6 +27,7 @@
 	min-height: 100dvh;
 	position: relative;
 	overflow: clip;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .sticky-steps__container {

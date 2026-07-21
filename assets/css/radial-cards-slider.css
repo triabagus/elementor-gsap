@@ -47,6 +47,7 @@
 	padding-top: var(--rcs-slider-pad-top);
 	display: flex;
 	position: relative;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 /* Drag cursor states */

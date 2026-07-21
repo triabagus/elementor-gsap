@@ -36,6 +36,7 @@
 	position: fixed;
 	left: 50%;
 	transform: translateX(-50%);
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .bottom-nav[data-bottom-nav-position="bottom"] {

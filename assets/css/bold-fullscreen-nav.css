@@ -33,6 +33,7 @@
 	pointer-events: none;
 	position: fixed;
 	inset: 0;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .egsap-bfn[data-egsap-bfn-editor="1"] {

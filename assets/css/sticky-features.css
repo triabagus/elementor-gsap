@@ -46,6 +46,7 @@
 	filter: none;
 	perspective: none;
 	will-change: auto;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .sticky-features__scroll {

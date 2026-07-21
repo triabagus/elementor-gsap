@@ -5,6 +5,7 @@
 	display: flex;
 	position: relative;
 	background-color: #20261b;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .slider__main {

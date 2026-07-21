@@ -40,6 +40,7 @@
 	pointer-events: none;
 	position: fixed;
 	inset: 0;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
 }
 
 .egsap-tsn[data-egsap-tsn-editor="1"] {
