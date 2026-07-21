@@ -88,6 +88,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 6. **Bold Full Screen Navigation** — a bar with logo + hamburger that opens a full-screen colored tile (via `clip-path` reveal) containing oversized menu links; links slide up with a rotational stagger, hover dims all other items, and hovering a single link slides it up with a text-shadow trick.
 
+7. **Multilevel Navigation** — a top bar with logo, center menu (mix of plain links + dropdown triggers), and CTA buttons; hovering a dropdown trigger grows a white bar background from top and reveals a full-width mega dropdown with either large image cards or static text items, with staggered fade-in of columns and hover zoom on card images. Full accessibility (aria + arrow-key navigation) and mobile drawer with accordion sub-menus.
+
 #### GSAP • Sections & Layouts
 
 1. **Sticky Steps (Basic)** — a two-column layout where a sticky image column stays in view while text steps scroll past, swapping visuals based on which step is closest to viewport center (GSAP ScrollTrigger).

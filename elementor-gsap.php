@@ -136,6 +136,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/mega-nav-directional.css',
 		'assets/css/twostep-scaling-nav.css',
 		'assets/css/bold-fullscreen-nav.css',
+		'assets/css/multilevel-nav.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -163,6 +164,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/mega-nav-directional.js',
 		'assets/js/twostep-scaling-nav.js',
 		'assets/js/bold-fullscreen-nav.js',
+		'assets/js/multilevel-nav.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -190,6 +192,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-mega-nav-directional-widget.php',
 		'widgets/class-twostep-scaling-nav-widget.php',
 		'widgets/class-bold-fullscreen-nav-widget.php',
+		'widgets/class-multilevel-nav-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -401,6 +404,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-bold-fullscreen-nav-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Bold_Fullscreen_Nav_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-multilevel-nav-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Multilevel_Nav_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -610,6 +616,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/bold-fullscreen-nav.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-multilevel-nav',
+			ELEMENTOR_GSAP_URL . 'assets/js/multilevel-nav.js',
+			[],
+			elementor_gsap_asset_ver( 'assets/js/multilevel-nav.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -774,6 +787,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/bold-fullscreen-nav.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/bold-fullscreen-nav.css' )
+		);
+		wp_register_style(
+			'elementor-multilevel-nav',
+			ELEMENTOR_GSAP_URL . 'assets/css/multilevel-nav.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/multilevel-nav.css' )
 		);
 	} );
 } );
