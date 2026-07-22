@@ -1,0 +1,77 @@
+/* 3D Cards Tornado — cards diatur di helix 3D yang rotate & scale mengikuti
+   scroll/drag. Semua transform via GSAP JS (perspective + rotateY + z-depth
+   + filter blur/brightness). Card static di CSS, dinamis di runtime. */
+
+.egsap-tor {
+	--tor-card-width:        18em;
+	--tor-card-radius:       1em;
+	--tor-card-aspect:       4 / 5;
+
+	--tor-height:            100dvh;
+	--tor-perspective:       75em;
+
+	cursor: grab;
+	touch-action: none;
+	width: 100%;
+	height: var(--tor-height);
+	position: relative;
+	overflow: clip;
+}
+
+.egsap-tor[data-egsap-tor-editor="1"] {
+	height: 30em;
+	cursor: default;
+}
+
+.egsap-tor__collection {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.egsap-tor__list {
+	font-size: clamp(0.5em, 0.75vw, 1.5em);
+	width: 100%;
+	height: 100%;
+	perspective: var(--tor-perspective);
+	transform-style: preserve-3d;
+	position: relative;
+}
+
+.egsap-tor__item {
+	transform-style: preserve-3d;
+	backface-visibility: visible;
+	will-change: transform, filter;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.egsap-tor__card {
+	aspect-ratio: var(--tor-card-aspect);
+	pointer-events: none;
+	-webkit-user-select: none;
+	user-select: none;
+	border-radius: var(--tor-card-radius);
+	width: var(--tor-card-width);
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-tor__cover-image {
+	object-fit: cover;
+	border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.egsap-tor {
+		cursor: default;
+	}
+}

@@ -45,6 +45,7 @@ function elementor_gsap_resolve_vendor( $kind ) {
 		'draggable'     => 'gsap/Draggable.min.js',
 		'inertia'       => 'gsap/InertiaPlugin.min.js',
 		'drawsvg'       => 'gsap/DrawSVGPlugin.min.js',
+		'observer'      => 'gsap/Observer.min.js',
 	];
 
 	$cdn_files = [
@@ -55,6 +56,7 @@ function elementor_gsap_resolve_vendor( $kind ) {
 		'draggable'     => 'https://cdn.jsdelivr.net/npm/gsap@' . ELEMENTOR_GSAP_GSAP_VER . '/dist/Draggable.min.js',
 		'inertia'       => 'https://cdn.jsdelivr.net/npm/gsap@' . ELEMENTOR_GSAP_GSAP_VER . '/dist/InertiaPlugin.min.js',
 		'drawsvg'       => 'https://cdn.jsdelivr.net/npm/gsap@' . ELEMENTOR_GSAP_GSAP_VER . '/dist/DrawSVGPlugin.min.js',
+		'observer'      => 'https://cdn.jsdelivr.net/npm/gsap@' . ELEMENTOR_GSAP_GSAP_VER . '/dist/Observer.min.js',
 	];
 
 	if ( 'hls' === $kind ) {
@@ -141,6 +143,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/scaling-hamburger-nav.css',
 		'assets/css/apple-dock-nav.css',
 		'assets/css/radial-cards-marquee.css',
+		'assets/css/3d-cards-tornado.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -173,6 +176,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/scaling-hamburger-nav.js',
 		'assets/js/apple-dock-nav.js',
 		'assets/js/radial-cards-marquee.js',
+		'assets/js/3d-cards-tornado.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -205,6 +209,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-scaling-hamburger-nav-widget.php',
 		'widgets/class-apple-dock-nav-widget.php',
 		'widgets/class-radial-cards-marquee-widget.php',
+		'widgets/class-3d-cards-tornado-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -212,6 +217,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/vendor/gsap/Draggable.min.js',
 		'assets/vendor/gsap/InertiaPlugin.min.js',
 		'assets/vendor/gsap/DrawSVGPlugin.min.js',
+		'assets/vendor/gsap/Observer.min.js',
 		'assets/vendor/hls/hls.min.js',
 	];
 
@@ -431,6 +437,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-radial-cards-marquee-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Radial_Cards_Marquee_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-3d-cards-tornado-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Cards_Tornado_3D_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -441,6 +450,7 @@ add_action( 'plugins_loaded', function () {
 		$draggable     = elementor_gsap_resolve_vendor( 'draggable' );
 		$inertia       = elementor_gsap_resolve_vendor( 'inertia' );
 		$drawsvg       = elementor_gsap_resolve_vendor( 'drawsvg' );
+		$observer      = elementor_gsap_resolve_vendor( 'observer' );
 		$hls           = elementor_gsap_resolve_vendor( 'hls' );
 
 		wp_register_script( 'gsap',                $gsap['url'],          [],         $gsap['ver'],          true );
@@ -450,6 +460,7 @@ add_action( 'plugins_loaded', function () {
 		wp_register_script( 'gsap-draggable',      $draggable['url'],     [ 'gsap' ], $draggable['ver'],     true );
 		wp_register_script( 'gsap-inertia',        $inertia['url'],       [ 'gsap' ], $inertia['ver'],       true );
 		wp_register_script( 'gsap-drawsvg',        $drawsvg['url'],       [ 'gsap' ], $drawsvg['ver'],       true );
+		wp_register_script( 'gsap-observer',       $observer['url'],      [ 'gsap' ], $observer['ver'],      true );
 		wp_register_script( 'hls-js',              $hls['url'],           [],         $hls['ver'],           true );
 		wp_register_script(
 			'elementor-willem-loading',
@@ -675,6 +686,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/radial-cards-marquee.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-3d-cards-tornado',
+			ELEMENTOR_GSAP_URL . 'assets/js/3d-cards-tornado.js',
+			[ 'gsap', 'gsap-observer', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/3d-cards-tornado.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -869,6 +887,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/radial-cards-marquee.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/radial-cards-marquee.css' )
+		);
+		wp_register_style(
+			'elementor-3d-cards-tornado',
+			ELEMENTOR_GSAP_URL . 'assets/css/3d-cards-tornado.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/3d-cards-tornado.css' )
 		);
 	} );
 } );

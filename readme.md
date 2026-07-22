@@ -64,6 +64,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 3. **Radial Cards Marquee** — cards distributed around a large invisible circle that rotates continuously (pure CSS `@keyframes` linear infinite). JS auto-clones or trims cards to match a configurable `--total`, and pauses the animation when the ring is scrolled out of view to save CPU.
 
+4. **3D Cards Tornado** — cards arranged on a 3D helix that auto-rotates and responds to scroll/drag input (GSAP Observer + ScrollTrigger). Each card gets dynamic scale, depth-based blur & darkness for front/back visibility. Auto-duplicates card DOM to fill viewport, pauses animation when scrolled out of view.
+
 #### GSAP • Buttons
 
 1. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
