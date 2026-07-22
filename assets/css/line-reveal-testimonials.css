@@ -1,0 +1,197 @@
+/* Line Reveal Testimonials — testimonial slider dengan line-by-line reveal
+   (SplitText mask), image clip-path circle expand, autoplay + prev/next
+   navigation. JS pakai GSAP + SplitText + ScrollTrigger. */
+
+.egsap-lrt {
+	--lrt-gap:              1.25em;
+	--lrt-controls-width:   33.3333%;
+	--lrt-controls-gap:     1em;
+	--lrt-main-gap:         5em;
+	--lrt-details-gap:      1.5em;
+	--lrt-item-gap:         4em;
+	--lrt-item-details-gap: 1.25em;
+
+	--lrt-p-size:           1.25em;
+	--lrt-p-opacity:        0.5;
+	--lrt-h-size:           3em;
+	--lrt-h-tracking:       -0.02em;
+
+	--lrt-btn-bg:           transparent;
+	--lrt-btn-border:       rgba(0,0,0,0.2);
+	--lrt-btn-color:        #201d1d;
+	--lrt-btn-size:         2.5em;
+	--lrt-btn-radius:       0.25em;
+	--lrt-btn-arrow-size:   0.75em;
+
+	--lrt-avatar-size:      5em;
+
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
+
+	gap: var(--lrt-gap);
+	flex-flow: wrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+	width: 100%;
+	position: relative;
+}
+
+.egsap-lrt__controls {
+	gap: var(--lrt-controls-gap);
+	flex-flow: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: var(--lrt-controls-width);
+	display: flex;
+}
+
+.egsap-lrt__main {
+	gap: var(--lrt-main-gap);
+	flex-flow: column;
+	flex: 1;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+	min-width: 0;
+}
+
+.egsap-lrt__button {
+	background-color: var(--lrt-btn-bg);
+	border: 1px solid var(--lrt-btn-border);
+	color: var(--lrt-btn-color);
+	border-radius: var(--lrt-btn-radius);
+	justify-content: center;
+	align-items: center;
+	width: var(--lrt-btn-size);
+	height: var(--lrt-btn-size);
+	padding: 0;
+	display: flex;
+	cursor: pointer;
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.egsap-lrt__button:hover {
+	background-color: rgba(0,0,0,0.04);
+}
+
+.egsap-lrt__arrow {
+	width: var(--lrt-btn-arrow-size);
+	display: block;
+}
+
+.egsap-lrt__main-details {
+	gap: var(--lrt-details-gap);
+	flex-flow: row;
+	justify-content: flex-start;
+	align-items: center;
+	display: flex;
+}
+
+.egsap-lrt__count {
+	width: 1ch;
+	display: inline-block;
+	text-align: center;
+}
+
+.egsap-lrt__p {
+	margin: 0;
+	font-size: var(--lrt-p-size);
+	line-height: 1.2;
+	color: inherit;
+	font-family: inherit;
+}
+
+.egsap-lrt__p.is--faded {
+	opacity: var(--lrt-p-opacity);
+}
+
+.egsap-lrt__collection {
+	width: 100%;
+}
+
+.egsap-lrt__list {
+	width: 100%;
+	display: grid;
+	position: relative;
+}
+
+.egsap-lrt__item {
+	gap: var(--lrt-item-gap);
+	opacity: 0;
+	visibility: hidden;
+	flex-flow: column;
+	grid-area: 1 / 1;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 100%;
+	display: flex;
+	position: relative;
+}
+
+.egsap-lrt__item.is--active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.egsap-lrt__h {
+	letter-spacing: var(--lrt-h-tracking);
+	width: 100%;
+	margin: 0;
+	font-size: var(--lrt-h-size);
+	font-weight: 500;
+	line-height: 1;
+	color: inherit;
+	font-family: inherit;
+}
+
+/* SplitText mask compensation — supaya descenders / accent nggak ketutup */
+.egsap-lrt .text-line-mask {
+	padding-bottom: 0.2em;
+	margin-bottom: -0.2em;
+}
+
+.egsap-lrt__item-details {
+	gap: var(--lrt-item-details-gap);
+	flex-flow: row;
+	justify-content: flex-start;
+	align-items: center;
+	display: flex;
+}
+
+.egsap-lrt__item-visual {
+	aspect-ratio: 1;
+	border-radius: 100em;
+	width: var(--lrt-avatar-size);
+	overflow: hidden;
+	flex: none;
+}
+
+.egsap-lrt__item-img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+/* Editor mode — skip GSAP init, hanya show item pertama (is--active).
+   Default CSS di atas sudah hide non-active items via opacity + visibility,
+   jadi di editor pun perilakunya konsisten: satu item yang muncul. */
+.egsap-lrt[data-egsap-lrt-editor="1"] .egsap-lrt__item:not(.is--active) {
+	display: none;
+}
+
+@media screen and (max-width: 767px) {
+	.egsap-lrt {
+		--lrt-gap:              3em;
+		--lrt-main-gap:         3em;
+		--lrt-item-gap:         2em;
+		--lrt-p-size:           1em;
+		--lrt-h-size:           2em;
+		--lrt-avatar-size:      3.5em;
+	}
+
+	.egsap-lrt__controls {
+		order: 9999;
+		width: 100%;
+	}
+}

@@ -162,6 +162,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/3d-cards-tornado.css',
 		'assets/css/parallax-image-slider.css',
 		'assets/css/cascading-slider.css',
+		'assets/css/line-reveal-testimonials.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -197,6 +198,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/3d-cards-tornado.js',
 		'assets/js/parallax-image-slider.js',
 		'assets/js/cascading-slider.js',
+		'assets/js/line-reveal-testimonials.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -232,6 +234,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-3d-cards-tornado-widget.php',
 		'widgets/class-parallax-image-slider-widget.php',
 		'widgets/class-cascading-slider-widget.php',
+		'widgets/class-line-reveal-testimonials-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -469,6 +472,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-cascading-slider-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Cascading_Slider_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-line-reveal-testimonials-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Line_Reveal_Testimonials_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -738,6 +744,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/cascading-slider.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-line-reveal-testimonials',
+			ELEMENTOR_GSAP_URL . 'assets/js/line-reveal-testimonials.js',
+			[ 'gsap', 'gsap-splittext', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/line-reveal-testimonials.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -950,6 +963,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/cascading-slider.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/cascading-slider.css' )
+		);
+		wp_register_style(
+			'elementor-line-reveal-testimonials',
+			ELEMENTOR_GSAP_URL . 'assets/css/line-reveal-testimonials.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/line-reveal-testimonials.css' )
 		);
 	} );
 } );
