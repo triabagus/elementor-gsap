@@ -163,6 +163,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/parallax-image-slider.css',
 		'assets/css/cascading-slider.css',
 		'assets/css/line-reveal-testimonials.css',
+		'assets/css/dropping-cards-stack.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -199,6 +200,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/parallax-image-slider.js',
 		'assets/js/cascading-slider.js',
 		'assets/js/line-reveal-testimonials.js',
+		'assets/js/dropping-cards-stack.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -235,6 +237,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-parallax-image-slider-widget.php',
 		'widgets/class-cascading-slider-widget.php',
 		'widgets/class-line-reveal-testimonials-widget.php',
+		'widgets/class-dropping-cards-stack-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -475,6 +478,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-line-reveal-testimonials-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Line_Reveal_Testimonials_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-dropping-cards-stack-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Dropping_Cards_Stack_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -751,6 +757,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/line-reveal-testimonials.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-dropping-cards-stack',
+			ELEMENTOR_GSAP_URL . 'assets/js/dropping-cards-stack.js',
+			[ 'gsap', 'gsap-draggable', 'gsap-customease' ],
+			elementor_gsap_asset_ver( 'assets/js/dropping-cards-stack.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -969,6 +982,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/line-reveal-testimonials.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/line-reveal-testimonials.css' )
+		);
+		wp_register_style(
+			'elementor-dropping-cards-stack',
+			ELEMENTOR_GSAP_URL . 'assets/css/dropping-cards-stack.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/dropping-cards-stack.css' )
 		);
 	} );
 } );

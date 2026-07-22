@@ -1,0 +1,252 @@
+/* Dropping Cards Stack — stack cards yang di-drag/click untuk cycle next.
+   Cards di-position absolute dan di-offset via GSAP transform per depth.
+   JS handle Draggable interaction + keyboard nav + intersection detection. */
+
+.egsap-dcs {
+	--dcs-gap:               2em;
+	--dcs-pad-b:             7.5em;
+	--dcs-pad-r:             7.5em;
+	--dcs-pad-b-mob:         4.5em;
+	--dcs-pad-r-mob:         4.5em;
+
+	--dcs-card-max:          50em;
+	--dcs-card-min-margin:   10em;
+	--dcs-card-min-margin-mob: 6.5em;
+
+	--dcs-card-radius:       1.25em;
+	--dcs-card-aspect:       62.5%;
+	--dcs-card-aspect-tablet: 75%;
+	--dcs-card-aspect-mobile: 150%;
+	--dcs-card-pad:          3em;
+	--dcs-card-pad-mob:      7.5vw;
+
+	--dcs-visual-width:      35%;
+	--dcs-visual-width-mob:  60%;
+	--dcs-visual-radius:     0.5em;
+	--dcs-visual-tint:       rgba(0,0,0,0.1);
+
+	--dcs-title-size:        4.75em;
+	--dcs-title-size-mob:    10vw;
+	--dcs-title-tracking:    -0.03em;
+
+	--dcs-p-size:            1em;
+
+	--dcs-btn-bg:            #f4f4f4;
+	--dcs-btn-color:         #201d1d;
+	--dcs-btn-bg-prev:       rgba(244,244,244,0.2);
+	--dcs-btn-color-prev:    #f4f4f4;
+	--dcs-btn-size:          3em;
+	--dcs-btn-icon:          40%;
+	--dcs-btn-gap:           0.375em;
+
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
+
+	gap: var(--dcs-gap);
+	flex-flow: column;
+	align-items: center;
+	display: flex;
+	width: 100%;
+}
+
+.egsap-dcs__collection {
+	padding-bottom: var(--dcs-pad-b);
+	padding-right: var(--dcs-pad-r);
+}
+
+.egsap-dcs__list {
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	position: relative;
+}
+
+.egsap-dcs__item {
+	will-change: transform, opacity;
+	-webkit-user-select: none;
+	user-select: none;
+	position: absolute;
+}
+
+.egsap-dcs__item:nth-child(1) {
+	position: relative;
+}
+
+/* Card */
+.egsap-dcs__card {
+	color: #201d1d;
+	background-color: #ffc664;
+	border-radius: var(--dcs-card-radius);
+	width: min(var(--dcs-card-max), 100vw - var(--dcs-card-min-margin));
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-dcs__card.is--light  { background-color: #f4f4f4; }
+.egsap-dcs__card.is--purple { color: #f4f4f4; background-color: #8963eb; }
+.egsap-dcs__card.is--pink   { background-color: #e4bdf2; }
+.egsap-dcs__card.is--dark   { color: #f4f4f4; background-color: #10101f; }
+
+.egsap-dcs__card-before {
+	padding-top: var(--dcs-card-aspect);
+}
+
+.egsap-dcs__card-content {
+	flex-flow: column;
+	justify-content: space-between;
+	width: 100%;
+	height: 100%;
+	padding: var(--dcs-card-pad);
+	display: flex;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.egsap-dcs__card-start {
+	justify-content: space-between;
+	display: flex;
+}
+
+.egsap-dcs__card-visual {
+	background-color: var(--dcs-visual-tint);
+	border-radius: var(--dcs-visual-radius);
+	width: var(--dcs-visual-width);
+	position: relative;
+}
+
+.egsap-dcs__card-visual-before {
+	padding-top: 62.5%;
+}
+
+.egsap-dcs__card-visual-img {
+	object-fit: cover;
+	border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.egsap-dcs__card-words {
+	width: 45%;
+}
+
+.egsap-dcs__card-p {
+	margin: 0;
+	font-size: var(--dcs-p-size);
+	color: inherit;
+	font-family: inherit;
+	line-height: 1.3;
+}
+
+.egsap-dcs__card-end {
+	display: flex;
+}
+
+.egsap-dcs__card-h {
+	letter-spacing: var(--dcs-title-tracking);
+	margin: 0;
+	font-size: var(--dcs-title-size);
+	font-weight: 600;
+	line-height: 0.9;
+	color: inherit;
+	font-family: inherit;
+}
+
+/* Controls */
+.egsap-dcs__controls {
+	gap: var(--dcs-btn-gap);
+	display: flex;
+}
+
+.egsap-dcs__control {
+	cursor: pointer;
+	border-radius: 50%;
+	background: none;
+	border: 0;
+	padding: 0;
+}
+
+.egsap-dcs__control-circle {
+	color: var(--dcs-btn-color);
+	background-color: var(--dcs-btn-bg);
+	border-radius: 50%;
+	flex: none;
+	justify-content: center;
+	align-items: center;
+	width: var(--dcs-btn-size);
+	height: var(--dcs-btn-size);
+	display: flex;
+	position: relative;
+	transition: transform 0.3s ease;
+	transform: translateY(0) rotate(0.001deg);
+}
+
+.egsap-dcs__control:hover .egsap-dcs__control-circle {
+	transform: translateY(-0.25em) rotate(0.001deg);
+}
+
+.egsap-dcs__control-circle.is--prev {
+	color: var(--dcs-btn-color-prev);
+	background-color: var(--dcs-btn-bg-prev);
+}
+
+.egsap-dcs__control-svg {
+	width: var(--dcs-btn-icon);
+	display: block;
+}
+
+.egsap-dcs__control.is--prev {
+	transform: scaleX(-1);
+}
+
+/* Editor mode — cards di-render vertikal supaya user bisa preview semua.
+   JS di-skip di editor iframe (Draggable + IntersectionObserver nggak work). */
+.egsap-dcs[data-egsap-dcs-editor="1"] .egsap-dcs__list {
+	flex-flow: column;
+	gap: 1em;
+	width: 100%;
+	align-items: stretch;
+}
+
+.egsap-dcs[data-egsap-dcs-editor="1"] .egsap-dcs__item,
+.egsap-dcs[data-egsap-dcs-editor="1"] .egsap-dcs__item:nth-child(1) {
+	position: relative;
+	width: 100%;
+	opacity: 1 !important;
+	pointer-events: auto !important;
+	transform: none !important;
+}
+
+.egsap-dcs[data-egsap-dcs-editor="1"] .egsap-dcs__collection {
+	padding: 0;
+	width: 100%;
+}
+
+@media screen and (max-width: 991px) {
+	.egsap-dcs {
+		--dcs-card-aspect: var(--dcs-card-aspect-tablet);
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.egsap-dcs {
+		--dcs-pad-b: var(--dcs-pad-b-mob);
+		--dcs-pad-r: var(--dcs-pad-r-mob);
+		--dcs-card-min-margin: var(--dcs-card-min-margin-mob);
+		--dcs-card-aspect: var(--dcs-card-aspect-mobile);
+		--dcs-card-pad: var(--dcs-card-pad-mob);
+		--dcs-title-size: var(--dcs-title-size-mob);
+		--dcs-visual-width: var(--dcs-visual-width-mob);
+	}
+
+	.egsap-dcs__card-start {
+		gap: 2em;
+		flex-flow: column;
+	}
+
+	.egsap-dcs__card-words {
+		width: 100%;
+	}
+}

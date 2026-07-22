@@ -72,6 +72,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 7. **Line Reveal Testimonials** — testimonial slider where the quote text is split into lines via SplitText and animates line-by-line (yPercent 110 → 0) on slide change, with the avatar image expanding via `clip-path: circle()`. Includes autoplay (pauses when scrolled offscreen via ScrollTrigger), prev/next buttons, arrow-key nav, and reduced-motion fallback.
 
+8. **Dropping Cards Stack** — Tinder-style card deck where the top card is draggable in any direction; releasing past a threshold drops it and reveals the next. Cards render with cascading depth offset (derived from collection padding). Includes prev/next buttons, arrow-key nav (when in-view via IntersectionObserver), and 5 preset color variants + custom per-card colors.
+
 #### GSAP • Buttons
 
 1. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
