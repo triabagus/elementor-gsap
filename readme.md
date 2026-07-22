@@ -66,6 +66,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 4. **3D Cards Tornado** — cards arranged on a 3D helix that auto-rotates and responds to scroll/drag input (GSAP Observer + ScrollTrigger). Each card gets dynamic scale, depth-based blur & darkness for front/back visibility. Auto-duplicates card DOM to fill viewport, pauses animation when scrolled out of view.
 
+5. **Parallax Image Slider (Smooothy)** — horizontal image slider with smooth drag, optional snap-to-slide, and infinite loop powered by [Smooothy](https://github.com/fvalla/smooothy). Each slide's inner image is oversized (default 160%) and shifts horizontally proportional to slide position, creating a subtle parallax feel driven by Smooothy's `parallaxValues`.
+
 #### GSAP • Buttons
 
 1. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
