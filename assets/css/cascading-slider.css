@@ -1,0 +1,181 @@
+/* Cascading Slider — 3-tier slider dengan active slide besar di tengah,
+   2 sibling di kiri-kanan, dan 2 slide "far" di edge. Slides pakai
+   `clip-path` inset untuk reveal/hide horizontal saat transisi.
+   JS pakai GSAP untuk position/tween tiap slide berdasarkan slot offset. */
+
+.egsap-csr {
+	--csr-max-width:      90em;
+	--csr-list-height:    35em;
+	--csr-gap:            0.5em;
+	--csr-radius:         0.75em;
+
+	--csr-content-color:  #ffffff;
+	--csr-content-gradient: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0));
+	--csr-content-pad:    2em 2em 3em 2.5em;
+
+	--csr-title-size:     2.75em;
+
+	--csr-btn-bg:         #d7ecd7;
+	--csr-btn-color:      #323b32;
+	--csr-btn-size:       3em;
+	--csr-btn-pad:        0.75em;
+	--csr-btn-radius:     0.25em;
+	--csr-btn-gap:        1em;
+	--csr-nav-mt:         4em;
+
+	width: 100%;
+	max-width: var(--csr-max-width);
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	display: block;
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
+}
+
+.egsap-csr__collection {
+	width: 100%;
+}
+
+.egsap-csr__list {
+	--gap: var(--csr-gap);
+	width: 100%;
+	height: var(--csr-list-height);
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-csr__item {
+	--clip: 0;
+	--radius: var(--csr-radius);
+
+	color: var(--csr-content-color);
+	cursor: pointer;
+	will-change: transform, clip-path;
+	clip-path: inset(0px calc(var(--clip) * 1px) round var(--radius));
+	-webkit-user-select: none;
+	user-select: none;
+	height: 100%;
+	position: absolute;
+	inset: 0 auto auto 0;
+}
+
+.egsap-csr__item[data-status="active"] {
+	cursor: default;
+}
+
+.egsap-csr__item-inner {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.egsap-csr__item-bg {
+	z-index: 0;
+	position: absolute;
+	inset: 0;
+}
+
+.egsap-csr__img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	inset: 0;
+}
+
+.egsap-csr__item-content {
+	z-index: 2;
+	background-image: var(--csr-content-gradient);
+	padding: var(--csr-content-pad);
+	position: absolute;
+	inset: auto 0 0;
+}
+
+.egsap-csr__h {
+	opacity: 0;
+	letter-spacing: -0.03em;
+	margin: 0;
+	font-family: inherit;
+	font-size: var(--csr-title-size);
+	font-weight: 400;
+	line-height: 1;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	transform: translate(0, 0.25em);
+	transition-delay: 0ms;
+	color: inherit;
+}
+
+.egsap-csr__item[data-status="active"] .egsap-csr__h {
+	transition-delay: 400ms;
+	opacity: 1;
+	transform: translate(0, 0);
+}
+
+/* Navigation buttons */
+.egsap-csr__nav {
+	gap: var(--csr-btn-gap);
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+	margin-top: var(--csr-nav-mt);
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	position: relative;
+}
+
+.egsap-csr__button {
+	color: var(--csr-btn-color);
+	background-color: var(--csr-btn-bg);
+	border: 0;
+	border-radius: var(--csr-btn-radius);
+	justify-content: center;
+	align-items: center;
+	width: var(--csr-btn-size);
+	height: var(--csr-btn-size);
+	padding: var(--csr-btn-pad);
+	display: flex;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+}
+
+.egsap-csr__button:hover {
+	opacity: 0.85;
+}
+
+.egsap-csr__button-arrow {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.egsap-csr__button-arrow.is--prev {
+	transform: rotate(-180deg);
+}
+
+/* Editor preview — slides normalnya absolute stacked. Di editor,
+   ubah ke flex row supaya user bisa lihat semua slides. */
+.egsap-csr[data-egsap-csr-editor="1"] .egsap-csr__list {
+	display: flex;
+	gap: 1em;
+	overflow-x: auto;
+	scrollbar-width: thin;
+	height: auto;
+	min-height: 20em;
+}
+
+.egsap-csr[data-egsap-csr-editor="1"] .egsap-csr__item {
+	position: relative;
+	inset: auto;
+	flex: 0 0 auto;
+	width: 20em;
+	height: 20em;
+	clip-path: none !important;
+	cursor: default;
+}
+
+.egsap-csr[data-egsap-csr-editor="1"] .egsap-csr__h {
+	opacity: 1;
+	transform: none;
+}

@@ -68,6 +68,8 @@ The plugin ships **6 Loaders** & **1 Transition ** (configured via Page Settings
 
 5. **Parallax Image Slider (Smooothy)** — horizontal image slider with smooth drag, optional snap-to-slide, and infinite loop powered by [Smooothy](https://github.com/fvalla/smooothy). Each slide's inner image is oversized (default 160%) and shifts horizontally proportional to slide position, creating a subtle parallax feel driven by Smooothy's `parallaxValues`.
 
+6. **Cascading Slider** — 3-tier carousel where the active slide sits center-large, ±1 siblings are thinner strips on either side, and ±2 "far" slides show as narrow edge slivers. Slides use `clip-path: inset()` for horizontal reveal/hide transitions animated by GSAP. Click any slide (or Prev/Next buttons, or arrow keys) to travel; auto-clones to a minimum of 9 slides for full cascading effect.
+
 #### GSAP • Buttons
 
 1. **Button Draw Underline** — a button with an animated SVG underline that draws in on hover (DrawSVGPlugin), with 6 hand-drawn variants or random cycle.
