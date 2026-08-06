@@ -164,6 +164,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/css/cascading-slider.css',
 		'assets/css/line-reveal-testimonials.css',
 		'assets/css/dropping-cards-stack.css',
+		'assets/css/draggable-marquee.css',
 		'assets/js/willem-loading-animation.js',
 		'assets/js/crisp-loading-animation.js',
 		'assets/js/bunny-hls-player.js',
@@ -201,6 +202,7 @@ function elementor_gsap_assets_fingerprint() {
 		'assets/js/cascading-slider.js',
 		'assets/js/line-reveal-testimonials.js',
 		'assets/js/dropping-cards-stack.js',
+		'assets/js/draggable-marquee.js',
 		'includes/class-willem-loading-animation-template.php',
 		'includes/class-crisp-loading-animation-template.php',
 		'includes/class-welcoming-words-loader-template.php',
@@ -238,6 +240,7 @@ function elementor_gsap_assets_fingerprint() {
 		'widgets/class-cascading-slider-widget.php',
 		'widgets/class-line-reveal-testimonials-widget.php',
 		'widgets/class-dropping-cards-stack-widget.php',
+		'widgets/class-draggable-marquee-widget.php',
 		'assets/vendor/gsap/gsap.min.js',
 		'assets/vendor/gsap/SplitText.min.js',
 		'assets/vendor/gsap/CustomEase.min.js',
@@ -481,6 +484,9 @@ add_action( 'plugins_loaded', function () {
 
 		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-dropping-cards-stack-widget.php';
 		$widgets_manager->register( new \Elementor_GSAP\Widgets\Dropping_Cards_Stack_Widget() );
+
+		require_once ELEMENTOR_GSAP_PATH . 'widgets/class-draggable-marquee-widget.php';
+		$widgets_manager->register( new \Elementor_GSAP\Widgets\Draggable_Marquee_Widget() );
 	} );
 
 	add_action( 'elementor/frontend/after_register_scripts', function () {
@@ -764,6 +770,13 @@ add_action( 'plugins_loaded', function () {
 			elementor_gsap_asset_ver( 'assets/js/dropping-cards-stack.js' ),
 			true
 		);
+		wp_register_script(
+			'elementor-draggable-marquee',
+			ELEMENTOR_GSAP_URL . 'assets/js/draggable-marquee.js',
+			[ 'gsap', 'gsap-observer', 'gsap-scrolltrigger' ],
+			elementor_gsap_asset_ver( 'assets/js/draggable-marquee.js' ),
+			true
+		);
 	} );
 
 	add_action( 'elementor/frontend/after_register_styles', function () {
@@ -988,6 +1001,12 @@ add_action( 'plugins_loaded', function () {
 			ELEMENTOR_GSAP_URL . 'assets/css/dropping-cards-stack.css',
 			[],
 			elementor_gsap_asset_ver( 'assets/css/dropping-cards-stack.css' )
+		);
+		wp_register_style(
+			'elementor-draggable-marquee',
+			ELEMENTOR_GSAP_URL . 'assets/css/draggable-marquee.css',
+			[],
+			elementor_gsap_asset_ver( 'assets/css/draggable-marquee.css' )
 		);
 	} );
 } );

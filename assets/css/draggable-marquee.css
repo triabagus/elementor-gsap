@@ -1,0 +1,62 @@
+/* Draggable Marquee — infinite horizontal marquee dengan drag-to-influence
+   direction. JS pakai GSAP Observer untuk detect pointer velocity, mengubah
+   timeScale marquee sementara, lalu decay balik ke resting direction. */
+
+.egsap-dmq {
+	--dmq-item-width:    15em;
+	--dmq-item-radius:   1.25em;
+	--dmq-item-radius-round: 100em;
+	--dmq-item-gap:      1em;
+	--dmq-item-aspect:   1;
+
+	font-family: 'PP Neue Montreal', Arial, sans-serif;
+
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex: none;
+	width: 100%;
+	overflow: hidden;
+}
+
+.egsap-dmq__collection {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex: none;
+	will-change: transform;
+}
+
+.egsap-dmq__list {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex: none;
+}
+
+.egsap-dmq__item {
+	width: var(--dmq-item-width);
+	aspect-ratio: var(--dmq-item-aspect);
+	border-radius: var(--dmq-item-radius);
+	margin-right: var(--dmq-item-gap);
+	flex: none;
+	overflow: hidden;
+}
+
+.egsap-dmq__item.is--round {
+	border-radius: var(--dmq-item-radius-round);
+}
+
+.egsap-dmq__item-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+/* Editor preview — di iframe editor, Observer tidak diinisialisasi. Show
+   items in scroll wrapper supaya bisa dilihat semua item statik. */
+.egsap-dmq[data-egsap-dmq-editor="1"] {
+	overflow-x: auto;
+	scrollbar-width: thin;
+}
